@@ -63,7 +63,7 @@ buffer.tab_width = 4
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.H = 'cpp'
 
--- Language specific overrides (currently uneeded)
+-- Language specific overrides
 events.connect(events.LEXER_LOADED, function(name)
     if name == 'dart' then
         buffer.tab_width = 2
