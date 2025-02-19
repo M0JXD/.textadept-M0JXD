@@ -12,6 +12,7 @@ events.connect(events.LEXER_LOADED, function(name)
     local project_bin
 
     if name == 'c' or name == 'cpp' then
+        local debugger = require('debugger')
         -- Xmake hierachy
         project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
         debugger.project_commands[project_dir] = function()
@@ -21,6 +22,7 @@ events.connect(events.LEXER_LOADED, function(name)
         -- TODO: implement CMake (maybe more like Meson) and actually check these paths exist before setting up the debugger
         
     elseif name == 'rust' then
+        local debugger = require('debugger')
         -- Try for Rust (Cargo)
         project_bin = io.get_project_root() .. '/target/debug/' .. io.get_project_root():match(".*/(.*)$")
         
@@ -36,10 +38,13 @@ end)
 local lsp = require('lsp')
 --lsp.server_commands.cpp = 'clangd'
 lsp.server_commands.rust = 'rust-analyzer'
+lsp.server_commands.dart = 'dart language-server'
 -- Use Textadept's basic autocompletion for ''ctrl+ ' in the terminal, LSP module seems unhappy with TUI Textadept
 if CURSES then
     keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
 end
+
+
 
 -- File Browser
 local file_browser = require('file_browser')
@@ -62,25 +67,29 @@ lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.H = 'cpp'
 
 -- Language specific overrides (currently uneeded)
---events.connect(events.LEXER_LOADED, function(name)
---    if name == '' then
---        buffer.tab_width = 2
---        buffer.use_tabs = false
---    end
---end)
+events.connect(events.LEXER_LOADED, function(name)
+    if name == 'dart' then
+        buffer.tab_width = 2
+        buffer.use_tabs = false
+        -- Trigger code actions
+        keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
+    end
+end)
 
 -- Themes
 if not CURSES then
     events.connect(events.MODE_CHANGED, function()
         if _THEME == 'dark' then
-            --view:set_theme('base16-catppuccin-mocha')
+            -- view:set_theme('dark', {font = 'Monospace', size = 12})
+            view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12})
         else 
-            --view:set_theme('base16-catppuccin-latte')
+            -- view:set_theme('light')
+            view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 12})
         end
     end)
     events.emit(events.MODE_CHANGED)
 else
-    --view:set_theme('term')
+    view:set_theme('term')
 end
 
 -- Add a suspend menu entry for terminal
