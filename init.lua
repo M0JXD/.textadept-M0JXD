@@ -4,35 +4,34 @@ require('format')
 require('lua_repl')
 -- require('spellcheck')
 
--- Debugger setup - can call reset command and should auto-setup
-local debugger = require('debugger')
-events.connect(events.LEXER_LOADED, function(name)
+-- Debugger setup (on Linux anyways)- can call reset command and should auto-setup
+if not WIN32 or OSX then 
+    events.connect(events.LEXER_LOADED, function(name)
+        local project_dir = io.get_project_root()
+        local project_bin
 
-    local project_dir = io.get_project_root()
-    local project_bin
-
-    if name == 'c' or name == 'cpp' then
-        local debugger = require('debugger')
-        -- Xmake hierachy
-        project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
-        debugger.project_commands[project_dir] = function()
-            return 'c', project_bin
+        if name == 'c' or name == 'cpp' then
+            local debugger = require('debugger')
+            -- Xmake hierachy
+            project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
+            debugger.project_commands[project_dir] = function()
+                return 'c', project_bin
+            end
+            
+            -- TODO: implement CMake (maybe more like Meson) and actually check these paths exist before setting up the debugger
+            
+        elseif name == 'rust' then
+            local debugger = require('debugger')
+            -- Try for Rust (Cargo)
+            project_bin = io.get_project_root() .. '/target/debug/' .. io.get_project_root():match(".*/(.*)$")
+            
+            -- Need to implement/check support for Rust's rust-gdb wrapper, can use C for now
+            debugger.project_commands[project_dir] = function()
+                return 'c', project_bin
+            end
         end
-        
-        -- TODO: implement CMake (maybe more like Meson) and actually check these paths exist before setting up the debugger
-        
-    elseif name == 'rust' then
-        local debugger = require('debugger')
-        -- Try for Rust (Cargo)
-        project_bin = io.get_project_root() .. '/target/debug/' .. io.get_project_root():match(".*/(.*)$")
-        
-        -- Need to implement/check support for Rust's rust-gdb wrapper, can use C for now
-        debugger.project_commands[project_dir] = function()
-            return 'c', project_bin
-        end
-        
-    end
-end)
+    end)
+end
 
 -- LSP
 local lsp = require('lsp')
@@ -43,6 +42,7 @@ lsp.server_commands.dart = 'dart language-server'
 if CURSES then
     keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
 end
+
 
 -- File Browser
 local file_browser = require('file_browser')
@@ -69,7 +69,7 @@ events.connect(events.LEXER_LOADED, function(name)
     if name == 'dart' then
         buffer.tab_width = 2
         buffer.use_tabs = false
-        -- Trigger code actions
+        -- Trigger code actions for Flutter
         keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
     end
 end)
