@@ -43,7 +43,6 @@ if CURSES then
     keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
 end
 
-
 -- File Browser
 local file_browser = require('file_browser')
 keys['ctrl+O'] = file_browser.init  -- Ctrl+Shift+o to open directory
