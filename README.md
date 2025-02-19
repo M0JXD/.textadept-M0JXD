@@ -1,6 +1,6 @@
 # My Textadept stuff
 
-There's two Ayu-like themes (modified to match VSCode highlighting guide better than the base16 ones, the dark one uses a pure black background), my init.lua, and and a modified file_browser module.
+There's two Ayu-like themes (modified to match VSCode's highlighting guide better than the base16 ones, the dark one uses a pure black background), my init.lua, and and a modified file_browser module.
 Mainly here so I can grab them wherever I need them.
 
 ## File Browser modifications
