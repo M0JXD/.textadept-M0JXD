@@ -5,7 +5,7 @@ require('lua_repl')
 -- require('spellcheck')
 
 -- Debugger setup (on Linux anyways)- can call reset command and should auto-setup
-if not WIN32 or OSX then 
+if not (WIN32 or OSX) then 
     events.connect(events.LEXER_LOADED, function(name)
         local project_dir = io.get_project_root()
         local project_bin
