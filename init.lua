@@ -18,7 +18,7 @@ if not (WIN32 or OSX) then
                 return 'c', project_bin
             end
             
-            -- TODO: implement CMake (maybe more like Meson) and actually check these paths exist before setting up the debugger
+            -- TODO: implement CMake and actually check these paths exist before setting up the debugger
             
         elseif name == 'rust' then
             local debugger = require('debugger')
