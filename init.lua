@@ -11,23 +11,25 @@ if not WIN32 or OSX then
         local project_bin
 
         if name == 'c' or name == 'cpp' and not CURSES then
-            local debugger = require('debugger')
+            -- local debugger = require('debugger')
+            
             -- Xmake hierachy
             --project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
             --debugger.project_commands[project_dir] = function()
             --    return 'c', project_bin
             --end
             
-            -- TODO: implement CMake (maybe more like Meson) and actually check these paths exist before setting up the debugger
+            -- TODO: implement CMake and actually check these paths exist before setting up the debugger
         end
     end)
 end
 
 -- LSP
---local lsp = require('lsp')
+local lsp = require('lsp')
+lsp.server_commands.dart = 'dart language-server'
+--lsp.server_commands.c = 'clangd'  -- TODO Setup to read compile_commands.json from vscode folder as per Xmake's usual thing'
 --lsp.server_commands.cpp = 'clangd'
---lsp.server_commands.rust = 'rust-analyzer'
---lsp.server_commands.dart = 'dart language-server'
+
 -- Use Textadept's basic autocompletion for ''ctrl+ ' in the terminal, LSP module seems unhappy with TUI Textadept
 if CURSES then
     keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
@@ -56,7 +58,7 @@ lexer.detect_extensions.H = 'cpp'
 
 -- Language specific overrides (currently uneeded)
 events.connect(events.LEXER_LOADED, function(name)
-    if name == 'dart' then
+    if (name == 'dart') and lsp then
         buffer.tab_width = 2
         buffer.use_tabs = false
         -- Trigger code actions for Flutter
@@ -66,6 +68,14 @@ end)
 
 -- Themes
 if not CURSES then
+    events.connect(events.VIEW_NEW, function() 
+        if _THEME == 'dark' then
+            view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12})
+        else 
+            view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 12})
+        end
+    end)
+
     events.connect(events.MODE_CHANGED, function()
         if _THEME == 'dark' then
             for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12}) end
@@ -77,6 +87,7 @@ if not CURSES then
     end)
     events.emit(events.MODE_CHANGED)
 end
+
 
 -- Add a suspend menu entry for terminal
 if CURSES then
