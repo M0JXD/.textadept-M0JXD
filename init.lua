@@ -3,7 +3,11 @@ require('file_diff')
 require('format')
 require('lua_repl')
 -- require('spellcheck')
+local autoupdate = require('autoupdate')
+autoupdate.check_on_startup = true
 
+-- Idea - wrap this into some callable functions that auto debug,
+-- e.g. xmake_debugger, cmake_debugger, makefile_debugger (can do the same for LSP)
 -- Debugger setup (on Linux anyways)- can call reset command and should auto-setup
 if not WIN32 or OSX then 
     events.connect(events.LEXER_LOADED, function(name)
