@@ -5,10 +5,11 @@ require('lua_repl')
 -- require('spellcheck')
 local autoupdate = require('autoupdate')
 autoupdate.check_on_startup = true
+autoupdate.copy_link = false
 
 -- Idea - wrap this into some callable functions that auto debug,
 -- e.g. xmake_debugger, cmake_debugger, makefile_debugger (can do the same for LSP)
--- Debugger setup (on Linux anyways)- can call reset command and should auto-setup
+-- Debugger setup (on Linux anyways) - can call reset command and should auto-setup
 if not WIN32 or OSX then 
     events.connect(events.LEXER_LOADED, function(name)
         local project_dir = io.get_project_root()
@@ -31,14 +32,8 @@ end
 -- LSP
 local lsp = require('lsp')
 lsp.server_commands.dart = 'dart language-server'
---lsp.server_commands.c = 'clangd'  -- TODO Setup to read compile_commands.json from vscode folder as per Xmake's usual thing'
---lsp.server_commands.cpp = 'clangd'
-
--- Use Textadept's basic autocompletion for ''ctrl+ ' in the terminal, LSP module seems unhappy with TUI Textadept
-if CURSES then
-    keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
-end
-
+-- TODO Setup LSP for C and Python
+--lsp.server_commands.c = 'clangd'
 
 -- File Browser
 local file_browser = require('file_browser')
@@ -56,10 +51,6 @@ buffer.use_tabs = false
 buffer.tab_width = 4
 --textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_CURRENT  -- Esc not working
 
--- Set Lexers (Non projects use capital C for cpp)
-lexer.detect_extensions.C = 'cpp'
-lexer.detect_extensions.H = 'cpp'
-
 -- Language specific overrides (currently uneeded)
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') and lsp then
@@ -71,36 +62,46 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 
 -- Themes
+-- Fonts are awkward on windows, so just remove
 if not CURSES then
     events.connect(events.VIEW_NEW, function() 
         if _THEME == 'dark' then
-            view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12})
+            view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14})
         else 
-            view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 12})
+            view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14})
         end
     end)
 
     events.connect(events.MODE_CHANGED, function()
         if _THEME == 'dark' then
-            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12}) end
-            pcall(function () ui.command_entry:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 12}) end)
+            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end
+            pcall(function () ui.command_entry:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end)
         else 
-            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 12}) end
-            pcall(function () ui.command_entry:set_theme('ayuesque-light', {font = 'Noto Mono', size = 12}) end)
+            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end
+            pcall(function () ui.command_entry:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end)
         end
     end)
     events.emit(events.MODE_CHANGED)
-else
+
+    else
     -- Terminal theme
-    view:set_theme('ayuesque-dark')
+    view:set_theme('ayuesque-term')
 end
 
-
--- Add a suspend menu entry for terminal
+-- Platform Specific Adjustments
 if CURSES then
+    -- Add a suspend menu entry for terminal version
     table.insert(textadept.menu.menubar[_L['View']], 18, {
     'Suspend...', ui.suspend
     })
+    -- Use Textadept's basic autocompletion for ''ctrl+ ' in the terminal,
+    -- LSP module seems unhappy with TUI Textadept
+    keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
+end
+
+if WIN32 then
+    -- Disable due to weird UK keyboard
+    KEYS['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
 end
 
 -- Distraction free mode
