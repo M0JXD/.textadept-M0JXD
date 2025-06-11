@@ -90,6 +90,9 @@ if not CURSES then
         end
     end)
     events.emit(events.MODE_CHANGED)
+else
+    -- Terminal theme
+    view:set_theme('ayuesque-dark')
 end
 
 
