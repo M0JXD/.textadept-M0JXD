@@ -4,7 +4,7 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black =  0x000000 -- AYU: 0x140E0B  -- BLACK: 0x000000
-colors.light_black = 0x211713
+colors.light_black = 0x3b3532 -- ATTEMPTS 0x4a423f--  0x3b3331 --  0x423632 -- 0x426332  -- 0x323642 -- 0x423632 
 colors.dark_grey = 0x665B56
 colors.grey = 0x80736C
 colors.light_grey = 0xB6BDBF
@@ -50,9 +50,9 @@ styles[lexer.EMBEDDED] = {fore = colors.purple}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.red}
--- styles[lexer.FUNCTION_METHOD] = {}
+styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
 styles[lexer.HEADING] = {fore = colors.magenta}
--- styles[lexer.IDENTIFIER] = {}
+-- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
 styles[lexer.LABEL] = {fore = colors.magenta}
@@ -100,13 +100,13 @@ styles.error_indent = {back = colors.red}
 
 -- Element colors.
 -- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_BACK] = colors.dark_grey
+view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.blue
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.yellow
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_grey
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.light_grey
 view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
 view.element_color[view.ELEMENT_CARET] = colors.light_grey
@@ -138,7 +138,7 @@ view.indic_fore[ui.find.INDIC_FIND] = colors.blue
 view.indic_alpha[ui.find.INDIC_FIND] = 0x80
 view.indic_fore[textadept.editing.INDIC_HIGHLIGHT] = colors.orange
 view.indic_alpha[textadept.editing.INDIC_HIGHLIGHT] = 0x80
-view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.light_grey
+view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.dark_grey
 view.indic_fore[textadept.run.INDIC_WARNING] = colors.yellow
 view.indic_fore[textadept.run.INDIC_ERROR] = colors.red
 

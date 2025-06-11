@@ -4,7 +4,7 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black =  0x000000 -- AYU: 0x140E0B  -- BLACK: 0x000000
-colors.light_black = 0x211713
+colors.light_black = 0xf2c2bb 
 colors.dark_grey = 0x665B56
 colors.grey = 0x80736C
 colors.light_grey = 0xB6BDBF
@@ -48,9 +48,9 @@ styles[lexer.EMBEDDED] = {fore = colors.purple}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.red}
--- styles[lexer.FUNCTION_METHOD] = {}
+styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
 styles[lexer.HEADING] = {fore = colors.magenta}
--- styles[lexer.IDENTIFIER] = {}
+-- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
 styles[lexer.LABEL] = {fore = colors.magenta}
@@ -98,16 +98,16 @@ styles.error_indent = {back = colors.red}
 
 -- Element colors.
 -- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_grey
+view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_grey
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_grey
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_grey
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_grey
-view.element_color[view.ELEMENT_CARET] = colors.black
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
+view.element_color[view.ELEMENT_CARET] = colors.light_grey
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 if view ~= ui.command_entry then
 	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_grey | 0x60000000
