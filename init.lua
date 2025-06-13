@@ -7,32 +7,27 @@ local autoupdate = require('autoupdate')
 autoupdate.check_on_startup = true
 autoupdate.copy_link = false
 
--- Idea - wrap this into some callable functions that auto debug,
--- e.g. xmake_debugger, cmake_debugger, makefile_debugger (can do the same for LSP)
--- Debugger setup (on Linux anyways) - can call reset command and should auto-setup
-if not WIN32 or OSX then 
-    events.connect(events.LEXER_LOADED, function(name)
-        local project_dir = io.get_project_root()
-        local project_bin
-
-        if name == 'c' or name == 'cpp' and not CURSES then
-            -- local debugger = require('debugger')
-            
-            -- Xmake hierachy
-            --project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
-            --debugger.project_commands[project_dir] = function()
-            --    return 'c', project_bin
-            --end
-            
-            -- TODO: implement CMake and actually check these paths exist before setting up the debugger
+-- Utils to quickly setup dev environment for various systems
+function setup_xmake()
+    local project_dir = io.get_project_root()
+    local project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
+    if name == 'c' or name == 'cpp' then
+        local debugger = require('debugger')
+        debugger.project_commands[project_dir] = function()
+            return 'c', project_bin
         end
-    end)
+    end
+end
+
+-- TODO: CMake
+function setup_cmake()
+    ui.print("CMAKE SETUP")
 end
 
 -- LSP
 local lsp = require('lsp')
 lsp.server_commands.dart = 'dart language-server'
--- TODO Setup LSP for C and Python
+-- TODO Setup LSP for C, Python
 --lsp.server_commands.c = 'clangd'
 
 -- File Browser
@@ -61,8 +56,7 @@ events.connect(events.LEXER_LOADED, function(name)
     end
 end)
 
--- Themes
--- Fonts are awkward on windows, so just remove
+-- Themes -- NB: Fonts are awkward on windows, so remove them
 if not CURSES then
     events.connect(events.VIEW_NEW, function() 
         if _THEME == 'dark' then
@@ -82,14 +76,11 @@ if not CURSES then
         end
     end)
     events.emit(events.MODE_CHANGED)
-
-    else
-    -- Terminal theme
-    view:set_theme('ayuesque-term')
 end
 
--- Platform Specific Adjustments
+-- TUI Version
 if CURSES then
+    view:set_theme('ayuesque-term')
     -- Add a suspend menu entry for terminal version
     table.insert(textadept.menu.menubar[_L['View']], 18, {
     'Suspend...', ui.suspend
@@ -99,9 +90,10 @@ if CURSES then
     keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
 end
 
+-- Platform Specific Adjustments
 if WIN32 then
     -- Disable due to weird UK keyboard
-    KEYS['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
+    keys['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
 end
 
 -- Distraction free mode
