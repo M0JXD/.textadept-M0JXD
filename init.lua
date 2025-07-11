@@ -56,6 +56,9 @@ events.connect(events.LEXER_LOADED, function(name)
     end
 end)
 
+-- Keybindings
+keys['ctrl+K'] = function() buffer:line_delete() end
+
 -- Themes -- NB: Fonts are awkward on windows, so remove them
 if not CURSES then
     events.connect(events.VIEW_NEW, function() 
