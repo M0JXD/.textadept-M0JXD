@@ -35,10 +35,7 @@ NOTE: At the moment this seems a bit broken on Windows. Want to fix... at some p
 1) The highlighting is improved for Textadept 12 and now uses multiple colours depending on expanded/folded state.
 2) There are simple booleans that can be set to hide dot files/folders, sort without case sensitivity and force the folders to be listed first.
 
-### Installation
-
-Add this module's init.lua under the "file_browser" folder the same way as is detailed in the Textadept wiki.
-You can then initialise it in your Textadept's init.lua. Here's an example:
+Example usage:
 
 ```lua
 -- File Browser Module
