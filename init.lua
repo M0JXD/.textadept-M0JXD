@@ -43,7 +43,7 @@ buffer.use_tabs = false
 buffer.tab_width = 4
 --textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_CURRENT  -- Esc not working
 
--- Language specific overrides (currently uneeded)
+-- Language specific
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') and lsp then
         buffer.tab_width = 2
@@ -60,6 +60,7 @@ end)
 --Keybindings
 keys['ctrl+K'] = function() buffer:line_delete() end
 
+-- Themes
 if not CURSES then
     events.connect(events.VIEW_NEW, function() 
         if _THEME == 'dark' then
