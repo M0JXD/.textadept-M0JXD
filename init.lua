@@ -2,10 +2,12 @@
 require('file_diff')
 require('format')
 require('lua_repl')
--- require('spellcheck')
+local spellcheck = require('spellcheck')
+spellcheck.check_spelling_on_save = false
 local autoupdate = require('autoupdate')
 autoupdate.check_on_startup = true
 autoupdate.copy_link = false
+local distraction_free = require('distraction_free')
 
 -- Utils to quickly setup dev environment for various systems
 function setup_xmake()
@@ -19,15 +21,10 @@ function setup_xmake()
     end
 end
 
--- TODO: CMake
-function setup_cmake()
-    ui.print("CMAKE SETUP")
-end
-
 -- LSP
 local lsp = require('lsp')
 lsp.server_commands.dart = 'dart language-server'
--- TODO Setup LSP for C, Python
+-- TODO Setup LSP for C, Python etc.
 --lsp.server_commands.c = 'clangd'
 
 -- File Browser
@@ -54,12 +51,15 @@ events.connect(events.LEXER_LOADED, function(name)
         -- Trigger code actions for Flutter
         keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
     end
+    
+    if (name == 'text') then
+        textadept.editing.auto_pairs = nil
+    end
 end)
 
--- Keybindings
+--Keybindings
 keys['ctrl+K'] = function() buffer:line_delete() end
 
--- Themes -- NB: Fonts are awkward on windows, so remove them
 if not CURSES then
     events.connect(events.VIEW_NEW, function() 
         if _THEME == 'dark' then
@@ -97,37 +97,4 @@ end
 if WIN32 then
     -- Disable due to weird UK keyboard
     keys['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
-end
-
--- Distraction free mode
-if not CURSES then
-    local distraction_free = false
-    local menubar = textadept.menu.menubar
-    local tab_bar = ui.tabs
-
-    function clean_statusbar ()
-        ui.statusbar_text = '' 
-        ui.buffer_statusbar_text = ''
-    end
-
-    keys['ctrl+f12'] = function()
-        if not distraction_free then
-            textadept.menu.menubar = nil  -- Remove menu bar
-            ui.tabs = false  -- Remove the tab bar
-           -- Disable scroll bars
-           view.h_scroll_bar = false
-           view.v_scroll_bar = false
-           -- Force the statusbar to always be blank
-           events.connect(events.UPDATE_UI, clean_statusbar)
-           events.emit(events.UPDATE_UI, 1)
-        else  -- Restore old state.
-            textadept.menu.menubar = menubar
-            ui.tabs = tab_bar
-            view.h_scroll_bar = true
-            view.v_scroll_bar = true
-            events.disconnect(events.UPDATE_UI, clean_statusbar)
-            events.emit(events.UPDATE_UI, 1)
-        end
-        distraction_free = not distraction_free
-    end
 end
