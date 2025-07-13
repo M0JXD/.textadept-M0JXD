@@ -4,10 +4,27 @@ A collection of things I use/modified for Textadept. There's:
 - Three Ayu-like themes, light, dark and term, which are made to match VSCode's highlighting guide better than the base16 ones. The dark one uses a pure black background.
 - My init.lua
 - A modified file_browser module
-  
+- A module for distraction free mode
+
 Mainly here so I can grab them wherever I need them.
 
-## File Browser modifications
+## Distraction Free Module
+
+Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module.
+Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Defaults to my preferences aha </br>
+Example usage:
+
+```lua
+local distraction_free = require('distraction_free')
+distraction_free.hide_menubar = false
+distraction_free.hide_tabs = false
+distraction_free.hide_scrollbars = true
+distraction_free.clear_statusbar = false
+distraction_free.hide_margins = true
+distraction_free.maximise = true
+```
+
+## File Browser Module Modifications
 Mitchell's Textadept file_browser module with some changes.
 
 ### About
