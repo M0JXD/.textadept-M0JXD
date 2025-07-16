@@ -1,6 +1,6 @@
-# My Textadept stuff
+# My (M0JXD's) ~/.textadept/
 
-A collection of things I use/modified for Textadept. There's:
+My collection of things I use/modified for Textadept. There's:
 - Three Ayu-like themes, light, dark and term, which are made to match VSCode's highlighting guide better than the base16 ones. The dark one uses a pure black background.
 - My init.lua
 - A modified file_browser module
