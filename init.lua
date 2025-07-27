@@ -25,10 +25,16 @@ end
 -- Default Settings, Keybindings
 buffer.use_tabs = false
 buffer.tab_width = 4
---textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_CURRENT  -- Esc not working
+textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+-- Match VSCode
 keys['ctrl+K'] = function() buffer:line_delete() end
+keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
+keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+--keys['ctrl+shift+down'] = 
+--keys['ctrl+shift+up'] = 
 
 -- Language specific
+lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') and lsp then
         buffer.tab_width = 2
@@ -39,13 +45,14 @@ events.connect(events.LEXER_LOADED, function(name)
     
     if (name == 'text') then
         textadept.editing.auto_pairs = nil
+        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_NONE
     end
 end)
 
 -- TUI Adjustments
 if CURSES then
-    view:set_theme('ayuesque-term')
-    -- Add a suspend menu entry for terminal version
+    -- view:set_theme('ayuesque-term')  -- TODO: find a way of detecting if a term can handle this.
+    -- Add a suspend menu entry 
     table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
     -- Force use Textadept's basic autocompletion for ''ctrl+ ' in the terminal,
     -- as LSP module seems unhappy with TUI Textadept
