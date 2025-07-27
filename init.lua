@@ -34,18 +34,21 @@ keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Do
 --keys['ctrl+shift+up'] = 
 
 -- Language specific
+local auto_pairs = textadept.editing.auto_pairs
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
 events.connect(events.LEXER_LOADED, function(name)
-    if (name == 'dart') and lsp then
+    if (name == 'dart') then
         buffer.tab_width = 2
         buffer.use_tabs = false
         -- Trigger code actions for Flutter
-        keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
+        if lsp then keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2] end
     end
     
     if (name == 'text') then
         textadept.editing.auto_pairs = nil
         textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_NONE
+    else
+        textadept.editing.auto_pairs = auto_pairs
     end
 end)
 
