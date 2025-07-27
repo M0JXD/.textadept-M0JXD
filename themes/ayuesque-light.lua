@@ -43,7 +43,7 @@ styles[lexer.CLASS] = {fore = colors.yellow}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey}
 -- styles[lexer.CONSTANT] = {}
-styles[lexer.CONSTANT_BUILTIN] = {fore = colors.purple}
+styles[lexer.CONSTANT_BUILTIN] = {fore = colors.blue}  -- was purple
 styles[lexer.EMBEDDED] = {fore = colors.purple}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
