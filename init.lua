@@ -1,11 +1,11 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
 
--- Themes
+-- Themes (When on Windows remove the fonts)
 if not CURSES then
-    events.connect(events.VIEW_NEW, function() 
+    events.connect(events.VIEW_NEW, function()
         if _THEME == 'dark' then
             view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14})
-        else 
+        else
             view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14})
         end
     end)
@@ -14,58 +14,12 @@ if not CURSES then
         if _THEME == 'dark' then
             for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end
             pcall(function () ui.command_entry:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end)
-        else 
+        else
             for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end
             pcall(function () ui.command_entry:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end)
         end
     end)
     events.emit(events.MODE_CHANGED)
-end
-
--- Default Settings, Keybindings
-buffer.use_tabs = false
-buffer.tab_width = 4
-textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
--- Match VSCode
-keys['ctrl+K'] = function() buffer:line_delete() end
-keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
-keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
---keys['ctrl+shift+down'] = 
---keys['ctrl+shift+up'] = 
-
--- Language specific
-local auto_pairs = textadept.editing.auto_pairs
-lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
-events.connect(events.LEXER_LOADED, function(name)
-    if (name == 'dart') then
-        buffer.tab_width = 2
-        buffer.use_tabs = false
-        -- Trigger code actions for Flutter
-        if lsp then keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2] end
-    end
-    
-    if (name == 'text') then
-        textadept.editing.auto_pairs = nil
-        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_NONE
-    else
-        textadept.editing.auto_pairs = auto_pairs
-    end
-end)
-
--- TUI Adjustments
-if CURSES then
-    -- view:set_theme('ayuesque-term')  -- TODO: find a way of detecting if a term can handle this.
-    -- Add a suspend menu entry 
-    table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
-    -- Force use Textadept's basic autocompletion for ''ctrl+ ' in the terminal,
-    -- as LSP module seems unhappy with TUI Textadept
-    keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
-end
-
--- Windows Adjustments
-if WIN32 then
-    -- Disable due to weird UK keyboard
-    keys['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
 end
 
 -- Modules
@@ -79,12 +33,11 @@ spellcheck.check_spelling_on_save = false
 
 local autoupdate = require('autoupdate')
 autoupdate.check_on_startup = true
-autoupdate.copy_link = false
 
 -- LSP
 local lsp = require('lsp')
 lsp.server_commands.dart = 'dart language-server'
--- TODO Setup LSP for C, Python etc.
+-- TODO: Setup LSP for C, Python etc.
 -- lsp.server_commands.c = 'clangd'
 
 -- File Browser
@@ -97,6 +50,56 @@ file_browser.hide_dot_folders = true
 file_browser.hide_dot_files = false
 file_browser.force_folders_first = true
 file_browser.case_insensitive_sort = true
+
+-- Default Settings, Keybindings
+buffer.use_tabs = false
+buffer.tab_width = 4
+textadept.editing.strip_trailing_spaces = true
+textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+-- Match VSCode
+keys['ctrl+K'] = function() buffer:line_delete() end
+keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
+keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+--keys['ctrl+shift+down'] =
+--keys['ctrl+shift+up'] =
+
+-- Language specific
+lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
+textadept.editing.comment_string.c = '/*|*/'
+local auto_pairs = textadept.editing.auto_pairs
+events.connect(events.LEXER_LOADED, function(name)
+    if (name == 'dart') then
+        buffer.tab_width = 2
+        buffer.use_tabs = false
+        -- Trigger code actions for Flutter
+        if lsp then keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2] end
+    end
+
+    if (name == 'text') then
+        textadept.editing.auto_pairs = nil
+        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_NONE
+        view.wrap_mode = view.WRAP_WHITESPACE
+    else
+        textadept.editing.auto_pairs = auto_pairs
+        view.wrap_mode = view.WRAP_NONE
+    end
+end)
+
+-- TUI Adjustments
+if CURSES then
+    -- view:set_theme('ayuesque-term')  -- TODO: find a way of detecting if a term can handle this.
+    -- Add a suspend menu entry
+    table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
+    -- Force use Textadept's basic autocompletion for ''ctrl+ ' in the terminal,
+    -- as LSP module seems unhappy with TUI Textadept
+    keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
+end
+
+-- Windows Adjustments
+if WIN32 then
+    -- Disable due to weird UK keyboard
+    keys['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
+end
 
 -- Utils to quickly setup dev environment for various systems
 function setup_xmake()
