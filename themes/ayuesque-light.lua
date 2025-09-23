@@ -4,22 +4,22 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black =  0x000000 -- AYU: 0x140E0B  -- BLACK: 0x000000
-colors.light_black = 0xf2c2bb 
+colors.light_black = 0xf2c2bb
 colors.dark_grey = 0x665B56
 colors.grey = 0x80736C
 colors.light_grey = 0xB6BDBF
 colors.white = 0xFAF9F8  -- AYU: FAF9F8  -- WHITE: 0xFFFFFF
 
 colors.red = 0x645CFF
-colors.orange = 0x168aff  
+colors.orange = 0x168aff
 colors.yellow = 0x34B3FC
-colors.lime = 0x62D97F
+colors.lime =  0x62D97F
 colors.green = 0x04c466
 colors.teal = 0xCBE695
 colors.blue = 0xF09F19
 colors.violet = 0xD55FB4
 colors.purple = 0xFFA6D2
-colors.magenta = 0x78F071
+colors.magenta = 0x43CB6C -- OLD: 0x78F071
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
