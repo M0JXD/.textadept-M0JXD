@@ -1,6 +1,6 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
 
--- Themes (When on Windows remove the fonts)
+-- Themes, when on Windows remove the fonts, for Ctrl-D: font = 'Noto Mono',
 if not CURSES then
     events.connect(events.VIEW_NEW, function()
         if _THEME == 'dark' then
@@ -31,14 +31,19 @@ require('distraction_free')
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
 
-local autoupdate = require('autoupdate')
-autoupdate.check_on_startup = true
+local update_notifier = require('update_notifier')
+update_notifier.check_on_startup = true
 
 -- LSP
 local lsp = require('lsp')
-lsp.server_commands.dart = 'dart language-server'
--- TODO: Setup LSP for C, Python etc.
--- lsp.server_commands.c = 'clangd'
+if QT then
+    -- Most language servers behave better on QT, so only activate there
+    lsp.server_commands.dart = 'dart language-server'
+    -- TODO: Setup LSP for other languages
+    -- lsp.server_commands.c = 'clangd'
+    -- lsp.server_commands.cpp = 'clangd'
+    -- lsp.server_commands.python = ''
+end
 
 -- File Browser
 local file_browser = require('file_browser')
@@ -83,6 +88,10 @@ events.connect(events.LEXER_LOADED, function(name)
         textadept.editing.auto_pairs = auto_pairs
         view.wrap_mode = view.WRAP_NONE
     end
+
+    if (name == 'makefile') then
+        buffer.use_tabs = true
+    end
 end)
 
 -- TUI Adjustments
@@ -90,15 +99,12 @@ if CURSES then
     -- view:set_theme('ayuesque-term')  -- TODO: find a way of detecting if a term can handle this.
     -- Add a suspend menu entry
     table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
-    -- Force use Textadept's basic autocompletion for ''ctrl+ ' in the terminal,
-    -- as LSP module seems unhappy with TUI Textadept
-    keys['ctrl+ '] = function() textadept.editing.autocomplete('word') end
 end
 
 -- Windows Adjustments
 if WIN32 then
     -- Disable due to weird UK keyboard
-    keys['ctrl+alt+|'] = function() textadept.editing.autocomplete('word') end
+    keys['ctrl+alt+|'] = nil
 end
 
 -- Utils to quickly setup dev environment for various systems
