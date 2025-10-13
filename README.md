@@ -1,12 +1,30 @@
 # My (M0JXD's) ~/.textadept/
 
 My collection of things I use/modified for Textadept. There's:
-- Three Ayu-like themes, light, dark and term, which are made to match VSCode's highlighting guide better than the base16 ones. The dark one uses a pure black background.
+- Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting guide better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals for the CURSES version.
 - My init.lua
-- A modified file_browser module
+- A module for handling themes
 - A module for distraction free mode
+- A modified file_browser module
 
 Mainly here so I can grab them wherever I need them.
+
+## Theme Manager Module
+
+Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applying theme aspects depending on system limitations. E.g. often Windows doesn't have fonts so it can choose to use Textadept's default, and for the CURSES version it'll attempt to detect if a terminal has true-color support so it can apply a fallback theme if necessary.
+
+Example usage:
+
+```lua
+local theme_mgr = require('theme_mgr')
+theme_mgr.light_theme = 'ayu-light'
+theme_mgr.dark_theme = 'ayu-evolve'
+theme_mgr.term_theme = 'ayu-evolve'
+theme_mgr.font_type = 'Noto Mono'
+theme_mgr.font_size = 14
+theme_mgr.win32_default_font = false
+theme_mgr.term_fallback_theme = 'term'
+```
 
 ## Distraction Free Module
 

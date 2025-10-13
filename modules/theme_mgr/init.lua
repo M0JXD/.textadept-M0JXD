@@ -13,7 +13,6 @@ M.term_fallback_theme = 'term'
 M.font_type = 'Monospace'
 M.font_size = 12
 M.win32_default_font = true
-M.curses_apply_font = false
 
 -- Windows fonts are not always available, so override to the default type
 -- TODO: Check this works
