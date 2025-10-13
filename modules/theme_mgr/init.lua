@@ -3,7 +3,7 @@
 -- This is a simple theme manager for Textadept.
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to acheive this
--- (Leaving a handy fallback for when you edit your theme and crash everything...)
+-- (Leaving a handy fallback for when you edit your themes and crash everything...)
 
 local M = {}
 M.light_theme = 'light'

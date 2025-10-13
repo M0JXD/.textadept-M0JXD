@@ -1,32 +1,20 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
 
--- Themes, when on Windows remove the fonts, for Ctrl-D: font = 'Noto Mono',
-if not CURSES then
-    events.connect(events.VIEW_NEW, function()
-        if _THEME == 'dark' then
-            view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14})
-        else
-            view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14})
-        end
-    end)
-
-    events.connect(events.MODE_CHANGED, function()
-        if _THEME == 'dark' then
-            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end
-            pcall(function () ui.command_entry:set_theme('ayuesque-dark', {font = 'Noto Mono', size = 14}) end)
-        else
-            for _, view in ipairs(_VIEWS) do view:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end
-            pcall(function () ui.command_entry:set_theme('ayuesque-light', {font = 'Noto Mono', size = 14}) end)
-        end
-    end)
-    events.emit(events.MODE_CHANGED)
-end
+-- Themeing
+local theme_mgr = require('theme_mgr')
+theme_mgr.light_theme = 'ayu-light'
+theme_mgr.dark_theme = 'ayu-evolve'
+theme_mgr.term_theme = 'ayu-evolve'
+theme_mgr.font_type = 'Noto Mono'
+theme_mgr.font_size = 14
 
 -- Modules
-require('file_diff')
-require('format')
-require('lua_repl')
 require('distraction_free')
+require('file_diff')
+require('lua_repl')
+
+local format = require('format')
+format.on_save = false
 
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -47,7 +35,7 @@ end
 
 -- File Browser
 local file_browser = require('file_browser')
-keys['ctrl+O'] = file_browser.init  -- Ctrl+Shift+o to open directory
+keys['ctrl+O'] = file_browser.init
 table.insert(textadept.menu.menubar[_L['File']], 3, {
     'Open Directory...', file_browser.init
 })
@@ -61,12 +49,11 @@ buffer.use_tabs = false
 buffer.tab_width = 4
 textadept.editing.strip_trailing_spaces = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
--- Match VSCode
+--ui.find.highlight_all_matches = true
+-- Match some VSCode bindings
 keys['ctrl+K'] = function() buffer:line_delete() end
 keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
---keys['ctrl+shift+down'] =
---keys['ctrl+shift+up'] =
 
 -- Language specific
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
@@ -86,6 +73,7 @@ events.connect(events.LEXER_LOADED, function(name)
         view.wrap_mode = view.WRAP_WHITESPACE
     else
         textadept.editing.auto_pairs = auto_pairs
+        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
         view.wrap_mode = view.WRAP_NONE
     end
 
@@ -96,7 +84,6 @@ end)
 
 -- TUI Adjustments
 if CURSES then
-    -- view:set_theme('ayuesque-term')  -- TODO: find a way of detecting if a term can handle this.
     -- Add a suspend menu entry
     table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
 end
@@ -107,14 +94,7 @@ if WIN32 then
     keys['ctrl+alt+|'] = nil
 end
 
--- Utils to quickly setup dev environment for various systems
-function setup_xmake()
-    local project_dir = io.get_project_root()
-    local project_bin = io.get_project_root() .. '/build/linux/x86_64/debug/' .. io.get_project_root():match(".*/(.*)$")
-    if name == 'c' or name == 'cpp' then
-        local debugger = require('debugger')
-        debugger.project_commands[project_dir] = function()
-            return 'c', project_bin
-        end
-    end
-end
+-- Lua Reset
+local tools = textadept.menu.menubar['Tools']
+tools[#tools + 1] = {''} -- separator
+tools[#tools + 1] = {'Reset L_ua State', reset} -- mark 'u' as the mnemonic
