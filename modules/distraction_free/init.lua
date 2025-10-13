@@ -9,6 +9,7 @@ M.hide_scrollbars = true
 M.clear_statusbar = true
 M.hide_margins = false
 M.maximise = false
+M.toggle_shortcut = 'ctrl+f12'
 
 local function clean_statusbar ()
     ui.statusbar_text = ''
@@ -22,7 +23,7 @@ local tab_bar = ui.tabs
 local margin_widths = {}
 local maximized = ui.maximized
 
-keys['ctrl+f12'] = function()
+keys[M.toggle_shortcut] = function()
     if not distraction_free then
         if M.hide_menubar then textadept.menu.menubar = nil end -- Remove menu bar
         if M.hide_tabs then ui.tabs = false end -- Remove the tab bar
