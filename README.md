@@ -31,7 +31,7 @@ theme_mgr.term_fallback_theme = 'term'
 
 ## Distraction Free Module
 
-Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module. Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Also works on CURSES and hides the title on that platform. Defaults to my preferences, it uses `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands. </br>
+Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module. Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Also works on CURSES and hides the title. Defaults to my preferences, I use `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands. </br>
 
 Example usage:
 
