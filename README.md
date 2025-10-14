@@ -1,25 +1,28 @@
 # My (M0JXD's) ~/.textadept/
 
 My collection of things I use/modified for Textadept. There's:
-- Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting guide better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals for the CURSES version.
 - My init.lua
-- A module for handling themes
+- A module for managing themes
 - A module for distraction free mode
 - A modified file_browser module
+- Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
 
 Mainly here so I can grab them wherever I need them.
 
 ## Theme Manager Module
 
-Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applying theme aspects depending on system limitations. E.g. often Windows doesn't have fonts so it can choose to use Textadept's default, and for the CURSES version it'll attempt to detect if a terminal has true-color support so it can apply a fallback theme if necessary.
+To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214). Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
+- On Windows, many fonts are often missing, so it can opt to use Textadept's default font.
+- Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-color support. The module will attempt to detect if a terminal has true-color support so it can apply a fallback theme if necessary.
 
+By default it uses Textadept's default themes and settings.
 Example usage:
 
 ```lua
 local theme_mgr = require('theme_mgr')
 theme_mgr.light_theme = 'ayu-light'
 theme_mgr.dark_theme = 'ayu-evolve'
-theme_mgr.term_theme = 'ayu-evolve'
+theme_mgr.term_theme = 'base16-catppuccin-latte'
 theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
 theme_mgr.win32_default_font = false
@@ -28,9 +31,7 @@ theme_mgr.term_fallback_theme = 'term'
 
 ## Distraction Free Module
 
-Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module. 
-Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Also works on CURSES and hides the title on that platform.
-Defaults to my preferences, it uses `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands. </br>
+Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module. Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Also works on CURSES and hides the title on that platform. Defaults to my preferences, it uses `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands. </br>
 
 Example usage:
 
@@ -42,14 +43,13 @@ distraction_free.hide_scrollbars = true
 distraction_free.clear_statusbar = false
 distraction_free.hide_margins = true
 distraction_free.maximise = true
+distraction_free.toggle_shortcut = 'ctrl+f11'
 ```
 
-## File Browser Module Modifications
-Mitchell's Textadept file_browser module with some changes.
-
-### About
+## Modified File Browser Module 
 
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
+
 NOTE: At the moment this seems a bit broken on Windows. Want to fix... at some point.
 
 1) The highlighting is improved for Textadept 12 and now uses multiple colours depending on expanded/folded state.
@@ -60,7 +60,6 @@ Example usage:
 ```lua
 -- File Browser Module
 local file_browser = require('file_browser')
--- Ctrl+Shift+o to open directory
 keys['ctrl+O'] = file_browser.init
 table.insert(textadept.menu.menubar[_L['File']], 3, {
     'Open Directory...', file_browser.init
