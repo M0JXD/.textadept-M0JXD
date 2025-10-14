@@ -14,7 +14,8 @@ require('file_diff')
 require('lua_repl')
 
 local format = require('format')
-format.on_save = false
+--format.on_save = false
+format.commands.dart = 'dart format'
 
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -95,6 +96,23 @@ if WIN32 then
 end
 
 -- Lua Reset
-local tools = textadept.menu.menubar['Tools']
+local tools = textadept.menu.menubar[_L['Tools']]
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {'Reset L_ua State', reset} -- mark 'u' as the mnemonic
+
+if LINUX or BSD then
+    -- Open Terminal
+    function openTerminalHere()
+            terminalString = "gnome-terminal"
+            pathString = "~"
+            if buffer.filename then
+                    pathString = buffer.filename:match(".+/")
+            end
+            io.popen(terminalString.." --working-directory="..pathString.." &")
+    end
+
+    keys['ctrl+T'] = openTerminalHere
+    table.insert(tools, 12, {
+        'Open Terminal Here...', openTerminalHere
+    })
+end
