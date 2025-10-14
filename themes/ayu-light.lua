@@ -1,4 +1,5 @@
--- Ayu-esque Light theme for Textadept.
+-- Copyright 2025 Jamie Drinkell. MIT License.
+-- Hand rolled Ayu-Light theme for Textadept.
 
 local view, colors, styles = view, view.colors, view.styles
 
