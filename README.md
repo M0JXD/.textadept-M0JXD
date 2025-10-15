@@ -3,6 +3,7 @@
 My collection of things I use/modified for Textadept. There's:
 - My init.lua
 - A module for managing themes
+- A module for managing mnemonics between QT and GTK versions
 - A module for distraction free mode
 - A modified file_browser module
 - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
@@ -27,6 +28,23 @@ theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
 theme_mgr.win32_default_font = false
 theme_mgr.term_fallback_theme = 'term'
+```
+
+## Mnemonic Manager Module
+
+The QT and GTK versions of Textadept have different requirements for how mnemonics are marked in a menu entry's string. QT requires `&` and GTK requires `_`. 
+With this manager you can create your entry using either `&` or `_`, and it automatically corrects it to the right one for the version that's currently running.
+
+```lua
+local mnemonics = require('mnemonic_mgr')
+mnemonics:add_entry('RESET_LUA', 'Reset L&ua State')
+mnemonics:add_entry('OPEN_DIR', 'Open &Directory...')
+mnemonics:add_entry('OPEN_TERM', 'Open &Terminal Here...')
+
+-- Using the mnemonic with the example Lua reset entry
+local tools = textadept.menu.menubar[_L['Tools']]
+tools[#tools + 1] = {''} -- separator
+tools[#tools + 1] = {mnemonics['RESET_LUA'], reset} -- mark 'u' as the mnemonic
 ```
 
 ## Distraction Free Module
