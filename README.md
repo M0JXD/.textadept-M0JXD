@@ -43,8 +43,8 @@ mnemonics:add_entry('OPEN_TERM', 'Open &Terminal Here...')
 
 -- Using the mnemonic with the example Lua reset entry
 local tools = textadept.menu.menubar[_L['Tools']]
-tools[#tools + 1] = {''} -- separator
-tools[#tools + 1] = {mnemonics['RESET_LUA'], reset} -- mark 'u' as the mnemonic
+tools[#tools + 1] = {''}
+tools[#tools + 1] = {mnemonics['RESET_LUA'], reset}
 ```
 
 ## Distraction Free Module
