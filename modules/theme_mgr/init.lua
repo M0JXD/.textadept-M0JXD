@@ -5,26 +5,27 @@
 -- Handy if you don't want to override the default themes to acheive this
 -- (Leaving a handy fallback for when you edit your themes and crash everything...)
 
+-- TODO: GTK2 version doesn't detect system colours?
+
 local M = {}
 M.light_theme = 'light'
 M.dark_theme = 'dark'
 M.term_theme = 'term'
 M.term_fallback_theme = 'term'
-M.font_type = 'Monospace'
+M.font_type = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 M.font_size = 12
 M.win32_default_font = true
 
--- Windows fonts are not always available, so override to the default type
--- TODO: Check this works
-if WIN32 then
-    events.connect(events.INITIALIZED, function()
-        if M.win32_default_font then M.font_type = 'Monospace' end
-    end)
-end
-
 -- GUI Themeing
--- TODO: GTK2 version doesn't detect system colours?
 if not CURSES then
+
+    -- Windows fonts are not always available, so force override to the default type
+    if WIN32 then
+        events.connect(events.INITIALIZED, function()
+            if M.win32_default_font then M.font_type = 'Consolas' end
+        end)
+    end
+
     events.connect(events.VIEW_NEW, function()
         if _THEME == 'dark' then
             view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size})
