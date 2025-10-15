@@ -8,6 +8,12 @@ theme_mgr.term_theme = 'ayu-evolve'
 theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
 
+-- Menu Entries
+local mnemonics = require('mnemonic_mgr')
+mnemonics:add_entry('RESET_LUA', 'Reset L&ua State')
+mnemonics:add_entry('OPEN_DIR', 'Open &Directory...')
+mnemonics:add_entry('OPEN_TERM', 'Open &Terminal Here...')
+
 -- Modules
 require('distraction_free')
 require('file_diff')
@@ -15,7 +21,7 @@ require('lua_repl')
 
 local format = require('format')
 --format.on_save = false
-format.commands.dart = 'dart format'
+--format.commands.dart = 'dart format'
 
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -38,7 +44,7 @@ end
 local file_browser = require('file_browser')
 keys['ctrl+O'] = file_browser.init
 table.insert(textadept.menu.menubar[_L['File']], 3, {
-    'Open Directory...', file_browser.init
+    mnemonics['OPEN_DIR'], file_browser.init
 })
 file_browser.hide_dot_folders = true
 file_browser.hide_dot_files = false
@@ -98,7 +104,7 @@ end
 -- Lua Reset
 local tools = textadept.menu.menubar[_L['Tools']]
 tools[#tools + 1] = {''} -- separator
-tools[#tools + 1] = {'Reset L_ua State', reset} -- mark 'u' as the mnemonic
+tools[#tools + 1] = {mnemonics['RESET_LUA'], reset} -- mark 'u' as the mnemonic
 
 if LINUX or BSD then
     -- Open Terminal
@@ -113,6 +119,6 @@ if LINUX or BSD then
 
     keys['ctrl+T'] = openTerminalHere
     table.insert(tools, 12, {
-        'Open Terminal Here...', openTerminalHere
+        mnemonics['OPEN_TERM'], openTerminalHere
     })
 end
