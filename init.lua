@@ -106,6 +106,7 @@ local tools = textadept.menu.menubar[_L['Tools']]
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {mnemonics['RESET_LUA'], reset} -- mark 'u' as the mnemonic
 
+-- Open Terminal
 if LINUX or BSD then
     -- Open Terminal
     function openTerminalHere()
@@ -123,7 +124,7 @@ if LINUX or BSD then
     })
 end
 
- --Display the amount of rows in the first selection
+ --Display the amount of rows in the main selection
 events.connect(events.UPDATE_UI, function(updated)
     if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
 	local text = not CURSES and '%s %d    %s %d/%d    %s %d    %s    %s    %s    %s' or
