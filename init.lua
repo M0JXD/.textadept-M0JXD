@@ -15,7 +15,7 @@ require('lua_repl')
 
 local format = require('format')
 format.on_save = false
-format.commands.dart = 'dart format'  -- Can be removed next update
+format.commands.dart = 'dart format'
 
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -135,6 +135,6 @@ events.connect(events.UPDATE_UI, function(updated)
 	local tabs = string.format('%s %d', buffer.use_tabs and _L['Tabs:'] or _L['Spaces:'],
 		buffer.tab_width)
 	local encoding = buffer.encoding or ''
-	ui.buffer_statusbar_text = string.format(text, 'Rows:', selRow, _L['Line:'], line, max, _L['Col:'], col, lang, eol,
-		tabs, encoding)
+	ui.buffer_statusbar_text = string.format(text, _L['Rows:'], selRow, _L['Line:'], line, max,
+                                             _L['Col:'], col, lang, eol, tabs, encoding)
 end)
