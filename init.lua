@@ -8,20 +8,14 @@ theme_mgr.term_theme = 'ayu-evolve'
 theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
 
--- Menu Entries
-local mnemonics = require('mnemonic_mgr')
-mnemonics:add_entry('RESET_LUA', 'Reset L&ua State')
-mnemonics:add_entry('OPEN_DIR', 'Open &Directory...')
-mnemonics:add_entry('OPEN_TERM', 'Open &Terminal Here...')
-
 -- Modules
 require('distraction_free')
 require('file_diff')
 require('lua_repl')
 
 local format = require('format')
---format.on_save = false
-format.commands.dart = 'dart format'
+format.on_save = false
+format.commands.dart = 'dart format'  -- Can be removed next update
 
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -30,7 +24,6 @@ local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
 
 -- LSP
-
 if QT then
     -- Most language servers behave better on QT, so only activate there
 	local lsp = require('lsp')
@@ -42,10 +35,11 @@ if QT then
 end
 
 -- File Browser
+_L['Open Directory'] = 'Open _Directory...'
 local file_browser = require('file_browser')
 keys['ctrl+O'] = file_browser.init
 table.insert(textadept.menu.menubar[_L['File']], 3, {
-    mnemonics['OPEN_DIR'], file_browser.init
+    _L['Open Directory'], file_browser.init
 })
 file_browser.hide_dot_folders = true
 file_browser.hide_dot_files = false
@@ -63,12 +57,13 @@ keys['ctrl+K'] = function() buffer:line_delete() end
 keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
 
--- Language specific
+-- Language Specific
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
 textadept.editing.comment_string.c = '/*|*/'
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') then
+        format.on_save = true
         buffer.tab_width = 2
         buffer.use_tabs = false
         -- Trigger code actions for Flutter
@@ -103,11 +98,11 @@ if WIN32 then
 end
 
 -- Lua Reset
+_L['Reset Lua State'] = 'Reset L_ua State'
 local tools = textadept.menu.menubar[_L['Tools']]
 tools[#tools + 1] = {''} -- separator
-tools[#tools + 1] = {mnemonics['RESET_LUA'], reset} -- mark 'u' as the mnemonic
+tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
--- Open Terminal
 if LINUX or BSD then
     -- Open Terminal
     function openTerminalHere()
@@ -118,10 +113,10 @@ if LINUX or BSD then
             end
             io.popen(terminalString.." --working-directory="..pathString.." &")
     end
-
     keys['ctrl+T'] = openTerminalHere
+    _L['Open Terminal Here...'] = 'Open _Terminal Here...'
     table.insert(tools, 12, {
-        mnemonics['OPEN_TERM'], openTerminalHere
+        _L['Open Terminal Here...'], openTerminalHere
     })
 end
 
@@ -140,7 +135,6 @@ events.connect(events.UPDATE_UI, function(updated)
 	local tabs = string.format('%s %d', buffer.use_tabs and _L['Tabs:'] or _L['Spaces:'],
 		buffer.tab_width)
 	local encoding = buffer.encoding or ''
-	ui.buffer_statusbar_text = ''
-	ui.buffer_statusbar_text = string.format(text, 'Sel Row:', selRow, _L['Line:'], line, max, _L['Col:'], col, lang, eol,
+	ui.buffer_statusbar_text = string.format(text, 'Rows:', selRow, _L['Line:'], line, max, _L['Col:'], col, lang, eol,
 		tabs, encoding)
 end)
