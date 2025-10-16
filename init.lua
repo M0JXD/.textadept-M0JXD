@@ -30,9 +30,10 @@ local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
 
 -- LSP
-local lsp = require('lsp')
+
 if QT then
     -- Most language servers behave better on QT, so only activate there
+	local lsp = require('lsp')
     lsp.server_commands.dart = 'dart language-server'
     -- TODO: Setup LSP for other languages
     -- lsp.server_commands.c = 'clangd'
@@ -128,7 +129,7 @@ end
 events.connect(events.UPDATE_UI, function(updated)
     if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
 	local text = not CURSES and '%s %d    %s %d/%d    %s %d    %s    %s    %s    %s' or
-		'%s %d %s %d/%d  %s %d  %s  %s  %s  %s'
+		'%s %d  %s %d/%d  %s %d  %s  %s  %s  %s'
 	local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
 		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
 	local pos = buffer.current_pos
@@ -139,6 +140,7 @@ events.connect(events.UPDATE_UI, function(updated)
 	local tabs = string.format('%s %d', buffer.use_tabs and _L['Tabs:'] or _L['Spaces:'],
 		buffer.tab_width)
 	local encoding = buffer.encoding or ''
+	ui.buffer_statusbar_text = ''
 	ui.buffer_statusbar_text = string.format(text, 'Sel Row:', selRow, _L['Line:'], line, max, _L['Col:'], col, lang, eol,
 		tabs, encoding)
 end)
