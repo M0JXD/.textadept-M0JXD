@@ -23,15 +23,9 @@ spellcheck.check_spelling_on_save = false
 local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
 
--- LSP
+local lsp = require('lsp')
 if QT then
-    -- Most language servers behave better on QT, so only activate there
-	local lsp = require('lsp')
     lsp.server_commands.dart = 'dart language-server'
-    -- TODO: Setup LSP for other languages
-    -- lsp.server_commands.c = 'clangd'
-    -- lsp.server_commands.cpp = 'clangd'
-    -- lsp.server_commands.python = ''
 end
 
 -- File Browser
@@ -54,8 +48,10 @@ textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 --ui.find.highlight_all_matches = true
 -- Match some VSCode bindings
 keys['ctrl+K'] = function() buffer:line_delete() end
-keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
-keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+if not CURSES then
+	keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
+	keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+end
 
 -- Language Specific
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
@@ -63,20 +59,17 @@ textadept.editing.comment_string.c = '/*|*/'
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') then
-        format.on_save = true
         buffer.tab_width = 2
         buffer.use_tabs = false
-        -- Trigger code actions for Flutter
+        format.on_save = true
         if lsp then keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2] end
     end
 
     if (name == 'text') then
         textadept.editing.auto_pairs = nil
-        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_NONE
         view.wrap_mode = view.WRAP_WHITESPACE
     else
         textadept.editing.auto_pairs = auto_pairs
-        textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
         view.wrap_mode = view.WRAP_NONE
     end
 
@@ -98,20 +91,20 @@ if WIN32 then
 end
 
 -- Lua Reset
-_L['Reset Lua State'] = 'Reset L_ua State'
 local tools = textadept.menu.menubar[_L['Tools']]
+_L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
 if LINUX or BSD then
     -- Open Terminal
     function openTerminalHere()
-            terminalString = "gnome-terminal"
-            pathString = "~"
-            if buffer.filename then
-                    pathString = buffer.filename:match(".+/")
-            end
-            io.popen(terminalString.." --working-directory="..pathString.." &")
+        terminalString = "gnome-terminal"
+        pathString = "~"
+        if buffer.filename then
+            pathString = buffer.filename:match(".+/")
+        end
+        io.popen(terminalString.." --working-directory="..pathString.." &")
     end
     keys['ctrl+T'] = openTerminalHere
     _L['Open Terminal Here...'] = 'Open _Terminal Here...'
@@ -120,7 +113,7 @@ if LINUX or BSD then
     })
 end
 
- --Display the amount of rows in the main selection
+-- Display the amount of rows in the main selection
 events.connect(events.UPDATE_UI, function(updated)
     if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
 	local text = not CURSES and '%s %d    %s %d/%d    %s %d    %s    %s    %s    %s' or
