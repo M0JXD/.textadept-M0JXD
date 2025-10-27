@@ -5,7 +5,9 @@ My collection of things I use/modified for Textadept. There's:
 - A module for managing themes
 - A module for distraction free mode
 - A modified file_browser module
-- Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
+- Four themes
+    - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
+    - Two Xed themes to match the default highlighting in Linux Mint's default editor.
 
 Mainly here so I can grab them wherever I need them.
 
@@ -46,7 +48,7 @@ distraction_free.maximise = true
 distraction_free.toggle_shortcut = 'ctrl+f11'
 ```
 
-## Modified File Browser Module 
+## Modified File Browser Module
 
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
 
