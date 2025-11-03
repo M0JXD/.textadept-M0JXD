@@ -11,7 +11,7 @@ theme_mgr.font_size = 14
 -- Modules
 require('distraction_free')
 require('file_diff')
-require('lua_repl')
+--require('lua_repl')
 
 local format = require('format')
 format.on_save = false
@@ -55,7 +55,9 @@ end
 
 -- Language Specific
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
+lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/*|*/'
+
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
     if (name == 'dart') then
@@ -114,20 +116,9 @@ if LINUX or BSD then
 end
 
 -- Display the amount of rows in the main selection
+bfstatbar = require('bfstatbar_helper')
 events.connect(events.UPDATE_UI, function(updated)
-    if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
-	local text = not CURSES and '%s %d    %s %d/%d    %s %d    %s    %s    %s    %s' or
-		'%s %d  %s %d/%d  %s %d  %s  %s  %s  %s'
 	local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
 		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
-	local pos = buffer.current_pos
-	local line, max = buffer:line_from_position(pos), buffer.line_count
-	local col = buffer.column[pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection]
-	local lang = buffer.lexer_language
-	local eol = buffer.eol_mode == buffer.EOL_CRLF and _L['CRLF'] or _L['LF']
-	local tabs = string.format('%s %d', buffer.use_tabs and _L['Tabs:'] or _L['Spaces:'],
-		buffer.tab_width)
-	local encoding = buffer.encoding or ''
-	ui.buffer_statusbar_text = string.format(text, _L['Rows:'], selRow, _L['Line:'], line, max,
-                                             _L['Col:'], col, lang, eol, tabs, encoding)
+	ui.buffer_statusbar_text = 'Rows: ' .. selRow .. bfstatbar.prependable_buff_statbar
 end)

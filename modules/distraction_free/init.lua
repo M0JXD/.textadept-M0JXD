@@ -8,12 +8,20 @@ M.hide_tabs = true
 M.hide_scrollbars = true
 M.clear_statusbar = true
 M.hide_margins = false
+M.hide_curses_title = true
 M.maximise = false
 M.toggle_shortcut = 'ctrl+f12'
 
-local function clean_statusbar ()
+
+local function clean_statusbar()
     ui.statusbar_text = ''
     ui.buffer_statusbar_text = ''
+end
+
+-- NB: This is carefully connected to the right events instead of generic UPDATE_UI
+-- Otherwise it just flickers all the time.
+local function clear_title()
+    ui.title = nil
 end
 
 -- Distraction free mode
@@ -45,9 +53,16 @@ keys[M.toggle_shortcut] = function()
                 view.margin_width_n[i] = 0
             end
         end
-        -- Remove the "Title" in curses mode
-        if CURSES then ui.title = nil end
 
+        -- Remove the "Title" in curses
+        if CURSES and M.hide_curses_title then
+            events.connect(events.BUFFER_AFTER_SWITCH, clear_title)
+            events.connect(events.BUFFER_NEW, clear_title)
+            events.connect(events.SAVE_POINT_REACHED, clear_title)
+            events.connect(events.SAVE_POINT_LEFT, clear_title)
+            events.connect(events.VIEW_AFTER_SWITCH, clear_title)
+            events.emit(events.BUFFER_AFTER_SWITCH, 1)
+        end
     -- Restore old state.
     else
         if M.hide_menubar then textadept.menu.menubar = menubar end
@@ -67,7 +82,14 @@ keys[M.toggle_shortcut] = function()
             end
         end
         -- Restore the title by switching to the same buffer
-        if CURSES then view:goto_buffer(0) end
+        if CURSES and M.hide_curses_title then
+            events.disconnect(events.BUFFER_AFTER_SWITCH, clear_title)
+            events.disconnect(events.BUFFER_NEW, clear_title)
+            events.disconnect(events.SAVE_POINT_REACHED, clear_title)
+            events.disconnect(events.SAVE_POINT_LEFT, clear_title)
+            events.disconnect(events.VIEW_AFTER_SWITCH, clear_title)
+            view:goto_buffer(0)
+        end
     end
     distraction_free = not distraction_free
 end
