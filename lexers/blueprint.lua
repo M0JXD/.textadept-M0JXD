@@ -1,5 +1,5 @@
 -- Copyright 2025 Jamie Drinkell. See LICENSE.
--- GTK4 Blueprint LPeg lexer. WIP!!
+-- GTK4 Blueprint LPeg lexer.
 
 local lexer = lexer
 local P, S, B, R = lpeg.P, lpeg.S, lpeg.B, lpeg.R

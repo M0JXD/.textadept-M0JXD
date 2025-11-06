@@ -99,6 +99,7 @@ tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
 if LINUX or BSD then
+    local quick_open = textadept.menu.menubar[_L['Tools/Quick Open']]
     -- Open Terminal
     function openTerminalHere()
         terminalString = "gnome-terminal"
@@ -110,9 +111,25 @@ if LINUX or BSD then
     end
     keys['ctrl+T'] = openTerminalHere
     _L['Open Terminal Here...'] = 'Open _Terminal Here...'
-    table.insert(tools, 12, {
+    table.insert(quick_open, 5, {
         _L['Open Terminal Here...'], openTerminalHere
     })
+
+	-- Open File Browser
+	function openFileBrowserHere()
+		browserString = "nemo"
+        pathString = "~"
+        if buffer.filename then
+            pathString = buffer.filename:match(".+/")
+        end
+        io.popen(browserString.." "..pathString.." &")
+	end
+
+	keys['ctrl+E'] = openFileBrowserHere
+	_L['Open File Browser Here...'] = 'Open _File Browser Here...'
+	table.insert(quick_open, 6, {
+		_L['Open File Browser Here...'], openFileBrowserHere
+	})
 end
 
 -- Display the amount of rows in the main selection
