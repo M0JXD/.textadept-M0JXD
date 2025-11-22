@@ -51,7 +51,6 @@ elseif not WIN32 then
     local terminal = os.getenv("TERM")
     events.connect(events.INITIALIZED, function()
         if (terminal == 'xterm-256color') or (terminal == 'alacritty') then
-            ui.statusbar_text = M.term_theme
             view:set_theme(M.term_theme)
         elseif (terminal == 'xterm') or (terminal == 'linux') then
             view:set_theme(M.term_fallback_theme)
