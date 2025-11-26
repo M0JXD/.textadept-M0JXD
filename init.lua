@@ -7,11 +7,13 @@ theme_mgr.dark_theme = 'ayu-evolve'
 theme_mgr.term_theme = 'ayu-evolve'
 theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
+view.edge_column = 100
 
 -- Modules
 require('distraction_free')
+require('quick_open')
 require('file_diff')
---require('lua_repl')
+require('lua_repl')
 
 local format = require('format')
 format.on_save = false
@@ -55,16 +57,22 @@ end
 
 -- Language Specific
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
-lexer.detect_extensions.blp = 'blueprint'
+lexer.detect_extensions.h = 'c'
 textadept.editing.comment_string.c = '/*|*/'
-
+lexer.detect_extensions.blp = 'blueprint'
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
-    if (name == 'dart') then
+	if (name == 'makefile') then
+        buffer.use_tabs = true
+    end
+
+	if (name == 'dart') then
         buffer.tab_width = 2
         buffer.use_tabs = false
         format.on_save = true
-        if lsp then keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2] end
+        if lsp then
+            keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
+        end
     end
 
     if (name == 'text') then
@@ -74,63 +82,19 @@ events.connect(events.LEXER_LOADED, function(name)
         textadept.editing.auto_pairs = auto_pairs
         view.wrap_mode = view.WRAP_NONE
     end
-
-    if (name == 'makefile') then
-        buffer.use_tabs = true
-    end
 end)
 
--- TUI Adjustments
-if CURSES then
-    -- Add a suspend menu entry
-    table.insert(textadept.menu.menubar[_L['View']], 18, {'Suspend...', ui.suspend})
-end
-
--- Windows Adjustments
-if WIN32 then
-    -- Disable due to weird UK keyboard
-    keys['ctrl+alt+|'] = nil
-end
+-- Line Guide
+_L["Toggle Line Guide"] = 'Toggle _Line Guide'
+table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], function ()
+    view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
+end})
 
 -- Lua Reset
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
-
-if LINUX or BSD then
-    local quick_open = textadept.menu.menubar[_L['Tools/Quick Open']]
-    -- Open Terminal
-    function openTerminalHere()
-        terminalString = "gnome-terminal"
-        pathString = "~"
-        if buffer.filename then
-            pathString = buffer.filename:match(".+/")
-        end
-        io.popen(terminalString.." --working-directory="..pathString.." &")
-    end
-    keys['ctrl+T'] = openTerminalHere
-    _L['Open Terminal Here...'] = 'Open _Terminal Here...'
-    table.insert(quick_open, 5, {
-        _L['Open Terminal Here...'], openTerminalHere
-    })
-
-	-- Open File Browser
-	function openFileBrowserHere()
-		browserString = "nemo"
-        pathString = "~"
-        if buffer.filename then
-            pathString = buffer.filename:match(".+/")
-        end
-        io.popen(browserString.." "..pathString.." &")
-	end
-
-	keys['ctrl+E'] = openFileBrowserHere
-	_L['Open File Browser Here...'] = 'Open _File Browser Here...'
-	table.insert(quick_open, 6, {
-		_L['Open File Browser Here...'], openFileBrowserHere
-	})
-end
 
 -- Display the amount of rows in the main selection
 bfstatbar = require('bfstatbar_helper')
@@ -139,3 +103,15 @@ events.connect(events.UPDATE_UI, function(updated)
 		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
 	ui.buffer_statusbar_text = 'Rows: ' .. selRow .. bfstatbar.prependable_buff_statbar
 end)
+
+-- TUI Adjustments
+if CURSES then
+    -- Add a suspend menu entry
+    table.insert(textadept.menu.menubar[_L['View']], {'Suspend...', ui.suspend})
+end
+
+-- Windows Adjustments
+if WIN32 then
+    -- Disable due to weird UK keyboard
+    keys['ctrl+alt+|'] = nil
+end
