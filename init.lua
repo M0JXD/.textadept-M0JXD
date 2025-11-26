@@ -90,19 +90,22 @@ table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], f
     view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
 end})
 
--- Lua Reset
 local tools = textadept.menu.menubar[_L['Tools']]
+-- Selected Rows Tool
+_L["Show Rows"] = 'Show _Rows'
+table.insert(tools, 23, {_L['Show Rows'], function ()
+    local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
+        buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
+    str = selRow > 1 and ' rows.' or ' row.'
+    ui.dialogs.message{
+        title = 'Rows Selected', text = 'Current selection is '..selRow..str
+    }
+end})
+
+-- Lua Reset
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
-
--- Display the amount of rows in the main selection
-bfstatbar = require('bfstatbar_helper')
-events.connect(events.UPDATE_UI, function(updated)
-	local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
-		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
-	ui.buffer_statusbar_text = 'Rows: ' .. selRow .. bfstatbar.prependable_buff_statbar
-end)
 
 -- TUI Adjustments
 if CURSES then
