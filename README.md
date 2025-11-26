@@ -2,9 +2,7 @@
 
 My collection of things I use/modified for Textadept. There's:
 - My init.lua
-- A module for managing themes
-- A module for distraction free mode
-- A modified file_browser module
+- Various simple utility modules (detailed below)
 - Four themes
     - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
     - Two Xed themes to match the default highlighting in Linux Mint's default editor.
@@ -13,7 +11,8 @@ Mainly here so I can grab them wherever I need them.
 
 ## Theme Manager Module
 
-To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214). Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
+To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).
+Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
 - On Windows, many fonts are often missing, so it can opt to use Textadept's default font.
 - Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-color support. The module will attempt to detect if a terminal has true-color support so it can apply a fallback theme if necessary.
 
@@ -33,7 +32,9 @@ theme_mgr.term_fallback_theme = 'term'
 
 ## Distraction Free Module
 
-Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module. Also added the ability to hide the tab bar, and allows you to configure what you want to hide. Also works on CURSES and hides the title. Defaults to my preferences, I use `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands. </br>
+Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module.
+Also added the ability to hide the tab bar, and allows you to configure what you want to hide.
+Also works on CURSES and hides the title. Defaults to my preferences, I use `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands.
 
 Example usage:
 
@@ -48,11 +49,28 @@ distraction_free.maximise = true
 distraction_free.toggle_shortcut = 'ctrl+f11'
 ```
 
+## Quick Open Module
+
+NB: Not tested much on Windows
+
+Quickly open a Terminal or File Browser at the currently opened file's path.
+It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
+
+# UNMAINTAINED MODULES
+
+These are modules that I no longer or rarely use, but are left up in case someone else wants them.
+
+## bfstatbar_helper
+
+A little helper to make it easy to append/prepend the buffer_statusbar.
+I used to use this to show the rows selection but now use a dialog.
+
 ## Modified File Browser Module
 
+I now very rarely use the file_browser, instead I prefer to open the system browser (hence the WIP Quick Open module)
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
 
-NOTE: At the moment this seems a bit broken on Windows. Want to fix... at some point.
+NOTE: At the moment this seems a bit broken on Windows.
 
 1) The highlighting is improved for Textadept 12 and now uses multiple colours depending on expanded/folded state.
 2) There are simple booleans that can be set to hide dot files/folders, sort without case sensitivity and force the folders to be listed first.
