@@ -65,6 +65,8 @@ These are modules that I no longer or rarely use, but are left up in case someon
 A little helper to make it easy to append/prepend the buffer_statusbar.
 I used to use this to show the rows selection but now use a dialog.
 
+NB: Textadept now supports reading the statusbars so this is rendered obsolete. Once version 13 hits stable I will delete this.
+
 ## Modified File Browser Module
 
 I now very rarely use the file_browser, instead I prefer to open the system browser (hence the WIP Quick Open module)
