@@ -25,7 +25,7 @@ if not size then size = not OSX and 10 or 12 end
 
 -- Predefined styles.
 styles[view.STYLE_DEFAULT] = {
-    font = font, size = size, fore = colors.black, back = colors.white
+	font = font, size = size, fore = colors.black, back = colors.white
 }
 styles[view.STYLE_LINENUMBER] = {fore = colors.dark_grey, back = colors.white}
 styles[view.STYLE_BRACELIGHT] = {fore = colors.yellow, bold = true}

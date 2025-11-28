@@ -19,43 +19,43 @@ M.win32_default_font = true
 -- GUI Themeing
 if not CURSES then
 
-    -- Windows fonts are not always available, so force override to the default type
-    if WIN32 then
-        events.connect(events.INITIALIZED, function()
-            if M.win32_default_font then M.font_type = 'Consolas' end
-        end)
-    end
+	-- Windows fonts are not always available, so force override to the default type
+	if WIN32 then
+		events.connect(events.INITIALIZED, function()
+			if M.win32_default_font then M.font_type = 'Consolas' end
+		end)
+	end
 
-    events.connect(events.VIEW_NEW, function()
-        if _THEME == 'dark' then
-            view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size})
-        else
-            view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size})
-        end
-    end)
+	events.connect(events.VIEW_NEW, function()
+		if _THEME == 'dark' then
+			view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size})
+		else
+			view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size})
+		end
+	end)
 
-    events.connect(events.MODE_CHANGED, function()
-        if _THEME == 'dark' then
-            for _, view in ipairs(_VIEWS) do view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end
-            pcall(function () ui.command_entry:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end)
-        else
-            for _, view in ipairs(_VIEWS) do view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end
-            pcall(function () ui.command_entry:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end)
-        end
-    end)
-    events.emit(events.MODE_CHANGED)
+	events.connect(events.MODE_CHANGED, function()
+		if _THEME == 'dark' then
+			for _, view in ipairs(_VIEWS) do view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end
+			pcall(function () ui.command_entry:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end)
+		else
+			for _, view in ipairs(_VIEWS) do view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end
+			pcall(function () ui.command_entry:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end)
+		end
+	end)
+	events.emit(events.MODE_CHANGED)
 
 -- CURSES Theming
 elseif not WIN32 then
-    -- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report xterm-256color
-    local terminal = os.getenv("TERM")
-    events.connect(events.INITIALIZED, function()
-        if (terminal == 'xterm-256color') or (terminal == 'alacritty') then
-            view:set_theme(M.term_theme)
-        elseif (terminal == 'xterm') or (terminal == 'linux') then
-            view:set_theme(M.term_fallback_theme)
-        end
-    end)
+	-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report xterm-256color
+	local terminal = os.getenv("TERM")
+	events.connect(events.INITIALIZED, function()
+		if (terminal == 'xterm-256color') or (terminal == 'alacritty') then
+			view:set_theme(M.term_theme)
+		elseif (terminal == 'xterm') or (terminal == 'linux') then
+			view:set_theme(M.term_fallback_theme)
+		end
+	end)
 end
 
 return M

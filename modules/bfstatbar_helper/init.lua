@@ -8,7 +8,7 @@ M.appendable_buff_statbar = ''
 M.bothendable_buff_statbar = ''
 
 events.connect(events.UPDATE_UI, function(updated)
-    if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
+	if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
 	local text = not CURSES and '%s %d/%d    %s %d    %s    %s    %s    %s' or
 		'%s %d/%d  %s %d  %s  %s  %s  %s'
 	local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
@@ -22,17 +22,17 @@ events.connect(events.UPDATE_UI, function(updated)
 		buffer.tab_width)
 	local encoding = buffer.encoding or ''
 	M.default_buff_statbar = string.format(text, _L['Line:'], line, max,
-                                           _L['Col:'], col, lang, eol, tabs, encoding)
+										   _L['Col:'], col, lang, eol, tabs, encoding)
 
-    if CURSES then
-        M.prependable_buff_statbar = '  ' .. M.default_buff_statbar
-        M.appendable_buff_statbar = M.default_buff_statbar .. '  '
-        M.bothendable_buff_statbar = '  ' .. M.default_buff_statbar .. '  '
-    else
-        M.prependable_buff_statbar = '    ' .. M.default_buff_statbar
-        M.appendable_buff_statbar = M.default_buff_statbar .. '    '
-        M.bothendable_buff_statbar = '    ' .. M.default_buff_statbar .. '    '
-    end
+	if CURSES then
+		M.prependable_buff_statbar = '  ' .. M.default_buff_statbar
+		M.appendable_buff_statbar = M.default_buff_statbar .. '  '
+		M.bothendable_buff_statbar = '  ' .. M.default_buff_statbar .. '  '
+	else
+		M.prependable_buff_statbar = '    ' .. M.default_buff_statbar
+		M.appendable_buff_statbar = M.default_buff_statbar .. '    '
+		M.bothendable_buff_statbar = '    ' .. M.default_buff_statbar .. '    '
+	end
 end)
 
 return M
