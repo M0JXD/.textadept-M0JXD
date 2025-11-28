@@ -8,6 +8,7 @@ theme_mgr.term_theme = 'ayu-evolve'
 theme_mgr.font_type = 'Noto Mono'
 theme_mgr.font_size = 14
 view.edge_column = 100
+--require('textredux').hijack()
 
 -- Modules
 require('distraction_free')
