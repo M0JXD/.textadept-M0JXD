@@ -51,10 +51,20 @@ distraction_free.toggle_shortcut = 'ctrl+f11'
 
 ## Quick Open Module
 
-NB: Not tested much on Windows
-
 Quickly open a Terminal or File Browser at the currently opened file's path.
-It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
+Works on both Linux and Windows. It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
+
+Example usage (just requiring works as the below are the defaults):
+
+```lua
+local quick_open = require('quick_open')
+quick_open.linux_term = 'gnome-terminal'
+quick_open.linux_explorer = 'nemo'
+quick_open.win_term = 'cmd.exe'
+quick_open.win_explorer = 'explorer.exe'
+```
+
+I'm unsure if the Windows implementations will work for other explorers/terminals.
 
 # UNMAINTAINED MODULES
 
