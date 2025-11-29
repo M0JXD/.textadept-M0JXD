@@ -5,8 +5,8 @@
 local M = {}
 M.linux_term = 'gnome-terminal'
 M.linux_explorer = 'nemo'
-M.win_term = 'explorer.exe'
-M.win_explorer = 'cmd.exe'
+M.win_term = 'cmd.exe'
+M.win_explorer = 'explorer.exe'
 
 -- Open Terminal
 function openTerminalHere()
@@ -17,7 +17,9 @@ function openTerminalHere()
 		end
 		io.popen(M.linux_term.." --working-directory="..pathString.." &")
 	elseif WIN32 then
-		io.popen('Start-Process '..M.win_term)
+        local prePath = buffer.filename:match(".+\\")
+        pathString = " /K \"cd /d "..prePath.."\""
+		io.popen('start '..M.win_term..pathString)
 	end
 end
 
@@ -30,7 +32,9 @@ function openFileBrowserHere()
 		end
 		io.popen(M.linux_explorer.." "..pathString.." &")
 	elseif WIN32 then
-		io.popen('Start-Process '..M.win_explorer)
+        local prePath = buffer.filename:match(".+\\")
+        pathString = " /e,\""..prePath.."\""
+		io.popen('start '..M.win_explorer..pathString)
 	end
 end
 
