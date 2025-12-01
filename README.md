@@ -66,20 +66,9 @@ quick_open.win_explorer = 'explorer.exe'
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
 
-# UNMAINTAINED MODULES
-
-These are modules that I no longer or rarely use, but are left up in case someone else wants them.
-
-## bfstatbar_helper
-
-A little helper to make it easy to append/prepend the buffer_statusbar.
-I used to use this to show the rows selection but now use a dialog.
-
-NB: Textadept now supports reading the statusbars so this is rendered obsolete. Once version 13 hits stable I will delete this.
-
 ## Modified File Browser Module
 
-I now very rarely use the file_browser, instead I prefer to open the system browser (hence the WIP Quick Open module)
+I now very rarely use the file_browser, instead I prefer to open the system browser (hence the WIP Quick Open module). As such it should be considered unmaintained.
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
 
 NOTE: At the moment this seems a bit broken on Windows.

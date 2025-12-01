@@ -89,6 +89,14 @@ styles.environment_math = styles[lexer.NUMBER]
 -- styles.target = {}
 -- Markdown.
 -- styles.hr = {}
+-- Output.
+styles.csi = {visible = false}
+local csi_colors = {
+	black = colors.black, red = colors.red, green = colors.green, yellow = colors.yellow,
+	blue = colors.blue, magenta = colors.magenta, cyan = colors.teal, white = colors.white
+}
+for k, v in pairs(csi_colors) do styles['csi_' .. k] = {fore = v} end
+for k, v in pairs(csi_colors) do styles['csi_' .. k .. '_bright'] = {fore = v, bold = true} end
 -- Python.
 styles.keyword_soft = {}
 -- XML.
@@ -125,6 +133,14 @@ view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
 view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
+view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
+view.marker_back[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
+view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.green
+view.marker_back[view.MARKNUM_HISTORY_SAVED] = colors.green
+view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
+view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
+view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
+view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
 	view.marker_fore[i] = colors.white
 	view.marker_back[i] = colors.dark_grey
@@ -139,6 +155,14 @@ view.indic_alpha[textadept.editing.INDIC_HIGHLIGHT] = 0x80
 view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.black
 view.indic_fore[textadept.run.INDIC_WARNING] = colors.yellow
 view.indic_fore[textadept.run.INDIC_ERROR] = colors.red
+view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = colors.green
+view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_DELETION] = colors.red
+view.indic_fore[view.INDICATOR_HISTORY_SAVED_INSERTION] = colors.green
+view.indic_fore[view.INDICATOR_HISTORY_SAVED_DELETION] = colors.red
+view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_INSERTION] = colors.green
+view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_DELETION] = colors.red
+view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_INSERTION] = colors.green
+view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_DELETION] = colors.red
 
 -- Call tips.
 view.call_tip_fore_hlt = colors.blue
