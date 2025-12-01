@@ -32,7 +32,6 @@ if QT then
 	lsp.server_commands.dart = 'dart language-server'
 end
 
-
 -- File Browser
 _L['Open Directory'] = 'Open _Directory...'
 local file_browser = require('file_browser')
@@ -46,7 +45,7 @@ file_browser.force_folders_first = true
 file_browser.case_insensitive_sort = true
 
 -- Default Settings, Keybindings
-buffer.use_tabs = false
+--buffer.use_tabs = false
 buffer.tab_width = 4
 textadept.editing.strip_trailing_spaces = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
@@ -110,4 +109,3 @@ if WIN32 then
 	-- Disable due to weird UK keyboard
 	keys['ctrl+alt+|'] = nil
 end
-
