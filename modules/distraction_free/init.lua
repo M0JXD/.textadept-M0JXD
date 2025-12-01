@@ -12,7 +12,7 @@ M.hide_curses_title = true
 M.maximise = false
 M.toggle_shortcut = 'ctrl+f12'
 
-
+-- OLD: Once 13 reaches stable will be removed
 local function clean_statusbar()
 	ui.statusbar_text = ''
 	ui.buffer_statusbar_text = ''
@@ -42,10 +42,7 @@ keys[M.toggle_shortcut] = function()
 			view.v_scroll_bar = false
 		end
 		-- Force the statusbar to always be blank
-		if M.clear_statusbar then
-			events.connect(events.UPDATE_UI, clean_statusbar)
-			events.emit(events.UPDATE_UI, 1)
-		end
+		ui.statusbar = false
 		-- Hide margins/line numbers
 		if M.hide_margins then
 			for i = 1, view.margins do
@@ -73,8 +70,7 @@ keys[M.toggle_shortcut] = function()
 			view.v_scroll_bar = true
 		end
 		if M.clear_statusbar then
-			events.disconnect(events.UPDATE_UI, clean_statusbar)
-			events.emit(events.UPDATE_UI, 1)
+			ui.statusbar = true
 		end
 		if M.hide_margins then
 			for i = 1, view.margins do
