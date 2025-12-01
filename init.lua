@@ -104,35 +104,35 @@ table.insert(tools, 23, {_L['Show Rows'], function ()
 	}
 end})
 
-local function count_blank_lines()
+local function count_blank_lines(start_pos, end_pos)
     local blank_lines = 0
-    buffer:goto_pos(0)
+    buffer:goto_pos(start_pos)
 
 	repeat
         if (buffer:line_length(buffer:line_from_position(buffer.current_pos)) == 1) then
             blank_lines = blank_lines + 1
         end
 		buffer:line_down()
-	until (buffer.current_pos == buffer.length + 1)
+	until (buffer.current_pos == end_pos + 1)
     return blank_lines
 end
 
 -- Primitive Word Count
-local function count_words()
+local function count_words(start_pos, end_pos)
     -- The only delimiter should be spaces
     local old_word_char = buffer.word_chars
     buffer.word_chars = buffer.word_chars .. '@[]{}.,-()/":;?!*\n\f'
 	local current_pos = buffer.current_pos
 
-	buffer:goto_pos(0)
+	buffer:goto_pos(start_pos)
     local word_count = 0
 	repeat
 		buffer:word_right_end()
 		word_count = word_count + 1
 	until (buffer.current_pos == buffer.length + 1)
 
-    word_count = word_count + (buffer.line_count) - 2
-    word_count = word_count - count_blank_lines()
+    word_count = word_count + (end_pos) - 2
+    word_count = word_count - count_blank_lines(start_pos, end_pos)
     ui.dialogs.message {
 		title = 'Word Count', text = 'Word Count is '..word_count
 	}
@@ -140,7 +140,9 @@ local function count_words()
     buffer.word_chars = old_word_char
 end
 _L['Count Words'] = 'Count _Words'
-table.insert(tools, 24, {_L['Count Words'], count_words})
+table.insert(tools, 24, {_L['Count Words'], function ()
+	count_words(0, buffer.length) end
+})
 
 -- Lua Reset
 _L['Reset Lua State'] = 'Reset L_ua State'
