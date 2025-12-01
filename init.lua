@@ -92,6 +92,7 @@ table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], f
 end})
 
 local tools = textadept.menu.menubar[_L['Tools']]
+
 -- Selected Rows Tool
 _L["Show Rows"] = 'Show _Rows'
 table.insert(tools, 23, {_L['Show Rows'], function ()
@@ -102,6 +103,44 @@ table.insert(tools, 23, {_L['Show Rows'], function ()
 		title = 'Rows Selected', text = 'Current selection is '..selRow..str
 	}
 end})
+
+local function count_blank_lines()
+    local blank_lines = 0
+    buffer:goto_pos(0)
+
+	repeat
+        if (buffer:line_length(buffer:line_from_position(buffer.current_pos)) == 1) then
+            blank_lines = blank_lines + 1
+        end
+		buffer:line_down()
+	until (buffer.current_pos == buffer.length + 1)
+    return blank_lines
+end
+
+-- Primitive Word Count
+local function count_words()
+    -- The only delimiter should be spaces
+    local old_word_char = buffer.word_chars
+    buffer.word_chars = buffer.word_chars .. '@[]{}.,-()/":;?!*\n\f'
+	local current_pos = buffer.current_pos
+
+	buffer:goto_pos(0)
+    local word_count = 0
+	repeat
+		buffer:word_right_end()
+		word_count = word_count + 1
+	until (buffer.current_pos == buffer.length + 1)
+
+    word_count = word_count + (buffer.line_count) - 2
+    word_count = word_count - count_blank_lines()
+    ui.dialogs.message {
+		title = 'Word Count', text = 'Word Count is '..word_count
+	}
+	buffer:goto_pos(current_pos)
+    buffer.word_chars = old_word_char
+end
+_L['Count Words'] = 'Count _Words'
+table.insert(tools, 24, {_L['Count Words'], count_words})
 
 -- Lua Reset
 _L['Reset Lua State'] = 'Reset L_ua State'
@@ -119,3 +158,4 @@ if WIN32 then
 	-- Disable due to weird UK keyboard
 	keys['ctrl+alt+|'] = nil
 end
+
