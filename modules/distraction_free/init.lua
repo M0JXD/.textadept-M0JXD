@@ -12,12 +12,6 @@ M.hide_curses_title = true
 M.maximise = false
 M.toggle_shortcut = 'ctrl+f12'
 
--- OLD: Once 13 reaches stable will be removed
-local function clean_statusbar()
-	ui.statusbar_text = ''
-	ui.buffer_statusbar_text = ''
-end
-
 -- NB: This is carefully connected to the right events instead of generic UPDATE_UI
 -- Otherwise it just flickers all the time.
 local function clear_title()
