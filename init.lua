@@ -13,6 +13,7 @@ view.edge_column = 100
 -- Modules
 require('distraction_free')
 require('quick_open')
+require('doc_stats')
 require('file_diff')
 require('lua_repl')
 
@@ -30,6 +31,7 @@ local lsp = require('lsp')
 if QT then
 	lsp.server_commands.dart = 'dart language-server'
 end
+
 
 -- File Browser
 _L['Open Directory'] = 'Open _Directory...'
@@ -91,60 +93,8 @@ table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], f
 	view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
 end})
 
-local tools = textadept.menu.menubar[_L['Tools']]
-
--- Selected Rows Tool
-_L["Show Rows"] = 'Show _Rows'
-table.insert(tools, 23, {_L['Show Rows'], function ()
-	local selRow = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
-		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
-	str = selRow > 1 and ' rows.' or ' row.'
-	ui.dialogs.message{
-		title = 'Rows Selected', text = 'Current selection is '..selRow..str
-	}
-end})
-
-local function count_blank_lines(start_pos, end_pos)
-    local blank_lines = 0
-    buffer:goto_pos(start_pos)
-
-	repeat
-        if (buffer:line_length(buffer:line_from_position(buffer.current_pos)) == 1) then
-            blank_lines = blank_lines + 1
-        end
-		buffer:line_down()
-	until (buffer.current_pos == end_pos + 1)
-    return blank_lines
-end
-
--- Primitive Word Count
-local function count_words(start_pos, end_pos)
-    -- The only delimiter should be spaces
-    local old_word_char = buffer.word_chars
-    buffer.word_chars = buffer.word_chars .. '@[]{}.,-()/":;?!*\n\f'
-	local current_pos = buffer.current_pos
-
-	buffer:goto_pos(start_pos)
-    local word_count = 0
-	repeat
-		buffer:word_right_end()
-		word_count = word_count + 1
-	until (buffer.current_pos == buffer.length + 1)
-
-    word_count = word_count + (end_pos) - 2
-    word_count = word_count - count_blank_lines(start_pos, end_pos)
-    ui.dialogs.message {
-		title = 'Word Count', text = 'Word Count is '..word_count
-	}
-	buffer:goto_pos(current_pos)
-    buffer.word_chars = old_word_char
-end
-_L['Count Words'] = 'Count _Words'
-table.insert(tools, 24, {_L['Count Words'], function ()
-	count_words(0, buffer.length) end
-})
-
 -- Lua Reset
+local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
