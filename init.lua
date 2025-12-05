@@ -16,6 +16,7 @@ require('quick_open')
 require('doc_stats')
 require('file_diff')
 require('lua_repl')
+--require('open_file_mode')
 
 local format = require('format')
 format.on_save = false

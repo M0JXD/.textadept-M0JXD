@@ -14,19 +14,12 @@ M.term_theme = 'term'
 M.term_fallback_theme = 'term'
 M.font_type = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 M.font_size = 12
-M.win32_default_font = true
+M.win32_default_font = true  -- Windows fonts are not always available, so force override to the default type
 
 -- GUI Themeing
 if not CURSES then
-
-	-- Windows fonts are not always available, so force override to the default type
-	if WIN32 then
-		events.connect(events.INITIALIZED, function()
-			if M.win32_default_font then M.font_type = 'Consolas' end
-		end)
-	end
-
 	events.connect(events.VIEW_NEW, function()
+		if WIN32 and M.win32_default_font then M.font_type = 'Consolas' end
 		if _THEME == 'dark' then
 			view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size})
 		else
@@ -35,6 +28,7 @@ if not CURSES then
 	end)
 
 	events.connect(events.MODE_CHANGED, function()
+		if WIN32 and M.win32_default_font then M.font_type = 'Consolas' end
 		if _THEME == 'dark' then
 			for _, view in ipairs(_VIEWS) do view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end
 			pcall(function () ui.command_entry:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end)
