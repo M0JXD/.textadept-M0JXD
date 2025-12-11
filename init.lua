@@ -38,7 +38,8 @@ update_notifier.check_on_startup = true
 --require('textredux').hijack()
 -- Experimental features by @Fwirt (requires custom build)
 --local textbar = require('textbar')
---local minimap = require('minimap')
+--map = require("minimap")
+--keys['ctrl+@'] = function () map() end
 
 -- Default Settings, Keybindings
 buffer.tab_width = 4
