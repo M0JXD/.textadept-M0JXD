@@ -1,0 +1,9 @@
+[submodule "textredux"]
+	path = modules/textredux
+	url = https://github.com/rgieseke/textredux.git
+[submodule "minimap"]
+	path = modules/minimap
+	url = https://github.com/Fwirt/textadept-minimap.git
+[submodule "textbar"]
+	path = modules/textbar
+	url = https://github.com/Fwirt/textadept-textbar.git

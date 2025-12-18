@@ -3,3 +3,4 @@ themes/base16*
 lua_lsp_server.log
 session
 session_term
+modules/discord_rpc
