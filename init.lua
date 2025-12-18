@@ -126,3 +126,4 @@ end
 --file_browser.case_insensitive_sort = true
 
 -- TODO: Clear the output buffer before running new commands
+-- TODO: Hide dot folders from quick open list
