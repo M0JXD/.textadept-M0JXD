@@ -13,6 +13,9 @@ view.edge_column = 100
 require('distraction_free')
 require('quick_open')
 require('doc_stats')
+drpc = require('discord_rpc')
+--drpc.private_mode = true
+drpc.init()
 
 -- Modules (Official)
 --require('debugger')
@@ -45,7 +48,7 @@ update_notifier.check_on_startup = true
 buffer.tab_width = 4
 textadept.editing.strip_trailing_spaces = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
---buffer.use_tabs = false
+textadept.run.run_in_background = true
 --ui.find.highlight_all_matches = true
 -- Match some VSCode bindings
 keys['ctrl+K'] = function() buffer:line_delete() end
@@ -81,6 +84,8 @@ events.connect(events.LEXER_LOADED, function(name)
 		view.wrap_mode = view.WRAP_NONE
 	end
 end)
+textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
+textadept.run.build_commands['xmake.lua'] = 'xmake'
 
 -- Extras
 
@@ -119,3 +124,5 @@ end
 --file_browser.hide_dot_files = false
 --file_browser.force_folders_first = true
 --file_browser.case_insensitive_sort = true
+
+-- TODO: Clear the output buffer before running new commands
