@@ -14,7 +14,7 @@ require('distraction_free')
 require('quick_open')
 require('doc_stats')
 drpc = require('discord_rpc')
---drpc.private_mode = true
+drpc.private_mode = true
 drpc.init()
 
 -- Modules (Official)
@@ -75,13 +75,14 @@ events.connect(events.LEXER_LOADED, function(name)
 		format.on_save = true
 	end
 
-	if (name == 'text') then
+	if (name == 'text' or name == 'markdown') then
 		textadept.editing.auto_pairs = nil
 		view.wrap_mode = view.WRAP_WHITESPACE
-		--buffer.use_tabs = true
+		textadept.editing.strip_trailing_spaces = false
 	else
 		textadept.editing.auto_pairs = auto_pairs
 		view.wrap_mode = view.WRAP_NONE
+		textadept.editing.strip_trailing_spaces = true
 	end
 end)
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
@@ -127,3 +128,5 @@ end
 
 -- TODO: Clear the output buffer before running new commands
 -- TODO: Hide dot folders from quick open list
+-- TODO: Toggle strip trailing whitespace?
+-- TODO: Image link autocomplete in markdown
