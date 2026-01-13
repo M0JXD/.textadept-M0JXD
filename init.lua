@@ -51,11 +51,16 @@ textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 textadept.run.run_in_background = true
 --ui.find.highlight_all_matches = true
 -- Match some VSCode bindings
-keys['ctrl+K'] = function() buffer:line_delete() end
+
 keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 if not CURSES then
+	keys['ctrl+K'] = function() buffer:line_delete() end
 	keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 	keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+else
+	keys['ctrl+k'] = function() buffer:line_delete() end
+	keys['meta+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
+	keys['meta+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
 end
 
 -- Language Specific
