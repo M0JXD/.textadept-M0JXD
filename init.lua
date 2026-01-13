@@ -62,6 +62,7 @@ end
 lexer.detect_extensions.h = 'c'
 textadept.editing.comment_string.c = '/*|*/'
 lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
+lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
