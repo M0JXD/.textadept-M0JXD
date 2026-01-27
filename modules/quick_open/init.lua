@@ -3,10 +3,17 @@
 -- Windows currently untested
 
 local M = {}
-M.linux_term = 'gnome-terminal'
-M.linux_explorer = 'nemo'
-M.win_term = 'cmd.exe'
-M.win_explorer = 'explorer.exe'
+
+if LINUX then
+	M.terminal = 'gnome-terminal'
+	M.explorer = 'nemo'
+elseif BSD then
+	M.terminal = 'xfce4-terminal'
+	M.explorer = 'thunar'
+elseif WIN32 then
+	M.terminal = 'cmd.exe'
+	M.explorer = 'explorer.exe'
+end
 
 -- Open Terminal
 function openTerminalHere()
@@ -15,11 +22,11 @@ function openTerminalHere()
 		if buffer.filename then
 			pathString = buffer.filename:match(".+/")
 		end
-		io.popen(M.linux_term.." --working-directory="..pathString.." &")
+		io.popen(M.terminal.." --working-directory="..pathString.." &")
 	elseif WIN32 then
         local prePath = buffer.filename:match(".+\\")
         pathString = " /K \"cd /d "..prePath.."\""
-		io.popen('start '..M.win_term..pathString)
+		io.popen('start '..M.terminal..pathString)
 	end
 end
 
@@ -30,11 +37,11 @@ function openFileBrowserHere()
 		if buffer.filename then
 			pathString = buffer.filename:match(".+/")
 		end
-		io.popen(M.linux_explorer.." "..pathString.." &")
+		io.popen(M.explorer.." "..pathString.." &")
 	elseif WIN32 then
         local prePath = buffer.filename:match(".+\\")
         pathString = " /e,\""..prePath.."\""
-		io.popen('start '..M.win_explorer..pathString)
+		io.popen('start '..M.explorer..pathString)
 	end
 end
 

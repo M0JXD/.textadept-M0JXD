@@ -13,17 +13,24 @@ view.edge_column = 100
 require('distraction_free')
 require('quick_open')
 require('doc_stats')
-drpc = require('discord_rpc')
-drpc.private_mode = true
-drpc.init()
+
+if not BSD then
+	drpc = require('discord_rpc')
+	drpc.private_mode = true
+	drpc.init()
+end
 
 -- Modules (Official)
 --require('debugger')
 --require('export')
 require('file_diff')
+
+if not BSD then
 local format = require('format')
 format.on_save = false
 format.commands.dart = 'dart format'
+end
+
 local lsp = require('lsp')
 if QT then
 	lsp.server_commands.dart = 'dart language-server'
@@ -136,3 +143,4 @@ end
 -- TODO: Hide dot folders from quick open list
 -- TODO: Toggle strip trailing whitespace?
 -- TODO: Image link autocomplete in markdown
+-- TODO: Why is Textadept starting unfocused?
