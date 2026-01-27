@@ -45,8 +45,11 @@ elseif not WIN32 then
 	local terminal = os.getenv("TERM")
 	events.connect(events.INITIALIZED, function()
 		if (terminal == 'xterm-256color') or (terminal == 'alacritty') then
-			view:set_theme(M.term_theme)
-		elseif (terminal == 'xterm') or (terminal == 'linux') then
+			-- XFCE reports being capable, but doesn't actually seem to be
+			if not BSD then
+				view:set_theme(M.term_theme)
+			end
+		elseif (terminal == 'xterm') or (terminal == 'linux') or BSD then
 			view:set_theme(M.term_fallback_theme)
 		end
 	end)
