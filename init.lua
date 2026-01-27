@@ -26,15 +26,15 @@ end
 require('file_diff')
 
 if not BSD then
-local format = require('format')
-format.on_save = false
-format.commands.dart = 'dart format'
-end
+	local format = require('format')
+	format.on_save = false
+	format.commands.dart = 'dart format'
 
-local lsp = require('lsp')
-if QT then
-	lsp.server_commands.dart = 'dart language-server'
-	keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
+	local lsp = require('lsp')
+	if QT then
+		lsp.server_commands.dart = 'dart language-server'
+		keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
+	end
 end
 require('lua_repl')
 --require('open_file_mode')
