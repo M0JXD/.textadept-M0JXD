@@ -4,7 +4,9 @@
 local theme_mgr = require('theme_mgr')
 theme_mgr.light_theme = 'ayu-light'
 theme_mgr.dark_theme = 'ayu-evolve'
-theme_mgr.font_type = 'Dejavu Sans Mono' -- FreeMono
+theme_mgr.font_type = 'Dejavu Sans Mono'
+--theme_mgr.font_type = 'Noto Mono'
+--theme_mgr.font_type = 'FreeMono'
 theme_mgr.font_size = 14
 view.edge_column = 100
 
