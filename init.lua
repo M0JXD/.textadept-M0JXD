@@ -11,7 +11,7 @@ view.edge_column = 100
 -- Modules (M0JXD)
 require('distraction_free')
 require('quick_open')
-require('doc_stats')
+require('doc_stats')  -- TODO: Finish this module
 
 if not BSD then
 	drpc = require('discord_rpc')
@@ -56,8 +56,8 @@ textadept.editing.strip_trailing_spaces = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 textadept.run.run_in_background = true
 --ui.find.highlight_all_matches = true
--- Match some VSCode bindings
 
+-- Match some VSCode bindings
 keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 if not CURSES then
 	keys['ctrl+K'] = function() buffer:line_delete() end
@@ -100,9 +100,7 @@ end)
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
 
--- Extras
-
--- Extra Toggle Entries
+-- Extra Menu Entries
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
 table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], function ()
 	view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
@@ -113,23 +111,23 @@ table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing 
 	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
 end})
 
--- Lua Reset
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
--- TUI Adjustments
+-- Platform Specific Adjustments
 if CURSES then
 	-- Add a suspend menu entry
 	table.insert(textadept.menu.menubar[_L['View']], {'Suspend...', ui.suspend})
-end
-
--- Windows Adjustments
-if WIN32 then
+elseif WIN32 then
 	-- Disable due to weird UK keyboard
 	keys['ctrl+alt+|'] = nil
 end
+
+-- TODO: Clear the output buffer before running new commands
+-- TODO: Hide dot folders from quick open list
+-- TODO: Why is Textadept GTK starting unfocused?
 
 -- Old File Browser usage (Might revisit awaiting possible merged changes by @Fwirt)
 --_L['Open Directory'] = 'Open _Directory...'
@@ -142,7 +140,3 @@ end
 --file_browser.hide_dot_files = false
 --file_browser.force_folders_first = true
 --file_browser.case_insensitive_sort = true
-
--- TODO: Clear the output buffer before running new commands
--- TODO: Hide dot folders from quick open list
--- TODO: Why is Textadept GTK starting unfocused?
