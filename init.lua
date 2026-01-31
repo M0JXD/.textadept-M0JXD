@@ -108,6 +108,7 @@ table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], f
 	view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
 end})
 
+-- TODO: Show the current mode in bfstatbar
 _L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
 table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
 	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
@@ -129,7 +130,6 @@ end
 
 -- TODO: Clear the output buffer before running new commands
 -- TODO: Hide dot folders from quick open list
--- TODO: Why is Textadept GTK starting unfocused?
 
 -- Old File Browser usage (Might revisit awaiting possible merged changes by @Fwirt)
 --_L['Open Directory'] = 'Open _Directory...'
