@@ -58,6 +58,10 @@ textadept.editing.strip_trailing_spaces = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 textadept.run.run_in_background = true
 --ui.find.highlight_all_matches = true
+-- Hide some folders from the quick open list
+table.insert(lfs.default_filter, '!.xmake')
+table.insert(lfs.default_filter, '!build_dir')
+table.insert(lfs.default_filter, '!build')
 
 -- Match some VSCode bindings
 keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
@@ -129,7 +133,6 @@ elseif WIN32 then
 end
 
 -- TODO: Clear the output buffer before running new commands
--- TODO: Hide dot folders from quick open list
 
 -- Old File Browser usage (Might revisit awaiting possible merged changes by @Fwirt)
 --_L['Open Directory'] = 'Open _Directory...'
