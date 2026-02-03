@@ -62,6 +62,7 @@ textadept.run.run_in_background = true
 table.insert(lfs.default_filter, '!.xmake')
 table.insert(lfs.default_filter, '!build_dir')
 table.insert(lfs.default_filter, '!build')
+table.insert(lfs.default_filter, '!assets')
 
 -- Match some VSCode bindings
 keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
