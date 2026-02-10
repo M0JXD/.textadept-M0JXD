@@ -4,6 +4,7 @@
 
 local M = {}
 
+-- TODO: I should really use xdg-open
 if LINUX then
 	M.terminal = 'gnome-terminal'
 	M.explorer = 'nemo'

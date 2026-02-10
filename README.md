@@ -52,23 +52,44 @@ distraction_free.toggle_shortcut = 'ctrl+f11'
 ## Quick Open Module
 
 Quickly open a Terminal or File Browser at the currently opened file's path.
-Works on both Linux and Windows. It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
+It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
 
-Example usage (just requiring works as the below are the defaults):
+By default, it will use:
+
+- Nemo and GNOME Terminal on Linux
+- Thunar and XFCE4 Terminal on BSD
+- explorer.exe and cmd.exe on Windows
+
+I'm unsure how well the Windows implementation will work for different explorers and terminals.
+I don't have any Apple devices so I'm 'unable to implement for macOS.
+
+Example usage:
 
 ```lua
 local quick_open = require('quick_open')
-quick_open.linux_term = 'gnome-terminal'
-quick_open.linux_explorer = 'nemo'
-quick_open.win_term = 'cmd.exe'
-quick_open.win_explorer = 'explorer.exe'
+quick_open.terminal = 'cool-retro-term'
+quick_open.explorer = 'nautilus'
 ```
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
 
+## Document Statistics Module
+
+Document Statistics is inspired by the same feature in the Xed editor.
+It will add a menu under Tools which will show a dialog with statistics for the current selection and the whole document.
+Currently there are only three: Lines, Words and Byte count.
+
+The word count feature is based on https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
+The separators are configurable in the doc_stats.separators array. By default, it will only match whitespace, which will provide the same results as MS Office.
+
+Example usage:
+```lua
+require('doc_stats')
+```
+
 ## Modified File Browser Module
 
-I now very rarely use the file_browser, instead I prefer to open the system browser (hence the WIP Quick Open module). As such it should be considered unmaintained.
+I now very rarely use the file_browser, instead I prefer to open the system browser (hence the Quick Open module). As such it should be considered unmaintained.
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
 
 NOTE: At the moment this seems a bit broken on Windows.
