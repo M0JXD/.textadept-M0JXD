@@ -4,18 +4,31 @@
 local M = {}
 
 -- Separators for the Word Count Algo
--- @[]{}.,-()/":;?!*\n\f
 M.separators = {
-	' ',
-	',',
-	';',
-	':',
+	--'@',
+	--'[',
+	--']',
+	--'}',
+	--'{',
+	--'(',
+	--')',
+	--'/',
+	--'\\',
+	--';',
+	--':',
+	--'-',
+	--'.',
+	--',',
+	--'"',
+	--"'",
+	--'*',
+	--'?',
+	--'!',
+	--'\f',
 	'\t',
 	'\n',
 	'\r',
-	'.',
-	'(',
-	')',
+	' '
 }
 
 -- Algo adapted from https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
@@ -62,7 +75,7 @@ local function count_words_all()
 	return count
 end
 
--- Selected Rows Tool
+-- Selected Rows
 local function count_rows()
 	local sel_row = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
 		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
@@ -72,7 +85,7 @@ end
 local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
-		text = 	'Stats are shown as Selected/Total\n' ..
+		text = 	'Stats are shown as "Selected/Total".\n' ..
 				'Word Count: ' .. (count_words_selection() or 0) .. '/' .. (count_words_all() or 0) .. '\n' ..
 				'Row Count: ' .. (count_rows() or 0) .. '/' .. buffer.line_count
 	}
