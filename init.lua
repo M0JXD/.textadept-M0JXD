@@ -13,7 +13,7 @@ view.edge_column = 100
 -- Modules (M0JXD)
 require('distraction_free')
 require('quick_open')
-require('doc_stats')  -- TODO: Finish this module
+require('doc_stats')
 
 if not BSD then
 	drpc = require('discord_rpc')
