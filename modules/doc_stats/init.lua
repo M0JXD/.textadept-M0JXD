@@ -41,27 +41,10 @@ local function checkMatchesSeparator(c)
 	return false
 end
 
-local function count_words_selection()
+local function count_words(all)
 	local state = true
 	local count = 0
-	local contents = buffer:get_sel_text()
-
-	for i = 1, #contents do
-		local c = contents:sub(i,i)
-		if checkMatchesSeparator(c) then
-			state = true
-		elseif state then
-			state = false
-			count = count + 1
-		end
-	end
-	return count
-end
-
-local function count_words_all()
-	local state = true
-	local count = 0
-	local contents = buffer:get_text()
+	local contents = all and buffer:get_text() or buffer:get_sel_text()
 
 	for i = 1, #contents do
 		local c = contents:sub(i,i)
@@ -82,12 +65,19 @@ local function count_rows()
 	return sel_row
 end
 
+-- Bytes (not strictly the same as characters)
+local function count_bytes(all)
+	local contents = all and buffer:get_text() or buffer:get_sel_text()
+	return #contents
+end
+
 local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
-		text = 	'Stats are shown as "Selected/Total".\n' ..
-				'Word Count: ' .. (count_words_selection() or 0) .. '/' .. (count_words_all() or 0) .. '\n' ..
-				'Row Count: ' .. (count_rows() or 0) .. '/' .. buffer.line_count
+		text = 	'Stats are shown as "Selected/Total":\n\n' ..
+				'Line Count: ' .. (count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
+				'Word Count: ' .. (count_words(false) or 0) .. '/' .. (count_words(true) or 0) .. '\n' ..
+				'Byte Count: ' .. (count_bytes(false) or 0) .. '/' .. (count_bytes(true) or 0)
 	}
 end
 
