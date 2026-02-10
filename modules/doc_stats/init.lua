@@ -3,9 +3,64 @@
 
 local M = {}
 
-_L['Document Statistics'] = '_Document Statistics'
-_L['Count Rows'] = 'Count _Rows'
-_L['Count Words'] = 'Count _Words'
+-- Separators for the Word Count Algo
+-- @[]{}.,-()/":;?!*\n\f
+M.separators = {
+	' ',
+	',',
+	';',
+	':',
+	'\t',
+	'\n',
+	'\r',
+	'.',
+	'(',
+	')',
+}
+
+-- Algo adapted from https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
+local function checkMatchesSeparator(c)
+	for i, v in ipairs(M.separators) do
+		if (c == v) then
+			return true
+		end
+	end
+	return false
+end
+
+local function count_words_selection()
+	local state = true
+	local count = 0
+	local contents = buffer:get_sel_text()
+
+	for i = 1, #contents do
+		local c = contents:sub(i,i)
+		if checkMatchesSeparator(c) then
+			state = true
+		elseif state then
+			state = false
+			count = count + 1
+		end
+	end
+	return count
+end
+
+local function count_words_all()
+	local state = true
+	local count = 0
+	local contents = buffer:get_text()
+
+	for i = 1, #contents do
+		local c = contents:sub(i,i)
+		if checkMatchesSeparator(c) then
+			state = true
+		elseif state then
+			state = false
+			count = count + 1
+		end
+	end
+	return count
+end
 
 -- Selected Rows Tool
 local function count_rows()
@@ -14,67 +69,19 @@ local function count_rows()
 	return sel_row
 end
 
-local function count_rows_dialog()
-	local sel_row = count_rows()
-	str = sel_row > 1 and ' rows.' or ' row.'
+local function stats_dialog()
 	ui.dialogs.message{
-		title = 'Rows Selected', text = 'Current selection is '..sel_row..str
+		title = 'Document Statistics',
+		text = 	'Stats are shown as Selected/Total\n' ..
+				'Word Count: ' .. (count_words_selection() or 0) .. '/' .. (count_words_all() or 0) .. '\n' ..
+				'Row Count: ' .. (count_rows() or 0) .. '/' .. buffer.line_count
 	}
 end
-
--- Count blank lines for word count
-local function count_blank_lines(start_pos, end_pos)
-	local blank_lines = 0
-	buffer:goto_pos(start_pos)
-
-	repeat
-		if (buffer:line_length(buffer:line_from_position(buffer.current_pos)) == 1) then
-			blank_lines = blank_lines + 1
-		end
-		buffer:line_down()
-	until (buffer.current_pos == end_pos + 1)
-	return blank_lines
-end
-
--- Primitive word count
-local function count_words(start_pos, end_pos)
-	-- The only delimiter should be spaces
-	local old_word_char = buffer.word_chars
-	buffer.word_chars = buffer.word_chars .. '@[]{}.,-()/":;?!*\n\f'
-	local current_pos = buffer.current_pos
-
-	buffer:goto_pos(start_pos)
-	local word_count = 0
-	repeat
-		buffer:word_right_end()
-		word_count = word_count + 1
-	until (buffer.current_pos == buffer.length + 1)
-
-	word_count = word_count + (end_pos) - 2
-	word_count = word_count - count_blank_lines(start_pos, end_pos)
-
-	buffer:goto_pos(current_pos)
-	buffer.word_chars = old_word_char
-	return word_count
-end
-
-local function count_words_dialog()
-	-- if there's no selection run without
-	local word_count = count_words(0, buffer.length)
-	ui.dialogs.message {
-		title = 'Word Count', text = 'Word Count is '..word_count
-	}
-end
-
-doc_stats_menu = {
-	title = _L['Document Statistics'],
-	{_L['Count Rows'],  count_rows_dialog},
-	{_L['Count Words'], count_words_dialog}
-}
-
 
 -- Insert into tools menu (code adapted from spellcheck module)
 --table.insert(textadept.menu.menubar[_L['Tools']], 20, doc_stats_menu)
+_L['Document Statistics'] = '_Document Statistics'
+doc_stats_menu = { _L['Document Statistics'], stats_dialog }
 local m_tools = textadept.menu.menubar['Tools']
 local found_area
 local SEP = {''}
