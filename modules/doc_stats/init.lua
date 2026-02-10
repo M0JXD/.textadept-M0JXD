@@ -1,4 +1,4 @@
--- Copyright 2025 Jamie Drinkell. MIT License.
+-- Copyright 2025-2026 Jamie Drinkell. MIT License.
 -- Simple document statistics module, showing word count and selection characteristics
 
 local M = {}
