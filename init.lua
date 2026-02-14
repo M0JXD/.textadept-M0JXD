@@ -65,12 +65,13 @@ table.insert(lfs.default_filter, '!build')
 table.insert(lfs.default_filter, '!assets')
 
 -- Match some VSCode bindings
-keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 if not CURSES then
+	keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 	keys['ctrl+K'] = function() buffer:line_delete() end
 	keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 	keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
 else
+	keys['meta+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 	keys['ctrl+k'] = function() buffer:line_delete() end
 	keys['meta+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 	keys['meta+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
@@ -78,10 +79,12 @@ end
 
 -- Language Specific
 lexer.detect_extensions.h = 'c'
-textadept.editing.comment_string.c = '/*|*/'
-lexer.detect_extensions.ino = 'cpp'  -- For Arduino sketches
+lexer.detect_extensions.C = 'cpp'
+lexer.detect_extensions.H = 'cpp'
+lexer.detect_extensions.ino = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
+textadept.editing.comment_string.c = '/*|*/'
 local auto_pairs = textadept.editing.auto_pairs
 events.connect(events.LEXER_LOADED, function(name)
 	if (name == 'makefile') then
@@ -134,15 +137,3 @@ elseif WIN32 then
 end
 
 -- TODO: Clear the output buffer before running new commands
-
--- Old File Browser usage (Might revisit awaiting possible merged changes by @Fwirt)
---_L['Open Directory'] = 'Open _Directory...'
---local file_browser = require('file_browser')
---keys['ctrl+O'] = file_browser.init
---table.insert(textadept.menu.menubar[_L['File']], 3, {
---	_L['Open Directory'], file_browser.init
---})
---file_browser.hide_dot_folders = true
---file_browser.hide_dot_files = false
---file_browser.force_folders_first = true
---file_browser.case_insensitive_sort = true
