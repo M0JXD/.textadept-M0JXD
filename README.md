@@ -61,7 +61,7 @@ By default, it will use:
 - explorer.exe and cmd.exe on Windows
 
 I'm unsure how well the Windows implementation will work for different explorers and terminals.
-I don't have any Apple devices so I'm 'unable to implement for macOS.
+I don't have any Apple devices so I'm unable to implement for macOS.
 
 Example usage:
 
