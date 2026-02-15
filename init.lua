@@ -29,7 +29,6 @@ require('file_diff')
 if not BSD then
 	local format = require('format')
 	format.on_save = false
-	format.commands.dart = 'dart format'
 
 	local lsp = require('lsp')
 	if QT then
