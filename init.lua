@@ -37,7 +37,8 @@ if not BSD then
 	end
 end
 require('lua_repl')
---require('open_file_mode')
+local open_file_key = CURSES and 'meta+O' or 'alt+O'
+keys[open_file_key] = require('open_file_mode')
 --require('scratch')
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
