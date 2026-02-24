@@ -3,10 +3,9 @@
 
 local M = {}
 
--- Default entries
-
 M.spacing = CURSES and '  ' or '    '
 
+-- Default entries
 -- Current line and amount
 table.insert(M, function ()
 	local line, max = buffer:line_from_position(buffer.current_pos), buffer.line_count
