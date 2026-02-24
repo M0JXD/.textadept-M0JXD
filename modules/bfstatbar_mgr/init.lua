@@ -8,15 +8,12 @@ local M = {}
 -- Current line and amount
 table.insert(M, function ()
 	local line, max = buffer:line_from_position(buffer.current_pos), buffer.line_count
-	local str = _L['Line: '] .. line .. '/' .. max
-	return str
+	return _L['Line: '] .. line .. '/' .. max
 end)
 
 -- Current column
 table.insert(M, function ()
-	local str = _L['Col: ']
-	str = str .. (buffer.column[buffer.current_pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection])
-	return str
+	return _L['Col: '] .. (buffer.column[buffer.current_pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection])
 end)
 
 -- Language
@@ -28,8 +25,7 @@ table.insert(M, function ()
 
 -- Tabs
 table.insert(M, function ()
-	local str = (buffer.use_tabs and _L['Tabs: '] or _L['Spaces: ']) .. buffer.tab_width
-	return str
+	return (buffer.use_tabs and _L['Tabs: '] or _L['Spaces: ']) .. buffer.tab_width
 end)
 
 -- Encoding
