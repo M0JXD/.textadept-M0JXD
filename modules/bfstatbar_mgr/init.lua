@@ -48,19 +48,3 @@ events.connect(events.UPDATE_UI, function (updated)
 end)
 
 return M
-
--- Example use
-
---bfstatbar = require('bfstatbar_mgr')
---
---table.remove(bfstatbar, 4)  -- Remove line endings
---
---table.insert(bfstatbar, 5, function ()
---	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and "On" or "Off")
---end)
---
---_L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
---table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
---	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
---	events.emit(events.UPDATE_UI)
---end})
