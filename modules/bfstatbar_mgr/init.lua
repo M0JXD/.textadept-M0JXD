@@ -1,50 +1,68 @@
 -- Copyright 2026 Jamie Drinkell. MIT License.
--- Idea regarding a bufferstatusbar method for Textadept.
+-- Idea regarding a bufferstatusbar table for Textadept.
 
 local M = {}
 
 -- Default entries
 
 -- Current line and amount
-table.insert(M, { title = _L['Line:'], function ()
-	local pos = buffer.current_pos
-	local line, max = buffer:line_from_position(pos), buffer.line_count
-	local str = line .. '/' .. max
+table.insert(M, function ()
+	local line, max = buffer:line_from_position(buffer.current_pos), buffer.line_count
+	local str = _L['Line: '] .. line .. '/' .. max
 	return str
-end})
+end)
 
 -- Current column
-table.insert(M, { title = _L['Col:'], function ()
-	return buffer.column[pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection]
-end})
+table.insert(M, function ()
+	local str = _L['Col: ']
+	str = str .. (buffer.column[buffer.current_pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection])
+	return str
+end)
 
 -- Language
-table.insert(M, { function () return buffer.lexer_language end})
+table.insert(M, function () return buffer.lexer_language end)
 
 -- EOL
-table.insert(M, { function ()
-					return buffer.eol_mode == buffer.EOL_CRLF and _L['CRLF'] or _L['LF'] end})
+table.insert(M, function ()
+				return buffer.eol_mode == buffer.EOL_CRLF and _L['CRLF'] or _L['LF'] end)
 
 -- Tabs
-table.insert(M, { title = function () return buffer.use_tabs and _L['Tabs:'] or _L['Spaces:'] end,
-					function () return buffer.tab_width end})
+table.insert(M, function ()
+	local str = (buffer.use_tabs and _L['Tabs: '] or _L['Spaces: ']) .. buffer.tab_width
+	return str
+end)
 
 -- Encoding
-table.insert(M, { function () return buffer.encoding or '' end})
+table.insert(M, function () return buffer.encoding or '' end)
 
 events.connect(events.UPDATE_UI, function (updated)
---	if not updated or updated & ui.CONTENT_OR_SELECTION == 0 then return end
-	local spacing = CURSES and '  ' or '    '
+	--if not updated or updated & (buffer.UPDATE_CONTENT or buffer.UPDATE_SELECTION) == 0 then return end
 	local text = ''
+	local spacing = CURSES and '  ' or '    '
 
 	for i,v in ipairs(M) do
-		text = spacing .. text
-		if (M[i].title) then
---			text = text .. ' ' .. (M[i].title)
+		if text ~= '' then
+			text = text .. spacing
 		end
---		text = text .. ' ' .. (M[i][#M[i]])
+		val = M[i]()
+		text = text .. ' ' .. val
 	end
 	ui.buffer_statusbar_text = text
 end)
 
 return M
+
+-- Example use
+
+--bfstatbar = require('bfstatbar_mgr')
+--
+--table.insert(bfstatbar, 5, function ()
+--	local str = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and "On" or "Off")
+--	return str
+--end)
+--
+--_L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
+--table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
+--	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
+--	events.emit(events.UPDATE_UI)
+--end})
