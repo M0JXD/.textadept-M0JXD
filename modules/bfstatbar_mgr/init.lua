@@ -1,5 +1,5 @@
 -- Copyright 2026 Jamie Drinkell. MIT License.
--- Idea regarding a bufferstatusbar table for Textadept.
+-- Idea regarding a buffer_statusbar table for Textadept.
 
 local M = {}
 
@@ -13,7 +13,8 @@ end)
 
 -- Current column
 table.insert(M, function ()
-	return _L['Col: '] .. (buffer.column[buffer.current_pos] + buffer.selection_n_caret_virtual_space[buffer.main_selection])
+	return _L['Col: '] .. (buffer.column[buffer.current_pos] +
+							buffer.selection_n_caret_virtual_space[buffer.main_selection])
 end)
 
 -- Language
@@ -37,9 +38,7 @@ events.connect(events.UPDATE_UI, function (updated)
 	local spacing = CURSES and '  ' or '    '
 
 	for i,v in ipairs(M) do
-		if text ~= '' then
-			text = text .. spacing
-		end
+		text = text .. spacing
 		val = M[i]()
 		text = text .. ' ' .. val
 	end
@@ -52,9 +51,10 @@ return M
 
 --bfstatbar = require('bfstatbar_mgr')
 --
+--table.remove(bfstatbar, 4)  -- Remove line endings
+--
 --table.insert(bfstatbar, 5, function ()
---	local str = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and "On" or "Off")
---	return str
+--	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and "On" or "Off")
 --end)
 --
 --_L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
