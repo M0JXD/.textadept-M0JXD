@@ -14,7 +14,7 @@ M.display_spaces = false
 
 M.ALL_SPACES = 0
 M.DISCARD_SPACES = 1
-M.DISCARD_NEWLINE = 2
+M.DISCARD_NEWLINES = 2
 
 -- Separators for the Word Count Algo
 M.separators = {
@@ -130,7 +130,7 @@ function M.count_chars(spaces, all)
 	local amount = buffer:count_characters(start_pos, end_pos)
 	if spaces == M.DISCARD_SPACES then
 		amount = amount - M.count_spaces(all)
-	elseif spaces == M.DISCARD_NEWLINE then
+	elseif spaces == M.DISCARD_NEWLINES then
 		amount = amount - M.count_newline(all)
 	end
 	return amount
@@ -145,7 +145,7 @@ local function stats_dialog()
 				'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0) .. '\n' ..
 			    'Characters (inc. spaces):  ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' ..
 			    'Characters (No spaces):  ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)  .. '\n' ..
-				'Characters (No newlines):  ' .. (M.count_chars(M.DISCARD_NEWLINE, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINE, true) or 0)
+				'Characters (No newlines):  ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0)
 	}
 end
 
@@ -188,7 +188,7 @@ events.connect(events.INITIALIZED, function ()
 
 	if M.display_chars_nl then
 		table.insert(bfstatbar, type(M.display_chars_nl) == 'boolean' and 1 or M.display_chars_nl, function ()
-			return 'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINE, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINE, true) or 0)
+			return 'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0)
 		end)
 	end
 
