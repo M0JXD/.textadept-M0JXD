@@ -11,9 +11,12 @@ theme_mgr.font_size = 14
 view.edge_column = 100
 
 -- Modules (M0JXD)
+bfstatbar = require('bfstatbar_mgr')
 require('distraction_free')
 require('quick_open')
-require('doc_stats')
+ds = require('doc_stats')
+ds.display_words = true
+ds.display_rows = true
 
 if not BSD then
 	drpc = require('discord_rpc')
@@ -110,17 +113,23 @@ end)
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
 
--- Extra Menu Entries
+-- Extra Utilities
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
 table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], function ()
 	view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
 end})
 
--- TODO: Show the current mode in bfstatbar
 _L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
 table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
 	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
+	events.emit(events.UPDATE_UI)
 end})
+
+-- Display whether strip trailing whitespace is on
+table.insert(bfstatbar, 5, function ()
+	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+end)
+
 
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
@@ -135,5 +144,3 @@ elseif WIN32 then
 	-- Disable due to weird UK keyboard
 	keys['ctrl+alt+|'] = nil
 end
-
--- TODO: Clear the output buffer before running new commands
