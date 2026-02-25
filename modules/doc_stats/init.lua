@@ -131,7 +131,7 @@ function M.count_chars(spaces, all)
 	if spaces == M.DISCARD_SPACES then
 		amount = amount - M.count_spaces(all)
 	elseif spaces == M.DISCARD_NEWLINE then
-		amount = amount - count_newline(all)
+		amount = amount - M.count_newline(all)
 	end
 	return amount
 end
