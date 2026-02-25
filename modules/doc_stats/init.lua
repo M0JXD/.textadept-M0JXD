@@ -140,7 +140,7 @@ local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
 		text = 	'Details are shown as "Selected/Total":\n\n' ..
-				'Lines:  ' .. (M.count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
+				'Rows:  ' .. (M.count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
 				'Words:  ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0) .. '\n' ..
 				'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0) .. '\n' ..
 			    'Characters (inc. spaces):  ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' ..
