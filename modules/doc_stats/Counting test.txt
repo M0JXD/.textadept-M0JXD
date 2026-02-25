@@ -27,4 +27,7 @@ How does it handle across lines up to a total of 34 words?
 
 
 
-63[{}@@] 64
+63[{}@@] 64 65 66 67 68
+
+MULTIBYTE: ♥️ 😢 ❤️‍🔥🏹
+	TAB CHAR
