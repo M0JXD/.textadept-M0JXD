@@ -130,7 +130,6 @@ table.insert(bfstatbar, 5, function ()
 	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
 end)
 
-
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''} -- separator
