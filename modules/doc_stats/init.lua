@@ -10,7 +10,6 @@ M.display_rows = false
 M.display_chars = false
 M.display_chars_ns = false
 M.display_chars_nl = false
-M.display_spaces = false
 
 M.ALL_SPACES = 0
 M.DISCARD_SPACES = 1
