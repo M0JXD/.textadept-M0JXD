@@ -34,7 +34,7 @@ theme_mgr.term_fallback_theme = 'term'
 
 Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module.
 Also added the ability to hide the tab bar, and allows you to configure what you want to hide.
-Also works on CURSES and hides the title. Defaults to my preferences, I use `Ctrl+F12` as to allow F11 to be free for "Step Into" debugger commands.
+Also works on CURSES and hides the title. Defaults to my preferences, as I prefer `Ctrl+F12`.
 
 Example usage:
 
@@ -73,18 +73,45 @@ quick_open.explorer = 'nautilus'
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
 
+## Buffer Statusbar Manager
+
+Buffer Statusbar Manager is the short awaited version two of bfstatbar_helper that was removed in 8d5ef307d5f7.
+It represents the items in the buffer statusbar as a array of getter functions.
+By default it provides the same defaults that Textadept displays in the buffer statusbar.
+
+Example usage:
+
+```lua
+bfstatbar = require('bfstatbar_mgr')
+
+table.remove(bfstatbar, 4)  -- Remove line endings
+
+-- Display whether strip trailing whitespace is on
+table.insert(bfstatbar, 5, function ()
+	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+end)
+```
+
 ## Document Statistics Module
 
-Document Statistics is inspired by the same feature in the Xed editor.
+Document Statistics is inspired by the plugin of the same name in the Xed editor and the Summary feature in Notepad++.
 It will add a menu under Tools which will show a dialog with statistics for the current selection and the whole document.
-Currently there are only three: Lines, Words and Byte count.
+
+You can also optionally add these details in the buffer status bar (this requires `bfstatbar_mgr` be imported as bfstatbar).
 
 The word count feature is based on https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
 The separators are configurable in the doc_stats.separators array. By default, it will only match whitespace, which will provide the same results as MS Office.
 
 Example usage:
+
 ```lua
-require('doc_stats')
+doc_stats = require('doc_stats')
+doc_stats.menu_entry = false
+doc_stats.display_words = true
+doc_stats.display_bytes = true
+doc_stats.display_rows = true
+doc_stats.display_chars = true
+doc_stats.display_chars_ns = true
 ```
 
 ## Modified File Browser Module
