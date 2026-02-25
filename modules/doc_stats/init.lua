@@ -75,7 +75,7 @@ end
 function M.count_rows()
 	local sel_row = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
 		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
-	return sel_row
+	return buffer.selection_empty and 0 or sel_row
 end
 
 -- Bytes (not strictly the same as characters)
