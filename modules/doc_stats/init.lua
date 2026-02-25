@@ -9,6 +9,12 @@ M.display_bytes = false
 M.display_rows = false
 M.display_chars = false
 M.display_chars_ns = false
+M.display_chars_nl = false
+M.display_spaces = false
+
+M.ALL_SPACES = 0
+M.DISCARD_SPACES = 1
+M.DISCARD_NEWLINE = 2
 
 -- Separators for the Word Count Algo
 M.separators = {
@@ -40,7 +46,7 @@ M.separators = {
 
 -- Algo adapted from https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
 local function checkMatchesSeparator(c)
-	for i, v in ipairs(M.separators) do
+	for i,v in ipairs(M.separators) do
 		if (c == v) then
 			return true
 		end
@@ -78,7 +84,7 @@ function M.count_bytes(all)
 	return #contents
 end
 
-local function count_spaces(all)
+function M.count_spaces(all)
 	local amount = 0
 	local contents = all and buffer:get_text() or buffer.selection_empty and 0 or buffer:get_sel_text()
 	if contents == 0 then return 0 end
@@ -92,13 +98,40 @@ local function count_spaces(all)
 	return amount
 end
 
+function M.count_newline(all)
+	local amount = 0
+	local contents = all and buffer:get_text() or buffer.selection_empty and 0 or buffer:get_sel_text()
+	if contents == 0 then return 0 end
+
+	if buffer.eol_mode == buffer.EOL_LF or buffer.eol_mode == buffer.EOL_CRLF then
+		for i = 1, #contents do
+			local c = contents:sub(i,i)
+			if c == '\n' then
+				amount = amount + 1
+			end
+		end
+	end
+
+	if buffer.eol_mode == buffer.EOL_CR or buffer.eol_mode == buffer.EOL_CRLF then
+		for i = 1, #contents do
+			local c = contents:sub(i,i)
+			if c == '\r' then
+				amount = amount + 1
+			end
+		end
+	end
+	return amount
+end
+
 function M.count_chars(spaces, all)
 	local start_pos = all and 0 or buffer.selection_empty and 0 or buffer.selection_start
 	local end_pos = all and buffer.line_end_position[buffer.line_count] or buffer.selection_empty and 0 or buffer.selection_end
 	-- Textadept doth provide
 	local amount = buffer:count_characters(start_pos, end_pos)
-	if spaces then
-		amount = amount - count_spaces(all)
+	if spaces == M.DISCARD_SPACES then
+		amount = amount - M.count_spaces(all)
+	elseif spaces == M.DISCARD_NEWLINE then
+		amount = amount - count_newline(all)
 	end
 	return amount
 end
@@ -106,12 +139,13 @@ end
 local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
-		text = 	'Stats are shown as "Selected/Total":\n\n' ..
+		text = 	'Details are shown as "Selected/Total":\n\n' ..
 				'Lines:  ' .. (M.count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
 				'Words:  ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0) .. '\n' ..
 				'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0) .. '\n' ..
-			    'Characters (Spaces):  ' .. (M.count_chars(false, false) or 0) .. '/' .. (M.count_chars(false, true) or 0) .. '\n' ..
-			    'Characters (No Spaces):  ' .. (M.count_chars(true, false) or 0) .. '/' .. (M.count_chars(true, true) or 0)
+			    'Characters (inc. spaces):  ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' ..
+			    'Characters (No spaces):  ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)  .. '\n' ..
+				'Characters (No newlines):  ' .. (M.count_chars(M.DISCARD_NEWLINE, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINE, true) or 0)
 	}
 end
 
@@ -139,32 +173,39 @@ end
 
 -- This depends on bfstatbar_mgr to be used as bfstatbar
 events.connect(events.INITIALIZED, function ()
-	if M.display_words then
-		table.insert(bfstatbar, 3, function ()
-			return 'Words: ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0)
-		end)
-	end
 
 	if M.display_rows then
-		table.insert(bfstatbar, 3, function ()
+		table.insert(bfstatbar, type(M.display_rows) == 'boolean' and 3 or M.display_rows, function ()
 			return 'Rows: ' .. (M.count_rows() or 0)
 		end)
 	end
 
+	if M.display_words then
+		table.insert(bfstatbar, type(M.display_words) == 'boolean' and 1 or M.display_words, function ()
+			return 'Words: ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0)
+		end)
+	end
+
+	if M.display_chars_nl then
+		table.insert(bfstatbar, type(M.display_chars_nl) == 'boolean' and 1 or M.display_chars_nl, function ()
+			return 'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINE, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINE, true) or 0)
+		end)
+	end
+
 	if M.display_chars_ns then
-		table.insert(bfstatbar, 1, function ()
-			return 'Chars (NS): ' .. (M.count_chars(true, false) or 0) .. '/' .. (M.count_chars(true, true) or 0)
+		table.insert(bfstatbar, type(M.display_chars_ns) == 'boolean' and 1 or M.display_chars_ns, function ()
+			return 'Chars (NS): ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)
 		end)
 	end
 
 	if M.display_chars then
-		table.insert(bfstatbar, 1, function ()
-			return 'Chars: ' .. (M.count_chars(false, false) or 0) .. '/' .. (M.count_chars(false, true) or 0)
+		table.insert(bfstatbar, type(M.display_chars) == 'boolean' and 1 or M.display_chars, function ()
+			return 'Chars: ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0)
 		end)
 	end
 
 	if M.display_bytes then
-		table.insert(bfstatbar, 1, function ()
+		table.insert(bfstatbar, type(M.display_bytes) == 'boolean' and 1 or M.display_bytes, function ()
 			return 'Bytes: ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0)
 		end)
 	end
