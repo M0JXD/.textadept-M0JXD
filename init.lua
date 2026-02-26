@@ -86,13 +86,13 @@ textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 --ui.find.highlight_all_matches = true
 local auto_pairs = textadept.editing.auto_pairs
-local function setup_langs()
+local function setup_buffer()
 	-- Default settings
 	buffer.tab_width = 4
 	buffer.use_tabs = false
 	view.wrap_mode = view.WRAP_NONE
-	textadept.editing.strip_trailing_spaces = true
 	textadept.editing.auto_pairs = auto_pairs
+	textadept.editing.strip_trailing_spaces = true
 
 	local name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
@@ -110,8 +110,8 @@ local function setup_langs()
 		textadept.editing.strip_trailing_spaces = false
 	end
 end
-events.connect(events.LEXER_LOADED, setup_langs)
-events.connect(events.BUFFER_AFTER_SWITCH, setup_langs)
+events.connect(events.LEXER_LOADED, setup_buffer)
+events.connect(events.BUFFER_AFTER_SWITCH, setup_buffer)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
