@@ -1,24 +1,20 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
 -- Quick open module to open a terminal, file explorer etc. at the current file path
--- Windows currently untested
 
 local M = {}
 
--- TODO: Use xdg-open?
 M.git_client = 'lazygit'
+M.explorer = 'xdg-open'
 if LINUX then
 	M.terminal = 'gnome-terminal'
-	M.explorer = 'nemo'
 elseif BSD then
 	M.terminal = 'xfce4-terminal'
-	M.explorer = 'thunar'
 elseif WIN32 then
 	M.terminal = 'cmd.exe'
 	M.explorer = 'explorer.exe'
 	M.git_client = 'lazygit.exe'
 end
 
--- Open Terminal
 local function openTerminalHere(arg)
 	local argString = '~'
 	if LINUX or BSD then
@@ -42,7 +38,6 @@ local function openTerminalHere(arg)
 	end
 end
 
--- Open File Browser
 local function openFileBrowserHere()
 	local pathString = '~'
 	if LINUX or BSD then
