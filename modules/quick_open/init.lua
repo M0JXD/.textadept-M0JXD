@@ -5,11 +5,32 @@ local M = {}
 
 M.git_client = 'lazygit'
 M.explorer = 'xdg-open'
-if LINUX then
+
+local desktop = os.getenv('XDG_CURRENT_DESKTOP')
+if desktop == nil then desktop = '' end
+
+-- TODO: Some of these need different args to allow a startup directory
+if desktop:match('Cinnamon') then
 	M.terminal = 'gnome-terminal'
-elseif BSD then
+elseif desktop:match('XFCE') then
 	M.terminal = 'xfce4-terminal'
-elseif WIN32 then
+elseif desktop:match('KDE') then
+	M.terminal = 'konsole'
+elseif desktop:match('GNOME') then
+	M.terminal = 'kgx'
+elseif desktop:match('ENLIGHTENMENT') then
+	M.terminal = 'terminology'
+elseif desktop:match('MATE') then
+	M.terminal = 'mate-terminal'
+elseif desktop:match('LXDE') then
+	M.terminal = 'lxterminal'
+elseif desktop:match('LXQt') then
+	M.terminal = 'qterminal'
+else
+	M.terminal = 'xterm'
+end
+
+if WIN32 then
 	M.terminal = 'cmd.exe'
 	M.explorer = 'explorer.exe'
 	M.git_client = 'lazygit.exe'
