@@ -55,12 +55,6 @@ update_notifier.check_on_startup = true
 --minimap = require('minimap')
 --keys['ctrl+@'] = function () minimap() end
 
--- Default Settings, Keybindings
-buffer.tab_width = 4
-textadept.editing.strip_trailing_spaces = true
-textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
-textadept.run.run_in_background = true
---ui.find.highlight_all_matches = true
 -- Hide some folders from the quick open list
 table.insert(lfs.default_filter, '!.xmake')
 table.insert(lfs.default_filter, '!build_dir')
@@ -80,7 +74,7 @@ else
 	keys['meta+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
 end
 
--- Language Specific
+-- Buffer/Language Settings
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.H = 'cpp'
@@ -88,27 +82,32 @@ lexer.detect_extensions.ino = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/*|*/'
+textadept.run.run_in_background = true
+textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+--ui.find.highlight_all_matches = true
 local auto_pairs = textadept.editing.auto_pairs
 local function setup_langs()
+	-- Default settings
+	buffer.tab_width = 4
+	buffer.use_tabs = false
+	view.wrap_mode = view.WRAP_NONE
+	textadept.editing.strip_trailing_spaces = true
+	textadept.editing.auto_pairs = auto_pairs
+
 	local name = buffer:get_lexer()
-	if name == 'makefile' then
+	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	end
 
 	if name == 'dart' then
 		buffer.tab_width = 2
-		buffer.use_tabs = false
 		format.on_save = true
 	end
 
 	if name == 'text' or name == 'markdown' then
-		textadept.editing.auto_pairs = nil
 		view.wrap_mode = view.WRAP_WHITESPACE
+		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
-	else
-		textadept.editing.auto_pairs = auto_pairs
-		view.wrap_mode = view.WRAP_NONE
-		textadept.editing.strip_trailing_spaces = true
 	end
 end
 events.connect(events.LEXER_LOADED, setup_langs)
