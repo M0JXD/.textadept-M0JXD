@@ -34,11 +34,13 @@ function openTerminalHere(arg)
 		io.popen(M.terminal..' '..argString)
 	elseif WIN32 then
         local prePath = buffer.filename:match('.+\\')
-        argString = ' /K \'cd /d '..prePath..'\''
+        argString = ' /K "cd /d '..prePath..'"'
+		ui.print(argString)
 		if arg then
-			argString = '/C \'cd /d '..prePath..' ; '.. arg .. '\''
+			argString = ' /K "cd /d '..prePath..' & '.. arg .. '"'
+			ui.print(argString)
 		end
-		io.popen('start '..M.terminal..argString)
+		io.popen('start '..M.terminal..' '..argString)
 	end
 end
 
