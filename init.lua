@@ -60,6 +60,8 @@ table.insert(lfs.default_filter, '!.xmake')
 table.insert(lfs.default_filter, '!build_dir')
 table.insert(lfs.default_filter, '!build')
 table.insert(lfs.default_filter, '!assets')
+table.insert(lfs.default_filter, '!.vs')
+table.insert(lfs.default_filter, '!.vscode')
 
 -- Match some VSCode bindings
 if not CURSES then
