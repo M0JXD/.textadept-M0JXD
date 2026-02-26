@@ -37,7 +37,6 @@ function openTerminalHere(arg)
         argString = ' /K "cd /d '..prePath..'"'
 		if arg then
 			argString = ' /C "cd /d '..prePath..' & '.. arg .. '"'
-			ui.print(argString)
 		end
 		io.popen('start '..M.terminal..' '..argString)
 	end
