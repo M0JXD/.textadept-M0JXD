@@ -5,6 +5,7 @@
 local M = {}
 
 -- TODO: I should really use xdg-open
+M.git_client = 'lazygit'
 if LINUX then
 	M.terminal = 'gnome-terminal'
 	M.explorer = 'nemo'
@@ -14,36 +15,50 @@ elseif BSD then
 elseif WIN32 then
 	M.terminal = 'cmd.exe'
 	M.explorer = 'explorer.exe'
+	M.git_client = 'lazygit.exe'
 end
 
 -- Open Terminal
-function openTerminalHere()
-	local pathString = "~"
+function openTerminalHere(arg)
+	local argString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
-			pathString = buffer.filename:match(".+/")
+			argString = buffer.filename:match('.+/')
+			argString = '--working-directory='..argString
 		end
-		io.popen(M.terminal.." --working-directory="..pathString.." &")
+		if arg then
+			argString = argString .. ' -e '..arg
+		else
+			argString = argString .. ' &'
+		end
+		io.popen(M.terminal..' '..argString)
 	elseif WIN32 then
-        local prePath = buffer.filename:match(".+\\")
-        pathString = " /K \"cd /d "..prePath.."\""
-		io.popen('start '..M.terminal..pathString)
+        local prePath = buffer.filename:match('.+\\')
+        argString = ' /K \'cd /d '..prePath..'\''
+		if arg then
+			argString = '/C \'cd /d '..prePath..' ; '.. arg .. '\''
+		end
+		io.popen('start '..M.terminal..argString)
 	end
 end
 
 -- Open File Browser
 function openFileBrowserHere()
-	local pathString = "~"
+	local pathString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
-			pathString = buffer.filename:match(".+/")
+			pathString = buffer.filename:match('.+/')
 		end
-		io.popen(M.explorer.." "..pathString.." &")
+		io.popen(M.explorer..' '..pathString..' &')
 	elseif WIN32 then
-        local prePath = buffer.filename:match(".+\\")
-        pathString = " /e,\""..prePath.."\""
+        local prePath = buffer.filename:match('.+\\')
+        pathString = ' /e,\''..prePath..'\''
 		io.popen('start '..M.explorer..pathString)
 	end
+end
+
+function openGitClientHere()
+	openTerminalHere(M.git_client)
 end
 
 -- Add them to the menu with keybindings
@@ -58,6 +73,12 @@ keys['ctrl+E'] = openFileBrowserHere
 _L['Open File Browser Here...'] = 'Open _File Browser Here...'
 table.insert(quick_open, 6, {
 	_L['Open File Browser Here...'], openFileBrowserHere
+})
+
+keys['ctrl+G'] = openGitClientHere
+_L['Open Git Client Here...'] = 'Open _Git Client Here...'
+table.insert(quick_open, 7, {
+	_L['Open Git Client Here...'], openGitClientHere
 })
 
 return M
