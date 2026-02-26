@@ -109,8 +109,8 @@ local function setup_buffer()
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
 	end
+	events.emit(events.LEXER_LOADED)
 end
-events.connect(events.LEXER_LOADED, setup_buffer)
 events.connect(events.BUFFER_AFTER_SWITCH, setup_buffer)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
