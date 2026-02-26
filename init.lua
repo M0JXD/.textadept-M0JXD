@@ -52,8 +52,8 @@ update_notifier.check_on_startup = true
 --require('textredux').hijack()
 -- Experimental features by @Fwirt (requires custom build)
 --local textbar = require('textbar')
---map = require('minimap')
---keys['ctrl+@'] = function () map() end
+--minimap = require('minimap')
+--keys['ctrl+@'] = function () minimap() end
 
 -- Default Settings, Keybindings
 buffer.tab_width = 4
@@ -129,7 +129,6 @@ table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing 
 	events.emit(events.UPDATE_UI)
 end})
 
--- Display whether strip trailing whitespace is on
 table.insert(bfstatbar, 5, function ()
 	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
 end)
