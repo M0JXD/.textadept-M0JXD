@@ -89,7 +89,8 @@ lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/*|*/'
 local auto_pairs = textadept.editing.auto_pairs
-events.connect(events.LEXER_LOADED, function(name)
+local function setup_langs()
+	local name = buffer:get_lexer()
 	if (name == 'makefile') then
 		buffer.use_tabs = true
 	end
@@ -109,7 +110,10 @@ events.connect(events.LEXER_LOADED, function(name)
 		view.wrap_mode = view.WRAP_NONE
 		textadept.editing.strip_trailing_spaces = true
 	end
-end)
+end
+events.connect(events.LEXER_LOADED, setup_langs)
+events.connect(events.BUFFER_AFTER_SWITCH, setup_langs)
+
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
 
