@@ -91,17 +91,17 @@ textadept.editing.comment_string.c = '/*|*/'
 local auto_pairs = textadept.editing.auto_pairs
 local function setup_langs()
 	local name = buffer:get_lexer()
-	if (name == 'makefile') then
+	if name == 'makefile' then
 		buffer.use_tabs = true
 	end
 
-	if (name == 'dart') then
+	if name == 'dart' then
 		buffer.tab_width = 2
 		buffer.use_tabs = false
 		format.on_save = true
 	end
 
-	if (name == 'text' or name == 'markdown') then
+	if name == 'text' or name == 'markdown' then
 		textadept.editing.auto_pairs = nil
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.strip_trailing_spaces = false
