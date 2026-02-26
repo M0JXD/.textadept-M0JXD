@@ -1,19 +1,16 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- Simple document statistics module, showing word count and selection characteristics
+-- Simple document statistics module, providing additional details about the buffer and selections.
 
 local M = {}
 
-M.menu_entry = true
-M.display_words = false
-M.display_bytes = false
-M.display_rows = false
-M.display_chars = false
+M.menu_entry       = true
+M.display_words    = false
+M.display_bytes    = false
+M.display_rows     = false
+M.display_chars    = false
 M.display_chars_ns = false
 M.display_chars_nl = false
-
-M.ALL_SPACES = 0
-M.DISCARD_SPACES = 1
-M.DISCARD_NEWLINES = 2
+M.replace_lines    = false  -- If set display_rows is ignored
 
 -- Separators for the Word Count Algo
 M.separators = {
@@ -43,9 +40,22 @@ M.separators = {
 	' '
 }
 
+-- Constants for count_chars()
+M.ALL_SPACES = 0
+M.DISCARD_SPACES = 1
+M.DISCARD_NEWLINES = 2
+
+function M.count_rows()
+	local sel_row = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
+		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
+	return buffer.selection_empty and 0 or sel_row
+end
+
+-- TODO: When there is no selection, have these return the value for the current line.
+
 -- Algo adapted from https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
 local function checkMatchesSeparator(c)
-	for i,v in ipairs(M.separators) do
+	for _,v in ipairs(M.separators) do
 		if (c == v) then
 			return true
 		end
@@ -70,14 +80,6 @@ function M.count_words(all)
 	return count
 end
 
--- Selected Rows
-function M.count_rows()
-	local sel_row = buffer:line_from_position(buffer.selection_n_end[buffer.main_selection]) -
-		buffer:line_from_position(buffer.selection_n_start[buffer.main_selection]) + 1
-	return buffer.selection_empty and 0 or sel_row
-end
-
--- Bytes (not strictly the same as characters)
 function M.count_bytes(all)
 	local contents = all and buffer:get_text() or buffer:get_sel_text()
 	return #contents
@@ -139,18 +141,16 @@ local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
 		text = 	'Details are shown as "Selected/Total":\n\n' ..
-				'Rows:  ' .. (M.count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
-				'Words:  ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0) .. '\n' ..
-				'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0) .. '\n' ..
-			    'Characters (inc. spaces):  ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' ..
-			    'Characters (No spaces):  ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)  .. '\n' ..
-				'Characters (No newlines):  ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0)
+		'Rows:  ' .. (M.count_rows() or 0) .. '/' .. buffer.line_count .. '\n' ..
+		'Words:  ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0) .. '\n' ..
+		'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0) .. '\n' ..
+		'Characters (inc. spaces):  ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' ..
+		'Characters (No spaces):  ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)  .. '\n' ..
+		'Characters (No newlines):  ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0)
 	}
 end
 
 -- Insert into tools menu (code adapted from spellcheck module)
---table.insert(textadept.menu.menubar[_L['Tools']], 20, doc_stats_menu)
-
 if M.menu_entry then
 	_L['Document Statistics'] = '_Document Statistics'
 	doc_stats_menu = { _L['Document Statistics'], stats_dialog }
@@ -172,10 +172,17 @@ end
 
 -- This depends on bfstatbar_mgr to be used as bfstatbar
 events.connect(events.INITIALIZED, function ()
-
-	if M.display_rows then
+	if M.display_rows and not M.replace_lines then
 		table.insert(bfstatbar, type(M.display_rows) == 'boolean' and 3 or M.display_rows, function ()
 			return 'Rows: ' .. (M.count_rows() or 0)
+		end)
+	end
+
+	if M.replace_lines then
+		table.remove(bfstatbar, 1)
+		table.insert(bfstatbar, 1, function ()
+			local rows = M.count_rows()
+			return 'Lines: ' .. (rows > 0 and rows or buffer:line_from_position(buffer.current_pos)) .. '/' .. buffer.line_count
 		end)
 	end
 

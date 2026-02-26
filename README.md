@@ -100,8 +100,9 @@ It will add a menu under Tools which will show a dialog with statistics for the 
 You can also optionally add these details in the buffer status bar (this requires `bfstatbar_mgr` be imported as bfstatbar).
 You may set each `display_` feild as true to use the default placement or use a number to insert it to a postion of your choice.
 
-The interal utilities functions are exposed, e.g. you may call `doc_stats.count_words(false)` to get the words for the current selection (true would get the whole document).
-They work on the currently viewed buffer.
+There is a boolean field called `replace_lines` that will change the behaviour of Textadept's current line counter so that it shows the amount of lines when a selection exists, but is otherwise the same when there is no selection.
+
+The interal utilities functions are exposed, e.g. you may call `doc_stats.count_words(false)` to get the words for the current selection (true would get the whole document). They work on the currently active buffer.
 
 The word count feature is based on https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
 The separators are configurable in the doc_stats.separators array. By default, it only matches whitespace, which provides the same results as MS Office.
@@ -113,7 +114,7 @@ doc_stats = require('doc_stats')
 doc_stats.menu_entry = false
 doc_stats.display_words = true
 doc_stats.display_bytes = true
-doc_stats.display_rows = 3
+doc_stats.replace_lines = true
 doc_stats.display_chars = 5
 doc_stats.display_chars_ns = 1
 

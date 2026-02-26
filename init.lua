@@ -16,7 +16,7 @@ require('distraction_free')
 require('quick_open')
 ds = require('doc_stats')
 ds.display_words = true
-ds.display_rows = true
+ds.replace_lines = true
 
 if not BSD then
 	drpc = require('discord_rpc')
