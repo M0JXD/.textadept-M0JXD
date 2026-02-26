@@ -27,7 +27,7 @@ function openTerminalHere(arg)
 			argString = '--working-directory='..argString
 		end
 		if arg then
-			argString = argString .. ' -e '..arg
+			argString = argString .. ' --maximize'..' -e '.. arg
 		else
 			argString = argString .. ' &'
 		end
