@@ -4,7 +4,7 @@
 
 local M = {}
 
--- TODO: I should really use xdg-open
+-- TODO: Use xdg-open?
 M.git_client = 'lazygit'
 if LINUX then
 	M.terminal = 'gnome-terminal'
@@ -19,7 +19,7 @@ elseif WIN32 then
 end
 
 -- Open Terminal
-function openTerminalHere(arg)
+local function openTerminalHere(arg)
 	local argString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
@@ -43,7 +43,7 @@ function openTerminalHere(arg)
 end
 
 -- Open File Browser
-function openFileBrowserHere()
+local function openFileBrowserHere()
 	local pathString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
@@ -57,7 +57,7 @@ function openFileBrowserHere()
 	end
 end
 
-function openGitClientHere()
+local function openGitClientHere()
 	openTerminalHere(M.git_client)
 end
 
