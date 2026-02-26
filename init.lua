@@ -86,7 +86,7 @@ textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 --ui.find.highlight_all_matches = true
 local auto_pairs = textadept.editing.auto_pairs
-local function setup_buffer()
+events.connect(events.BUFFER_AFTER_SWITCH, function ()
 	-- Default settings
 	buffer.tab_width = 4
 	buffer.use_tabs = false
@@ -110,8 +110,7 @@ local function setup_buffer()
 		textadept.editing.strip_trailing_spaces = false
 	end
 	events.emit(events.LEXER_LOADED)
-end
-events.connect(events.BUFFER_AFTER_SWITCH, setup_buffer)
+end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
