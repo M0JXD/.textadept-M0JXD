@@ -74,7 +74,9 @@ function M.select_theme()
         end
     end
     local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
-    if i then view:set_theme(themes[i]) end
+    if i then
+		view:set_theme(themes[i], {font = (M.win32_default_font and 'Consolas' or M.font_type), size = M.font_size})
+	end
 end
 
 local view = textadept.menu.menubar[_L['View']]
