@@ -98,14 +98,10 @@ local function setup_buffer(name)
 
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
-	end
-
-	if name == 'dart' then
+	elseif name == 'dart' then
 		buffer.tab_width = 2
 		format.on_save = true
-	end
-
-	if name == 'text' or name == 'markdown' then
+	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
