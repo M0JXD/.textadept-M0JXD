@@ -84,19 +84,18 @@ lexer.detect_extensions.ino = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/*|*/'
+-- Default settings
+--ui.find.highlight_all_matches = true
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
---ui.find.highlight_all_matches = true
 local auto_pairs = textadept.editing.auto_pairs
-events.connect(events.BUFFER_AFTER_SWITCH, function ()
-	-- Default settings
+local function setup_buffer(name)
 	buffer.tab_width = 4
 	buffer.use_tabs = false
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
 
-	local name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	end
@@ -111,7 +110,11 @@ events.connect(events.BUFFER_AFTER_SWITCH, function ()
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
 	end
-	events.emit(events.LEXER_LOADED)
+end
+events.connect(events.LEXER_LOADED, setup_buffer)
+events.connect(events.BUFFER_AFTER_SWITCH, function ()
+	setup_buffer(buffer:get_lexer())
+	events.emit(events.LEXER_LOADED, buffer:get_lexer())
 end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
