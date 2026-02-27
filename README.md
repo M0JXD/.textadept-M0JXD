@@ -56,9 +56,10 @@ It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
 
 By default, it will use:
 
-- Nemo and GNOME Terminal on Linux
-- Thunar and XFCE4 Terminal on BSD
-- explorer.exe and cmd.exe on Windows
+- xdg-open to open a file browser (which should work on Linux and BSD).
+- The suspected default terminal for the currently detected desktop environment.
+- `explorer.exe` and `cmd.exe` on Windows
+- It can also launch Lazygit, and does so with a fullscreen terminal.
 
 I'm unsure how well the Windows implementation will work for different explorers and terminals.
 I don't have any Apple devices so I'm unable to implement for macOS.
@@ -68,6 +69,8 @@ Example usage:
 ```lua
 local quick_open = require('quick_open')
 quick_open.terminal = 'cool-retro-term'
+quick_open.term_dir_arg = '--workdir '
+quick_open.term_max_arg = ' --fullscreen'
 quick_open.explorer = 'nautilus'
 ```
 
