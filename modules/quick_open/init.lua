@@ -7,8 +7,8 @@ M.git_client = 'lazygit'
 M.explorer = 'xdg-open'
 
 -- Most GTK terminals use these
-local term_dir_arg = '--working-directory='
-local term_max_arg = ' --maximize'
+M.term_dir_arg = '--working-directory='
+M.term_max_arg = ' --maximize'
 
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
@@ -25,12 +25,12 @@ elseif desktop:match('GNOME') then
 	M.terminal = 'kgx'
 elseif desktop:match('KDE') then
 	M.terminal = 'konsole'
-	term_dir_arg = '--workdir '
-	term_max_arg = ' --fullscreen'
+	M.term_dir_arg = '--workdir '
+	M.term_max_arg = ' --fullscreen'
 elseif desktop:match('ENLIGHTENMENT') then
 	M.terminal = 'terminology'
-	term_dir_arg = '-d='
-	term_max_arg = ' -M'
+	M.term_dir_arg = '-d='
+	M.term_max_arg = ' -M'
 elseif desktop:match('LXQt') then
 	M.terminal = 'qterminal'
 	-- Presumably the same as lxterminal?
@@ -50,10 +50,10 @@ local function openTerminalHere(arg)
 	if LINUX or BSD then
 		if buffer.filename then
 			argString = buffer.filename:match('.+/')
-			argString = term_dir_arg..argString
+			argString = M.term_dir_arg..argString
 		end
 		if arg then
-			argString = argString .. term_max_arg ..' -e '.. arg
+			argString = argString .. M.term_max_arg ..' -e '.. arg
 		else
 			argString = argString .. ' &'
 		end
