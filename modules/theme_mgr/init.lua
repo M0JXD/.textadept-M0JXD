@@ -7,17 +7,31 @@
 
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
-local M = { theme = {}, font = {} }
+local M = { theme = {}, font = {}, mt = {} }
 M.theme.light = 'light'
 M.theme.dark = 'dark'
 M.theme.term = 'term'
 M.font.size = 12
 M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 
-events.connect(events.INITIALIZED, function ()
+function M.check_font_available()
 	if not CURSES then
-		-- TODO: Check fonts exist
-		local font_exists = WIN32 and false or true
+		local font_check_cmd
+		if WIN32 then
+			-- Source - https://superuser.com/a/1534136
+			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+			font_check_cmd = 'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s'
+			-- Source - https://superuser.com/a/1534136
+			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+			--font_check_cmd= 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
+		else
+			font_check_cmd = 'fc-list'  -- Linux/BSD
+		end
+		local proc = os.spawn(font_check_cmd)
+		local list = proc:read('a')
+		local font_exists = list:match(M.font.family)
 		if not font_exists then
 			M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 		end
@@ -31,33 +45,38 @@ events.connect(events.INITIALIZED, function ()
 			M.theme.term = 'term'
 		end
 	end
-end)
+end
 
-local function setThemes(view)
-	if _THEME == 'dark' then
-		view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+function M.set_themes(view)
+	if CURSES then
+		view:set_theme(M.theme.term)
 	else
-		view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+		if _THEME == 'dark' then
+			view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+		else
+			view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+		end
 	end
 end
 
 if not CURSES then
-	events.connect(events.INITIALIZED, function () setThemes(view) end)
-	events.connect(events.VIEW_NEW, function () setThemes(view) end)
+	events.connect(events.VIEW_NEW, function () M.set_themes(view) end)
 	events.connect(events.MODE_CHANGED, function()
 		if _THEME == 'dark' then
-			for _, view in ipairs(_VIEWS) do setThemes(view) end
+			for _, view in ipairs(_VIEWS) do M.set_themes(view) end
 			pcall(function () ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size}) end)
 		else
-			for _, view in ipairs(_VIEWS) do setThemes(view) end
+			for _, view in ipairs(_VIEWS) do M.set_themes(view) end
 			pcall(function () ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size}) end)
 		end
 	end)
-else
-	events.connect(events.INITIALIZED, function () view:set_theme(M.theme.term) end)
 end
 
--- Theme selector thanks to @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
+M.mt.__call = function () M.check_font_available() ; M.set_themes(_G.view) end
+M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
+setmetatable(M, M.mt)
+
+-- Theme selector by @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
 function M.select_theme()
     local themes = {}
     for _, dir in ipairs{_USERHOME .. '/themes', _HOME .. '/themes'} do

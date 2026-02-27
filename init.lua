@@ -5,10 +5,10 @@ local theme_mgr = require('theme_mgr')
 theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'ayu-evolve'
-theme_mgr.font.family = 'Dejavu Sans Mono'
---theme_mgr.font.family= 'Noto Mono'
+theme_mgr.font.family= 'Noto Mono'
 --theme_mgr.font.family= 'FreeMono'
 theme_mgr.font.size = 14
+theme_mgr()
 view.edge_column = 100
 
 -- Modules (M0JXD)
@@ -95,12 +95,13 @@ local function setup_buffer(name)
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
+	if format then format.on_save = false end
 
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
 		buffer.tab_width = 2
-		format.on_save = true
+		if format then format.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
