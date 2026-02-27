@@ -6,27 +6,36 @@ local M = {}
 M.git_client = 'lazygit'
 M.explorer = 'xdg-open'
 
+-- Most GTK terminals use these
+local term_dir_arg = '--working-directory='
+local term_max_arg = ' --maximize'
+
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
 
--- TODO: Some of these need different args to allow a startup directory
 if desktop:match('Cinnamon') then
 	M.terminal = 'gnome-terminal'
 elseif desktop:match('XFCE') then
 	M.terminal = 'xfce4-terminal'
-elseif desktop:match('KDE') then
-	M.terminal = 'konsole'
-elseif desktop:match('GNOME') then
-	M.terminal = 'kgx'
-elseif desktop:match('ENLIGHTENMENT') then
-	M.terminal = 'terminology'
 elseif desktop:match('MATE') then
 	M.terminal = 'mate-terminal'
 elseif desktop:match('LXDE') then
 	M.terminal = 'lxterminal'
+elseif desktop:match('GNOME') then
+	M.terminal = 'kgx'
+elseif desktop:match('KDE') then
+	M.terminal = 'konsole'
+	term_dir_arg = '--workdir '
+	term_max_arg = ' --fullscreen'
+elseif desktop:match('ENLIGHTENMENT') then
+	M.terminal = 'terminology'
+	term_dir_arg = '-d='
+	term_max_arg = ' -M'
 elseif desktop:match('LXQt') then
 	M.terminal = 'qterminal'
+	-- Presumably the same as lxterminal?
 else
+	-- xterm doesn't really support giving a directory at startup?
 	M.terminal = 'xterm'
 end
 
@@ -41,10 +50,10 @@ local function openTerminalHere(arg)
 	if LINUX or BSD then
 		if buffer.filename then
 			argString = buffer.filename:match('.+/')
-			argString = '--working-directory='..argString
+			argString = term_dir_arg..argString
 		end
 		if arg then
-			argString = argString .. ' --maximize'..' -e '.. arg
+			argString = argString .. term_max_arg ..' -e '.. arg
 		else
 			argString = argString .. ' &'
 		end
