@@ -52,4 +52,34 @@ elseif not WIN32 then
 	end)
 end
 
+-- Theme selector thanks to @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
+function M.select_theme()
+    local themes = {}
+    for _, dir in ipairs{_USERHOME .. '/themes', _HOME .. '/themes'} do
+        if lfs.attributes(dir, 'mode') == 'directory' then
+            for file in lfs.dir(dir) do
+                local name = file:match('^(.+)%.lua$')
+                if name then themes[#themes + 1] = name end
+            end
+        end
+    end
+    table.sort(themes)
+    -- Remove duplicates.
+    local i = 1
+    while i < #themes do
+        if themes[i] == themes[i + 1] then
+            table.remove(themes, i + 1)
+        else
+            i = i + 1
+        end
+    end
+    local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
+    if i then view:set_theme(themes[i]) end
+end
+
+local view = textadept.menu.menubar[_L['View']]
+table.insert(view, #view - 2, {_L['Select Theme'] , M.select_theme})
+table.insert(view, #view - 2, {''})
+
+
 return M
