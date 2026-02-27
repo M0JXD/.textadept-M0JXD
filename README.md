@@ -56,12 +56,11 @@ It's based on https://github.com/orbitalquark/textadept/wiki/TerminalHere
 
 By default, it will use:
 
-- xdg-open to open a file browser (which should work on Linux and BSD).
+- `explorer.exe` and `cmd.exe` on Windows (I'm unsure how well it will work for different explorers and terminals).
+- xdg-open to open a file browser on Linux and BSD.
 - The suspected default terminal for the currently detected desktop environment.
-- `explorer.exe` and `cmd.exe` on Windows
-- It can also launch Lazygit, and does so with a fullscreen terminal.
+- There's also an option to laucnh a TUI Git client with a fullscreen terminal. The default is Lazygit. 
 
-I'm unsure how well the Windows implementation will work for different explorers and terminals.
 I don't have any Apple devices so I'm unable to implement for macOS.
 
 Example usage:
@@ -72,6 +71,7 @@ quick_open.terminal = 'cool-retro-term'
 quick_open.term_dir_arg = '--workdir '
 quick_open.term_max_arg = ' --fullscreen'
 quick_open.explorer = 'nautilus'
+quick_open.git_client = 'gitui'
 ```
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
