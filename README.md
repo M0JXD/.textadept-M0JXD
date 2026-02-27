@@ -4,7 +4,7 @@ My collection of things I use/modified for Textadept. There's:
 - My init.lua
 - Various simple utility modules (detailed below)
 - Four themes
-    - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 color terminals with textadept-curses.
+    - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones. The dark one uses a pure black background and works well in 256 colour terminals with textadept-curses.
     - Two Xed themes to match the default highlighting in Linux Mint's default editor.
 
 Mainly here so I can grab them wherever I need them.
@@ -14,7 +14,7 @@ Mainly here so I can grab them wherever I need them.
 To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).
 Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
 - On Windows, many fonts are often missing, so it can opt to use Textadept's default font.
-- Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-color support. The module will attempt to detect if a terminal has true-color support so it can apply a fallback theme if necessary.
+- Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support so it can apply a fallback theme if necessary.
 
 By default it uses Textadept's default themes and settings.
 Example usage:
@@ -59,7 +59,7 @@ By default, it will use:
 - `explorer.exe` and `cmd.exe` on Windows (I'm unsure how well it will work for different explorers and terminals).
 - xdg-open to open a file browser on Linux and BSD.
 - The suspected default terminal for the currently detected desktop environment.
-- There's also an option to laucnh a TUI Git client with a fullscreen terminal. The default is Lazygit. 
+- There's also an option to launch a TUI Git client with a fullscreen terminal. The default is Lazygit.
 
 I don't have any Apple devices so I'm unable to implement for macOS.
 
@@ -101,11 +101,11 @@ Document Statistics is inspired by the plugin of the same name in the Xed editor
 It will add a menu under Tools which will show a dialog with statistics for the current selection and the whole document.
 
 You can also optionally add these details in the buffer status bar (this requires `bfstatbar_mgr` be imported as bfstatbar).
-You may set each `display_` feild as true to use the default placement or use a number to insert it to a postion of your choice.
+You may set each `display_` field as true to use the default placement or use a number to insert it to a position of your choice.
 
 There is a boolean field called `replace_lines` that will change the behaviour of Textadept's current line counter so that it shows the amount of lines when a selection exists, but is otherwise the same when there is no selection.
 
-The interal utilities functions are exposed, e.g. you may call `doc_stats.count_words(false)` to get the words for the current selection (true would get the whole document). They work on the currently active buffer.
+The internal utilities functions are exposed, e.g. you may call `doc_stats.count_words(false)` to get the words for the current selection (true would get the whole document). They work on the currently active buffer.
 
 The word count feature is based on https://www.countofwords.com/word-count-algorithms-and-how-you-can-use-them.html
 The separators are configurable in the doc_stats.separators array. By default, it only matches whitespace, which provides the same results as MS Office.
