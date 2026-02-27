@@ -1,55 +1,60 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
 
--- This is a simple theme manager for Textadept.
+-- A simple theme manager for Textadept.
 -- Allow system switching and automatic detection/application of what's best in some environments.
--- Handy if you don't want to override the default themes to acheive this
--- (Leaving a handy fallback for when you edit your themes and crash everything...)
+-- Handy if you don't want to override the default themes to achieve this.
+-- (Leaving a fallback for when you edit your themes and crash everything...)
 
--- TODO: GTK2 version doesn't detect system colours?
+-- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
-local M = {}
-M.light_theme = 'light'
-M.dark_theme = 'dark'
-M.term_theme = 'term'
-M.term_fallback_theme = 'term'
-M.font_type = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
-M.font_size = 12
-M.win32_default_font = true  -- Windows fonts are not always available, so force override to the default type
+local M = { theme = {}, font = {} }
+M.theme.light = 'light'
+M.theme.dark = 'dark'
+M.theme.term = 'term'
+M.font.size = 12
+M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 
--- GUI Themeing
+events.connect(events.INITIALIZED, function ()
+	if not CURSES then
+		-- TODO: Check fonts exist
+		local font_exists = WIN32 and false or true
+		if not font_exists then
+			M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+		end
+	else
+		-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
+		-- Alacritty reports 'alacritty'
+		-- FreeBSD oddly reports 'xterm'
+		local terminal = os.getenv("TERM")
+		if terminal == nil then terminal = 'WIN' end
+		if terminal == 'xterm' or terminal == 'linux' or terminal == 'WIN' then
+			M.theme.term = 'term'
+		end
+	end
+end)
+
+local function setThemes(view)
+	if _THEME == 'dark' then
+		view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+	else
+		view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+	end
+end
+
 if not CURSES then
-	events.connect(events.VIEW_NEW, function()
-		if WIN32 and M.win32_default_font then M.font_type = 'Consolas' end
-		if _THEME == 'dark' then
-			view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size})
-		else
-			view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size})
-		end
-	end)
-
+	events.connect(events.INITIALIZED, function () setThemes(view) end)
+	events.connect(events.VIEW_NEW, function () setThemes(view) end)
 	events.connect(events.MODE_CHANGED, function()
-		if WIN32 and M.win32_default_font then M.font_type = 'Consolas' end
 		if _THEME == 'dark' then
-			for _, view in ipairs(_VIEWS) do view:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end
-			pcall(function () ui.command_entry:set_theme(M.dark_theme, {font = M.font_type, size = M.font_size}) end)
+			for _, view in ipairs(_VIEWS) do setThemes(view) end
+			pcall(function () ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size}) end)
 		else
-			for _, view in ipairs(_VIEWS) do view:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end
-			pcall(function () ui.command_entry:set_theme(M.light_theme, {font = M.font_type, size = M.font_size}) end)
+			for _, view in ipairs(_VIEWS) do setThemes(view) end
+			pcall(function () ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size}) end)
 		end
 	end)
-	events.emit(events.MODE_CHANGED)
-
--- CURSES Theming
-elseif not WIN32 then
-	-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report xterm-256color
-	local terminal = os.getenv("TERM")
-	events.connect(events.INITIALIZED, function()
-		if (terminal == 'xterm-256color') or (terminal == 'alacritty') then
-			view:set_theme(M.term_theme)
-		elseif (terminal == 'xterm') or (terminal == 'linux') or BSD then
-			view:set_theme(M.term_fallback_theme)
-		end
-	end)
+else
+	events.connect(events.INITIALIZED, function () view:set_theme(M.theme.term) end)
 end
 
 -- Theme selector thanks to @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
@@ -75,13 +80,12 @@ function M.select_theme()
     end
     local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
     if i then
-		view:set_theme(themes[i], {font = (M.win32_default_font and 'Consolas' or M.font_type), size = M.font_size})
+		view:set_theme(themes[i], {font = M.font.family, size = M.font.size})
 	end
 end
 
-local view = textadept.menu.menubar[_L['View']]
-table.insert(view, #view - 2, {_L['Select Theme'] , M.select_theme})
-table.insert(view, #view - 2, {''})
-
+local view_menu = textadept.menu.menubar[_L['View']]
+table.insert(view_menu, #view_menu - 2, {_L['Select Theme'] , M.select_theme})
+table.insert(view_menu, #view_menu - 2, {''})
 
 return M

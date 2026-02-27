@@ -13,21 +13,21 @@ Mainly here so I can grab them wherever I need them.
 
 To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).
 Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
-- On Windows, many fonts are often missing, so it can opt to use Textadept's default font.
+- If a requested font is missing, it will opt to use Textadept's default font instead of the OS default font.
 - Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support so it can apply a fallback theme if necessary.
+- I've added [@kbarni's theme selector](https://github.com/orbitalquark/textadept/pull/690#issue-3996335774) too just for fun!
 
 By default it uses Textadept's default themes and settings.
 Example usage:
 
 ```lua
 local theme_mgr = require('theme_mgr')
-theme_mgr.light_theme = 'ayu-light'
-theme_mgr.dark_theme = 'ayu-evolve'
-theme_mgr.term_theme = 'base16-catppuccin-latte'
-theme_mgr.font_type = 'Noto Mono'
-theme_mgr.font_size = 14
-theme_mgr.win32_default_font = false
-theme_mgr.term_fallback_theme = 'term'
+theme_mgr.theme.light = 'ayu-light'
+theme_mgr.theme.dark = 'ayu-evolve'
+theme_mgr.theme.term = 'base16-catppuccin-latte'
+theme_mgr.theme.term_fallback = 'term'
+theme_mgr.font.family= 'FreeMono'
+theme_mgr.font.size = 14
 ```
 
 ## Distraction Free Module

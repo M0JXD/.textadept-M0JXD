@@ -2,12 +2,13 @@
 
 -- Themeing
 local theme_mgr = require('theme_mgr')
-theme_mgr.light_theme = 'ayu-light'
-theme_mgr.dark_theme = 'ayu-evolve'
-theme_mgr.font_type = 'Dejavu Sans Mono'
---theme_mgr.font_type = 'Noto Mono'
---theme_mgr.font_type = 'FreeMono'
-theme_mgr.font_size = 14
+theme_mgr.theme.light = 'ayu-light'
+theme_mgr.theme.dark = 'ayu-evolve'
+theme_mgr.theme.term = 'ayu-evolve'
+theme_mgr.font.family = 'Dejavu Sans Mono'
+--theme_mgr.font.family= 'Noto Mono'
+--theme_mgr.font.family= 'FreeMono'
+theme_mgr.font.size = 14
 view.edge_column = 100
 
 -- Modules (M0JXD)
