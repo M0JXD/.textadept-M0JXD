@@ -1,4 +1,4 @@
--- Copyright 2025 Jamie Drinkell. MIT License.
+-- Copyright 2025-2026 Jamie Drinkell. MIT License.
 
 -- A simple theme manager for Textadept.
 -- Allow system switching and automatic detection/application of what's best in some environments.
@@ -38,10 +38,9 @@ function M.check_font_available()
 	else
 		-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
 		-- Alacritty reports 'alacritty'
-		-- FreeBSD oddly reports 'xterm'
 		local terminal = os.getenv("TERM")
 		if terminal == nil then terminal = 'WIN' end
-		if terminal == 'xterm' or terminal == 'linux' or terminal == 'WIN' then
+		if terminal == 'xterm' or terminal == 'linux' or terminal == 'cons25' or terminal == 'WIN' then
 			M.theme.term = 'term'
 		end
 	end
