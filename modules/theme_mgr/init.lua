@@ -14,7 +14,7 @@ M.theme.term = 'term'
 M.font.size = 12
 M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 
-function M.check_font_available()
+function M.check_platform_limits()
 	if not CURSES then
 		local font_check_cmd
 		if WIN32 then
@@ -71,7 +71,7 @@ if not CURSES then
 	end)
 end
 
-M.mt.__call = function () M.check_font_available() ; M.set_themes(_G.view) end
+M.mt.__call = function () M.check_platform_limits() ; M.set_themes(_G.view) end
 M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
 setmetatable(M, M.mt)
 
