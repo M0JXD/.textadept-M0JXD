@@ -12,7 +12,7 @@ theme_mgr()
 view.edge_column = 100
 
 -- Modules (M0JXD)
-require('bfstatbar_mgr')
+require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
 ds = require('doc_stats')
@@ -95,6 +95,7 @@ events.connect('UPDATE_HANDLER', function (from)
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
 	if formatter then formatter.on_save = true end
+
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
@@ -114,7 +115,7 @@ events.connect('UPDATE_HANDLER', function (from)
 			place = 0
 		end
 	elseif from == 'BUFFER_SWITCH' then
-		place = 1
+		place = 0
 		events.emit(events.LEXER_LOADED)
 	end
 end)

@@ -76,22 +76,29 @@ quick_open.git_client = 'gitui'
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
 
-## Buffer Statusbar Manager Module
+## Buffer Statusbar Utilites Module
 
-Buffer Statusbar Manager is the short awaited version two of bfstatbar_helper that was removed in 8d5ef307d5f7.
-It represents the items in the buffer statusbar as a array of getter functions.
-By default it provides the same defaults that Textadept displays in the buffer statusbar.
+Buffer Statusbar Utilties is the very short awaited replacement for both bfstatbar_helper that was removed in 8d5ef307d5f75d7e44f37330c0bbfb71a40aeae3,
+and the [table idea introduced in Textadept's Discussions](https://github.com/orbitalquark/textadept/discussions/688).
+
+It introduces some additional string functions to manage the buffer_statusbar more easily.
 
 Example usage:
 
 ```lua
-bfstatbar = require('bfstatbar_mgr')
+require('bfstatbar_utils')
 
-table.remove(bfstatbar, 4)  -- Remove line endings
+-- Remove Line Endings from being displayed
+events.connect(events.UPDATE_UI, function (updated)
+	if not updated or updated & 3 == 0 then return end
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_remove(4)
+end)
 
 -- Display whether strip trailing whitespace is on
-table.insert(bfstatbar, 5, function ()
-	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+events.connect(events.UPDATE_UI, function (updated)
+	if not updated or updated & 3 == 0 then return end
+	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(5, strip)
 end)
 ```
 
