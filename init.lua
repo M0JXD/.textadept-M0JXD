@@ -16,7 +16,6 @@ require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
 ds = require('doc_stats')
-
 ds.display.lines = true
 
 if not BSD then
@@ -32,6 +31,7 @@ require('file_diff')
 
 if not BSD then
 	local formatter = require('format')
+	formatter.on_save = false
 	local lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
@@ -94,7 +94,7 @@ events.connect('SETTINGS_HANDLER', function(from)
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
-	if formatter then formatter.on_save = true end
+	if formatter then formatter.on_save = false end
 	ds.display.words = false
 
 	name = buffer:get_lexer()
@@ -103,6 +103,8 @@ events.connect('SETTINGS_HANDLER', function(from)
 	elseif name == 'dart' then
 		buffer.tab_width = 2
 		if formatter then formatter.on_save = true end
+		-- elseif name == 'javascript' or name == 'python' then
+		-- if formatter then formatter.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil

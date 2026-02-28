@@ -48,8 +48,7 @@ lex:add_fold_point(lexer.COMMENT, '/*', '*/')
 
 -- Word lists.
 lex:set_word_list(lexer.KEYWORD, {
-	'as', 'bind', 'using', 'template', 'styles',
-	'destructive', 'suggested', 'disabled', 'responses',
+	'as', 'bind', 'using', 'template', 'styles', 'destructive', 'suggested', 'disabled', 'responses',
 	'items', 'bind-property', 'menu', 'section'
 })
 

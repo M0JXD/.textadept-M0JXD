@@ -29,11 +29,9 @@ function string.bst_insert(str, ...)
 		text = str .. spacing .. value
 	else
 		local c = 0
-		text, count = str:gsub(spacing, function (match)
+		text, count = str:gsub(spacing, function(match)
 			c = c + 1
-			if c == pos - 1 then
-				return match .. value .. match
-			end
+			if c == pos - 1 then return match .. value .. match end
 			return match
 		end)
 	end
@@ -49,15 +47,13 @@ function string.bst_remove(str, pos)
 	if pos <= 1 then
 		text = str:gsub(entry_pat, '', 1)
 	elseif pos >= count then
-		entry_pat = spacing..'%S*%s?%S*$'
+		entry_pat = spacing .. '%S*%s?%S*$'
 		text = str:gsub(entry_pat, '', 1)
 	else
 		local c = 0
-		text = str:gsub(entry_pat, function (match)
+		text = str:gsub(entry_pat, function(match)
 			c = c + 1
-			if c == pos then
-				return ''
-			end
+			if c == pos then return '' end
 			return match
 		end)
 	end
@@ -70,16 +66,14 @@ function string.bst_replace(str, pos, value)
 	local count = str:bst_count()
 
 	if pos >= count then
-		entry_pat = spacing..'%S*%s?%S*$'
+		entry_pat = spacing .. '%S*%s?%S*$'
 		text = str:gsub(entry_pat, spacing .. value, 1)
 	else
 		pos = pos <= 1 and 1 or pos
 		local c = 0
-		text = str:gsub(entry_pat, function (match)
+		text = str:gsub(entry_pat, function(match)
 			c = c + 1
-			if c == pos then
-				return value .. spacing
-			end
+			if c == pos then return value .. spacing end
 			return match
 		end)
 	end

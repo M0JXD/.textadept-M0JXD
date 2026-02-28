@@ -29,7 +29,7 @@ keys[M.toggle_shortcut] = function()
 	if not distraction_free then
 		if M.hide_menubar then textadept.menu.menubar = nil end -- Remove menu bar
 		if M.hide_tabs then ui.tabs = false end -- Remove the tab bar
-		if M.maximise then ui.maximized = true end  -- maximise
+		if M.maximise then ui.maximized = true end -- maximise
 		-- Disable scroll bars
 		if M.hide_scrollbars then
 			view.h_scroll_bar = false
@@ -54,7 +54,7 @@ keys[M.toggle_shortcut] = function()
 			events.connect(events.VIEW_AFTER_SWITCH, clear_title)
 			events.emit(events.BUFFER_AFTER_SWITCH, 1)
 		end
-	-- Restore old state.
+		-- Restore old state.
 	else
 		if M.hide_menubar then textadept.menu.menubar = menubar end
 		if M.hide_tabs then ui.tabs = tab_bar end
@@ -63,13 +63,9 @@ keys[M.toggle_shortcut] = function()
 			view.h_scroll_bar = true
 			view.v_scroll_bar = true
 		end
-		if M.clear_statusbar then
-			ui.statusbar = true
-		end
+		if M.clear_statusbar then ui.statusbar = true end
 		if M.hide_margins then
-			for i = 1, view.margins do
-				view.margin_width_n[i] = margin_widths[i]
-			end
+			for i = 1, view.margins do view.margin_width_n[i] = margin_widths[i] end
 		end
 		-- Restore the title by switching to the same buffer
 		if CURSES and M.hide_curses_title then
