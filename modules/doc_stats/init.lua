@@ -3,14 +3,16 @@
 
 local M = {}
 
-M.menu_entry       = true
-M.display_words    = false
-M.display_bytes    = false
-M.display_rows     = false
-M.display_chars    = false
-M.display_chars_ns = false
-M.display_chars_nl = false
-M.replace_lines    = false  -- If set display_rows is ignored
+M.display = {
+	menu = true,
+	words = false,
+	bytes = false,
+	lines = false,  -- Replaces the line entry
+	rows = false,
+	chars = false,
+	chars_ns = false,  -- No Spaces
+	chars_nl = false   -- No Lines
+}
 
 -- Separators for the Word Count Algo
 M.separators = {
@@ -151,7 +153,7 @@ local function stats_dialog()
 end
 
 -- Insert into tools menu (code adapted from spellcheck module)
-if M.menu_entry then
+if M.display.menu then
 	_L['Document Statistics'] = '_Document Statistics'
 	doc_stats_menu = { _L['Document Statistics'], stats_dialog }
 	local m_tools = textadept.menu.menubar['Tools']
@@ -170,51 +172,101 @@ if M.menu_entry then
 	end
 end
 
--- This depends on bfstatbar_mgr to be used as bfstatbar
-events.connect(events.INITIALIZED, function ()
-	if M.display_rows and not M.replace_lines then
-		table.insert(bfstatbar, type(M.display_rows) == 'boolean' and 3 or M.display_rows, function ()
-			return 'Rows: ' .. (M.count_rows() or 0)
-		end)
+function string.bst_insert(str, ...)
+	local text, pos, value
+	local spacing = CURSES and '  ' or '    '
+	local _, count = str:gsub(spacing, spacing)
+	count = count + 1
+
+	local arg = table.pack(...)
+	if arg.n == 1 then
+		pos = count + 1
+		value = arg[1]
+	elseif arg.n == 2 then
+		pos = arg[1]
+		value = arg[2]
 	end
 
-	if M.replace_lines then
-		table.remove(bfstatbar, 1)
-		table.insert(bfstatbar, 1, function ()
-			local rows = M.count_rows()
-			return 'Lines: ' .. (rows > 0 and rows or buffer:line_from_position(buffer.current_pos)) .. '/' .. buffer.line_count
+	if pos <= 1 then
+		text = value .. spacing .. str
+	elseif pos >= (count + 1) then
+		text = str .. spacing .. value
+	else
+		local c = 0
+		text, count = str:gsub(spacing, function (match)
+			c = c + 1
+			if c == pos - 1 then
+				return match .. value .. match
+			end
+			return match
 		end)
+	end
+	return text
+end
+
+function string.bst_replace(str, pos, value)
+	local text
+	local spacing = CURSES and '  ' or '    '
+	local entry_pat = '%S*%s?%S*' .. spacing
+	local _, count = str:gsub(spacing, spacing)
+	count = count + 1
+
+	if pos >= count then
+		entry_pat = spacing..'%S*%s?%S*$'
+		text = str:gsub(entry_pat, spacing .. value, 1)
+	else
+		pos = pos <= 1 and 1 or pos
+		local c = 0
+		text = str:gsub(entry_pat, function (match)
+			c = c + 1
+			if c == pos then
+				return value .. spacing
+			end
+			return match
+		end)
+	end
+	return text
+end
+
+events.connect(events.UPDATE_UI, function (updated)
+	if not updated or updated & 3 == 0 then return end
+	local bst_text = ui.buffer_statusbar_text
+	if M.display.lines then
+		local rows = M.count_rows()
+		rows = 'Lines: ' .. (rows > 0 and rows or buffer:line_from_position(buffer.current_pos)) .. '/' .. buffer.line_count
+		bst_text = bst_text:bst_replace(1, rows)
 	end
 
-	if M.display_words then
-		table.insert(bfstatbar, type(M.display_words) == 'boolean' and 1 or M.display_words, function ()
-			return 'Words: ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0)
-		end)
+	if M.display.rows then
+		bst_text = bst_text:bst_insert(type(M.display.rows) == 'boolean' and 3 or M.display.rows,
+			'Rows: ' .. (M.count_rows() or 0))
 	end
 
-	if M.display_chars_nl then
-		table.insert(bfstatbar, type(M.display_chars_nl) == 'boolean' and 1 or M.display_chars_nl, function ()
-			return 'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0)
-		end)
+	if M.display.words then
+		bst_text = bst_text:bst_insert(type(M.display.words) == 'boolean' and 1 or M.display.words,
+			'Words: ' .. (M.count_words(false) or 0) .. '/' .. (M.count_words(true) or 0))
 	end
 
-	if M.display_chars_ns then
-		table.insert(bfstatbar, type(M.display_chars_ns) == 'boolean' and 1 or M.display_chars_ns, function ()
-			return 'Chars (NS): ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0)
-		end)
+	if M.display.chars_nl then
+		bst_text = bst_text:bst_insert(type(M.display.chars_nl) == 'boolean' and 1 or M.display.chars_nl,
+			'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_NEWLINES, true) or 0))
 	end
 
-	if M.display_chars then
-		table.insert(bfstatbar, type(M.display_chars) == 'boolean' and 1 or M.display_chars, function ()
-			return 'Chars: ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0)
-		end)
+	if M.display.chars_ns then
+		bst_text = bst_text:bst_insert(type(M.display.chars_ns) == 'boolean' and 1 or M.display.chars_ns,
+			'Chars (NS): ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' .. (M.count_chars(M.DISCARD_SPACES, true) or 0))
 	end
 
-	if M.display_bytes then
-		table.insert(bfstatbar, type(M.display_bytes) == 'boolean' and 1 or M.display_bytes, function ()
-			return 'Bytes: ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0)
-		end)
+	if M.display.chars then
+		bst_text = bst_text:bst_insert(type(M.display.chars) == 'boolean' and 1 or M.display.chars,
+			'Chars: ' .. (M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0))
 	end
+
+	if M.display.bytes then
+		bst_text = bst_text:bst_insert(type(M.display.bytes) == 'boolean' and 1 or M.display.bytes,
+			'Bytes: ' .. (M.count_bytes(false) or 0) .. '/' .. (M.count_bytes(true) or 0))
+	end
+	ui.buffer_statusbar_text = bst_text
 end)
 
 return M

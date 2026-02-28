@@ -12,12 +12,12 @@ theme_mgr()
 view.edge_column = 100
 
 -- Modules (M0JXD)
-bfstatbar = require('bfstatbar_mgr')
+require('bfstatbar_mgr')
 require('distraction_free')
 require('quick_open')
 ds = require('doc_stats')
-ds.display_words = true
-ds.replace_lines = true
+ds.display.words = true
+ds.display.lines = true
 
 if not BSD then
 	drpc = require('discord_rpc')
@@ -31,9 +31,7 @@ end
 require('file_diff')
 
 if not BSD then
-	local format = require('format')
-	format.on_save = false
-
+	formatter = require('format')  -- format makes updater crash?
 	local lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
@@ -95,19 +93,20 @@ local function setup_buffer(name)
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
-	if format then format.on_save = false end
+	if formatter then formatter.on_save = true end
 
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
 		buffer.tab_width = 2
-		if format then format.on_save = true end
+		if formatter then formatter.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
 	end
 end
+setup_buffer(nil)
 events.connect(events.LEXER_LOADED, setup_buffer)
 events.connect(events.BUFFER_AFTER_SWITCH, function ()
 	setup_buffer(buffer:get_lexer())
@@ -126,11 +125,13 @@ end})
 _L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
 table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
 	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
-	events.emit(events.UPDATE_UI)
+	events.emit(events.UPDATE_UI, 3)
 end})
 
-table.insert(bfstatbar, 5, function ()
-	return 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+events.connect(events.UPDATE_UI, function (updated)
+	if not updated or updated & 3 == 0 then return end
+	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(5, strip)
 end)
 
 local tools = textadept.menu.menubar[_L['Tools']]

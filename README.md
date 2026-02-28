@@ -14,7 +14,7 @@ Mainly here so I can grab them wherever I need them.
 To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).
 Theme manager is a handy module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
 - If a requested font is missing, it will opt to use Textadept's default font instead of the OS default font. The matching is very simple so if you've put 'Comic Sans' instead of 'Comic Sans MS' it can still fail to fallback properly.
-- Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support so it fallback to the default terminal theme if necessary.
+- Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support and fallback to the default terminal theme if necessary.
 - I've added [@kbarni's theme selector](https://github.com/orbitalquark/textadept/pull/690#issue-3996335774) too just for fun!
 
 By default it uses Textadept's default themes and settings. You need to call the module to set everything up properly!
@@ -76,7 +76,7 @@ quick_open.git_client = 'gitui'
 
 I'm unsure if the Windows implementations will work for other explorers/terminals.
 
-## Buffer Statusbar Manager
+## Buffer Statusbar Manager Module
 
 Buffer Statusbar Manager is the short awaited version two of bfstatbar_helper that was removed in 8d5ef307d5f7.
 It represents the items in the buffer statusbar as a array of getter functions.
