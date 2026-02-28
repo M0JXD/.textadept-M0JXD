@@ -78,7 +78,7 @@ I'm unsure if the Windows implementations will work for other explorers/terminal
 
 ## Buffer Statusbar Utilites Module
 
-Buffer Statusbar Utilties is the very short awaited replacement for both bfstatbar_helper that was removed in 8d5ef307d5f75d7e44f37330c0bbfb71a40aeae3,
+Buffer Statusbar Utilties is the very short awaited replacement for both bfstatbar_helper that was [removed](https://github.com/M0JXD/.textadept-M0JXD/commit/f97274743940cbb4150a379c7e6c2b7cf7a7536d)
 and the [table idea introduced in Textadept's Discussions](https://github.com/orbitalquark/textadept/discussions/688).
 
 It introduces some additional string functions to manage the buffer_statusbar more easily.
