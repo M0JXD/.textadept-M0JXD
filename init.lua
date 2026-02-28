@@ -16,7 +16,7 @@ require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
 ds = require('doc_stats')
-ds.display.words = true
+
 ds.display.lines = true
 
 if not BSD then
@@ -31,7 +31,7 @@ end
 require('file_diff')
 
 if not BSD then
-	formatter = require('format')  -- format makes updater crash?
+	local formatter = require('format')
 	local lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
@@ -95,6 +95,7 @@ events.connect('UPDATE_HANDLER', function (from)
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
 	if formatter then formatter.on_save = true end
+	ds.display.words = false
 
     name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
@@ -106,6 +107,7 @@ events.connect('UPDATE_HANDLER', function (from)
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
+		ds.display.words = 3
 	end
 
 	-- We need to run lexer loaded handlers again now everything is set

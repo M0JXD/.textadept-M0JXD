@@ -3,15 +3,6 @@
 
 local M = {}
 
--- TODO: It would be neat if we could display each entry only for specific lexers
--- Handle this idea with metatables?
---ds.display.words = true  -- or number which forwards to location, displays for all lexers
---ds.display.words.location = nil -- or number
---ds.display.words.markdown = true
---ds.display.words.text = true
--- OR
---ds.display.words = function (lexer) that returns true or number for it?
-
 M.display = {
 	menu = true,
 	words = false,
@@ -237,6 +228,8 @@ function string.bst_replace(str, pos, value)
 	return text
 end
 
+
+-- TODO: Optimise this by running the checks on a buffer switch, and then connect/disconnect the UPDATE_UI event
 events.connect(events.UPDATE_UI, function (updated)
 	if not updated or updated & 3 == 0 then return end
 	local bst_text = ui.buffer_statusbar_text
