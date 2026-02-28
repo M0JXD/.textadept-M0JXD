@@ -7,7 +7,7 @@ theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'ayu-evolve'
 theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family= 'FreeMono'
-theme_mgr.font.size = 14
+theme_mgr.font.size = 12
 theme_mgr()
 view.edge_column = 100
 
