@@ -86,8 +86,8 @@ textadept.editing.comment_string.c = '/*|*/'
 --ui.find.highlight_all_matches = true
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
-local auto_pairs = textadept.editing.auto_pairs
 local place = 0
+local auto_pairs = textadept.editing.auto_pairs
 events.connect('UPDATE_HANDLER', function (from)
 	buffer.tab_width = 4
 	buffer.use_tabs = false
@@ -96,6 +96,7 @@ events.connect('UPDATE_HANDLER', function (from)
 	textadept.editing.strip_trailing_spaces = true
 	if formatter then formatter.on_save = true end
 
+    name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
@@ -115,7 +116,7 @@ events.connect('UPDATE_HANDLER', function (from)
 			place = 0
 		end
 	elseif from == 'BUFFER_SWITCH' then
-		place = 0
+		place = 1
 		events.emit(events.LEXER_LOADED)
 	end
 end)
