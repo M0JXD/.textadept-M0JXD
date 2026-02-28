@@ -5,8 +5,8 @@ local theme_mgr = require('theme_mgr')
 theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'ayu-evolve'
-theme_mgr.font.family= 'Noto Mono'
---theme_mgr.font.family= 'FreeMono'
+theme_mgr.font.family = 'Noto Mono'
+-- theme_mgr.font.family= 'FreeMono'
 theme_mgr.font.size = 14
 theme_mgr()
 view.edge_column = 100
@@ -26,8 +26,8 @@ if not BSD then
 end
 
 -- Modules (Official)
---require('debugger')
---require('export')
+-- require('debugger')
+-- require('export')
 require('file_diff')
 
 if not BSD then
@@ -40,18 +40,18 @@ if not BSD then
 end
 require('lua_repl')
 keys[(CURSES and 'meta+O' or 'alt+O')] = require('open_file_mode')
---require('scratch')
+-- require('scratch')
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
 local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
 
 -- Modules (external)
---require('textredux').hijack()
+-- require('textredux').hijack()
 -- Experimental features by @Fwirt (requires custom build)
---local textbar = require('textbar')
---minimap = require('minimap')
---keys['ctrl+@'] = function () minimap() end
+-- local textbar = require('textbar')
+-- minimap = require('minimap')
+-- keys['ctrl+@'] = function () minimap() end
 
 -- Hide some folders from the quick open list
 table.insert(lfs.default_filter, '!.xmake')
@@ -83,12 +83,12 @@ lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/*|*/'
 -- Default settings
---ui.find.highlight_all_matches = true
+-- ui.find.highlight_all_matches = true
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 local lex_handler = 0
 local auto_pairs = textadept.editing.auto_pairs
-events.connect('SETTINGS_HANDLER', function (from)
+events.connect('SETTINGS_HANDLER', function(from)
 	buffer.tab_width = 4
 	buffer.use_tabs = false
 	view.wrap_mode = view.WRAP_NONE
@@ -122,29 +122,36 @@ events.connect('SETTINGS_HANDLER', function (from)
 		events.emit(events.LEXER_LOADED)
 	end
 end)
-events.connect(events.LEXER_LOADED, function () lex_handler = lex_handler + 1 ; events.emit('SETTINGS_HANDLER', 'LEXER_LOADED') end)
-events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('SETTINGS_HANDLER', 'SWITCH') end)
-events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('SETTINGS_HANDLER', 'SWITCH') end)
+events.connect(events.LEXER_LOADED, function()
+	lex_handler = lex_handler + 1;
+	events.emit('SETTINGS_HANDLER', 'LEXER_LOADED')
+end)
+events.connect(events.BUFFER_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
+events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
 
 -- Extra Utilities
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
-table.insert(textadept.menu.menubar[_L['View']], 18, {_L['Toggle Line Guide'], function ()
-	view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
-end})
+table.insert(textadept.menu.menubar[_L['View']], 18, {
+	_L['Toggle Line Guide'],
+	function() view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE end
+})
 
 _L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
-table.insert(textadept.menu.menubar[_L['View']], 19, {_L['Toggle Strip Trailing Whitespace'], function ()
-	textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
-	events.emit(events.UPDATE_UI, 3)
-end})
+table.insert(textadept.menu.menubar[_L['View']], 19, {
+	_L['Toggle Strip Trailing Whitespace'], function()
+		textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
+		events.emit(events.UPDATE_UI, 3)
+	end
+})
 
-events.connect(events.UPDATE_UI, function (updated)
+events.connect(events.UPDATE_UI, function(updated)
 	if not updated or updated & 3 == 0 then return end
 	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
-	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(ui.buffer_statusbar_text:bst_count() - 1, strip)
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(
+		ui.buffer_statusbar_text:bst_count() - 1, strip)
 end)
 
 local tools = textadept.menu.menubar[_L['Tools']]
