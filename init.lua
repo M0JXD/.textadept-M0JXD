@@ -103,8 +103,6 @@ events.connect('SETTINGS_HANDLER', function(from)
 	elseif name == 'dart' then
 		buffer.tab_width = 2
 		if formatter then formatter.on_save = true end
-		-- elseif name == 'javascript' or name == 'python' then
-		-- if formatter then formatter.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
