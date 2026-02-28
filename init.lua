@@ -15,9 +15,10 @@ view.edge_column = 100
 require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
-ds = require('doc_stats')
+local ds = require('doc_stats')
 ds.display.lines = true
 
+local drpc = false
 if not BSD then
 	drpc = require('discord_rpc')
 	drpc.private_mode = true
@@ -28,11 +29,10 @@ end
 -- require('debugger')
 -- require('export')
 require('file_diff')
-
+local format, lsp = false, false
 if not BSD then
-	local formatter = require('format')
-	formatter.on_save = false
-	local lsp = require('lsp')
+	format = require('format')
+	lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
 		keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
@@ -94,7 +94,7 @@ events.connect('SETTINGS_HANDLER', function(from)
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
-	if formatter then formatter.on_save = false end
+	if format then format.on_save = false end
 	ds.display.words = false
 
 	name = buffer:get_lexer()
@@ -102,7 +102,7 @@ events.connect('SETTINGS_HANDLER', function(from)
 		buffer.use_tabs = true
 	elseif name == 'dart' then
 		buffer.tab_width = 2
-		if formatter then formatter.on_save = true end
+		if format then format.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
