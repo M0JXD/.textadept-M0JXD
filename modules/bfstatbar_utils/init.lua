@@ -3,11 +3,16 @@
 
 local M = {}
 
+local spacing = CURSES and '  ' or '    '
+
+function string.bst_count(str)
+	local _, count = str:gsub(spacing, spacing)
+	return count + 1
+end
+
 function string.bst_insert(str, ...)
 	local text, pos, value
-	local spacing = CURSES and '  ' or '    '
-	local _, count = str:gsub(spacing, spacing)
-	count = count + 1
+	local count = str:bst_count()
 
 	local arg = table.pack(...)
 	if arg.n == 1 then
@@ -37,10 +42,8 @@ end
 
 function string.bst_remove(str, pos)
 	local text
-	local spacing = CURSES and '  ' or '    '
 	local entry_pat = '%S*%s?%S*' .. spacing
-	local _, count = str:gsub(spacing, spacing)
-	count = count + 1
+	local count = str:bst_count()
 	pos = pos and pos or count + 1
 
 	if pos <= 1 then
@@ -63,10 +66,8 @@ end
 
 function string.bst_replace(str, pos, value)
 	local text
-	local spacing = CURSES and '  ' or '    '
 	local entry_pat = '%S*%s?%S*' .. spacing
-	local _, count = str:gsub(spacing, spacing)
-	count = count + 1
+	local count = str:bst_count()
 
 	if pos >= count then
 		entry_pat = spacing..'%S*%s?%S*$'

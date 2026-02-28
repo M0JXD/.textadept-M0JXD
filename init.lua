@@ -141,7 +141,7 @@ end})
 events.connect(events.UPDATE_UI, function (updated)
 	if not updated or updated & 3 == 0 then return end
 	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
-	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(5, strip)
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(ui.buffer_statusbar_text:bst_count() - 1, strip)
 end)
 
 local tools = textadept.menu.menubar[_L['Tools']]
