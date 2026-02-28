@@ -86,7 +86,7 @@ textadept.editing.comment_string.c = '/*|*/'
 --ui.find.highlight_all_matches = true
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
-local place = 0
+local lex_handler = 0
 local auto_pairs = textadept.editing.auto_pairs
 events.connect('UPDATE_HANDLER', function (from)
 	buffer.tab_width = 4
@@ -112,17 +112,17 @@ events.connect('UPDATE_HANDLER', function (from)
 
 	-- We need to run lexer loaded handlers again now everything is set
 	if from == 'LEXER_LOADED' then
-		if place == 1 then
+		if lex_handler == 1 then
 			events.emit(events.LEXER_LOADED)
 		else
-			place = 0
+			lex_handler = 0
 		end
 	elseif from == 'SWITCH' then
-		place = 1
+		lex_handler = 1
 		events.emit(events.LEXER_LOADED)
 	end
 end)
-events.connect(events.LEXER_LOADED, function () place = place + 1 ; events.emit('UPDATE_HANDLER', 'LEXER_LOADED') end)
+events.connect(events.LEXER_LOADED, function () lex_handler = lex_handler + 1 ; events.emit('UPDATE_HANDLER', 'LEXER_LOADED') end)
 events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
 events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
 
