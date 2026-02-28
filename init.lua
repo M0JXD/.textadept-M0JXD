@@ -117,14 +117,14 @@ events.connect('UPDATE_HANDLER', function (from)
 		else
 			place = 0
 		end
-	elseif from == 'BUFFER_SWITCH' then
+	elseif from == 'SWITCH' then
 		place = 1
 		events.emit(events.LEXER_LOADED)
 	end
 end)
 events.connect(events.LEXER_LOADED, function () place = place + 1 ; events.emit('UPDATE_HANDLER', 'LEXER_LOADED') end)
-events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'BUFFER_SWITCH') end)
-events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'BUFFER_SWITCH') end)
+events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
+events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
