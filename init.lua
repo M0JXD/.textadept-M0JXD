@@ -88,7 +88,7 @@ textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 local lex_handler = 0
 local auto_pairs = textadept.editing.auto_pairs
-events.connect('UPDATE_HANDLER', function (from)
+events.connect('SETTINGS_HANDLER', function (from)
 	buffer.tab_width = 4
 	buffer.use_tabs = false
 	view.wrap_mode = view.WRAP_NONE
@@ -122,9 +122,9 @@ events.connect('UPDATE_HANDLER', function (from)
 		events.emit(events.LEXER_LOADED)
 	end
 end)
-events.connect(events.LEXER_LOADED, function () lex_handler = lex_handler + 1 ; events.emit('UPDATE_HANDLER', 'LEXER_LOADED') end)
-events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
-events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'SWITCH') end)
+events.connect(events.LEXER_LOADED, function () lex_handler = lex_handler + 1 ; events.emit('SETTINGS_HANDLER', 'LEXER_LOADED') end)
+events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('SETTINGS_HANDLER', 'SWITCH') end)
+events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('SETTINGS_HANDLER', 'SWITCH') end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
