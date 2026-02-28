@@ -97,7 +97,7 @@ events.connect('UPDATE_HANDLER', function (from)
 	if formatter then formatter.on_save = true end
 	ds.display.words = false
 
-    name = buffer:get_lexer()
+	name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
@@ -124,6 +124,7 @@ events.connect('UPDATE_HANDLER', function (from)
 end)
 events.connect(events.LEXER_LOADED, function () place = place + 1 ; events.emit('UPDATE_HANDLER', 'LEXER_LOADED') end)
 events.connect(events.BUFFER_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'BUFFER_SWITCH') end)
+events.connect(events.VIEW_AFTER_SWITCH, function () events.emit('UPDATE_HANDLER', 'BUFFER_SWITCH') end)
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
