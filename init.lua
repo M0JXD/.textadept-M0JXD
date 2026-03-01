@@ -133,6 +133,8 @@ events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLE
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
+textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"'  -- Verify
+textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0'  -- Upload
 
 -- Extra Utilities
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
