@@ -32,6 +32,8 @@ require('file_diff')
 local format, lsp = false, false
 if not BSD then
 	format = require('format')
+	format.commands.python = WIN32 and 'py -m black -' or 'python -m black -'
+	format.commands.javascript = 'npx prettier --parser babel'
 	lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
@@ -156,7 +158,7 @@ end)
 
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
-tools[#tools + 1] = {''} -- separator
+tools[#tools + 1] = {''}
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
 -- Platform Specific Adjustments
