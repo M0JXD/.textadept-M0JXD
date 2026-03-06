@@ -98,6 +98,7 @@ events.connect('SETTINGS_HANDLER', function(from)
 	textadept.editing.strip_trailing_spaces = true
 	if format then format.on_save = false end
 	ds.display.words = false
+	ds.display.chars = false
 
 	name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
@@ -109,6 +110,7 @@ events.connect('SETTINGS_HANDLER', function(from)
 		view.wrap_mode = view.WRAP_WHITESPACE
 		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
+		ds.display.chars = 3
 		ds.display.words = 3
 	end
 
@@ -133,8 +135,8 @@ events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLE
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
-textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"'  -- Verify
-textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0'  -- Upload
+textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"' -- Verify
+textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0' -- Upload
 
 -- Extra Utilities
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
