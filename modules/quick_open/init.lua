@@ -50,35 +50,31 @@ local function openTerminalHere(arg)
 	if LINUX or BSD then
 		if buffer.filename then
 			argString = buffer.filename:match('.+/')
-			argString = M.term_dir_arg..argString
+			argString = M.term_dir_arg .. argString
 		end
 		if arg then
-			argString = argString .. M.term_max_arg ..' -e '.. arg
+			argString = argString .. M.term_max_arg .. ' -e ' .. arg
 		else
 			argString = argString .. ' &'
 		end
-		io.popen(M.terminal..' '..argString)
+		io.popen(M.terminal .. ' ' .. argString)
 	elseif WIN32 then
-        local prePath = buffer.filename:match('.+\\')
-        argString = ' /K "cd /d '..prePath..'"'
-		if arg then
-			argString = ' /C "cd /d '..prePath..' & '.. arg .. '"'
-		end
-		io.popen('start '..M.terminal..' '..argString)
+		local prePath = buffer.filename:match('.+\\')
+		argString = ' /K "cd /d ' .. prePath .. '"'
+		if arg then argString = ' /C "cd /d ' .. prePath .. ' & ' .. arg .. '"' end
+		io.popen('start ' .. M.terminal .. ' ' .. argString)
 	end
 end
 
 local function openFileBrowserHere()
 	local pathString = '~'
 	if LINUX or BSD then
-		if buffer.filename then
-			pathString = buffer.filename:match('.+/')
-		end
-		io.popen(M.explorer..' '..pathString..' &')
+		if buffer.filename then pathString = buffer.filename:match('.+/') end
+		io.popen(M.explorer .. ' ' .. pathString .. ' &')
 	elseif WIN32 then
-        local prePath = buffer.filename:match('.+\\')
-        pathString = ' /e,\''..prePath..'\''
-		io.popen('start '..M.explorer..pathString)
+		local prePath = buffer.filename:match('.+\\')
+		pathString = ' /e,' .. prePath
+		io.popen('start ' .. M.explorer .. pathString)
 	end
 end
 
