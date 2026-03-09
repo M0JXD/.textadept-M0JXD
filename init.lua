@@ -29,11 +29,24 @@ end
 -- require('debugger')
 -- require('export')
 require('file_diff')
-local format, lsp = false, false
+format = require('format')
+format.commands.python = WIN32 and 'py -m ' or '' .. 'black -'
+local function get_prettier_parser()
+	-- Most parsers are the same as the lexer name
+	local parser = buffer:get_lexer()
+	if parser == 'javascript' then parser = 'babel' end
+	return format.config_file_contains('package.json', 'prettier') and 'npx prettier --parser ' ..
+		parser or nil
+end
+format.commands.html = get_prettier_parser
+format.commands.css = get_prettier_parser
+format.commands.javascript = get_prettier_parser
+format.commands.typescript = get_prettier_parser
+format.commands.markdown = get_prettier_parser
+format.commands.yaml = get_prettier_parser
+
+local lsp = false
 if not BSD then
-	format = require('format')
-	format.commands.python = WIN32 and 'py -m black -' or 'python -m black -'
-	format.commands.javascript = 'npx prettier --parser babel'
 	lsp = require('lsp')
 	if QT then
 		lsp.server_commands.dart = 'dart language-server'
