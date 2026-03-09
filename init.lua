@@ -96,8 +96,9 @@ lexer.detect_extensions.H = 'cpp'
 lexer.detect_extensions.ino = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
-textadept.editing.comment_string.c = '/*|*/'
--- Default settings
+textadept.editing.comment_string.c = '/* | */'
+textadept.editing.comment_string.lua = '-- '
+textadept.editing.comment_string.python = '# '
 -- ui.find.highlight_all_matches = true
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
