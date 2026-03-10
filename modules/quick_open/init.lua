@@ -3,15 +3,12 @@
 
 local M = {}
 
-M.git_client = 'lazygit'
-M.explorer = 'xdg-open'
+local desktop = os.getenv('XDG_CURRENT_DESKTOP')
+if desktop == nil then desktop = '' end
 
 -- Most GTK terminals use these
 M.term_dir_arg = '--working-directory='
 M.term_max_arg = '--maximize'
-
-local desktop = os.getenv('XDG_CURRENT_DESKTOP')
-if desktop == nil then desktop = '' end
 
 if desktop:match('Cinnamon') then
 	M.terminal = 'gnome-terminal'
@@ -36,8 +33,12 @@ elseif desktop:match('LXQt') then
 	-- Presumably the same as lxterminal?
 else
 	-- xterm doesn't really support giving a directory at startup?
-	M.terminal = 'xterm'
+	M.terminal = 'xterm -hold'
+	M.term_max_arg = '-fullscreen'
 end
+
+M.explorer = 'xdg-open'
+M.git_client = 'lazygit'
 
 if WIN32 then
 	M.terminal = 'cmd.exe'
