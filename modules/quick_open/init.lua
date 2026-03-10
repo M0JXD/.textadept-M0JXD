@@ -8,7 +8,7 @@ M.explorer = 'xdg-open'
 
 -- Most GTK terminals use these
 M.term_dir_arg = '--working-directory='
-M.term_max_arg = ' --maximize'
+M.term_max_arg = '--maximize'
 
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
@@ -26,11 +26,11 @@ elseif desktop:match('GNOME') then
 elseif desktop:match('KDE') then
 	M.terminal = 'konsole'
 	M.term_dir_arg = '--workdir '
-	M.term_max_arg = ' --fullscreen'
+	M.term_max_arg = '--fullscreen'
 elseif desktop:match('ENLIGHTENMENT') then
 	M.terminal = 'terminology'
 	M.term_dir_arg = '-d='
-	M.term_max_arg = ' -M'
+	M.term_max_arg = '-M'
 elseif desktop:match('LXQt') then
 	M.terminal = 'qterminal'
 	-- Presumably the same as lxterminal?
@@ -53,7 +53,7 @@ local function openTerminalHere(arg)
 			argString = M.term_dir_arg .. argString
 		end
 		if arg then
-			argString = argString .. M.term_max_arg .. ' -e ' .. arg
+			argString = argString .. ' ' .. M.term_max_arg .. ' -e ' .. arg
 		else
 			argString = argString .. ' &'
 		end

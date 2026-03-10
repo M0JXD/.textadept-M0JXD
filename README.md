@@ -62,6 +62,7 @@ By default, it will use:
 - There's also an option to launch a TUI Git client with a fullscreen terminal. The default is Lazygit.
 
 I don't have any Apple devices so I'm unable to implement for macOS.
+If setting a custom terminal, as the directory argument are sometimes like `--working-directory=` you might need to add the trailing whitespace.
 
 Example usage:
 
@@ -69,7 +70,7 @@ Example usage:
 local quick_open = require('quick_open')
 quick_open.terminal = 'cool-retro-term'
 quick_open.term_dir_arg = '--workdir '
-quick_open.term_max_arg = ' --fullscreen'
+quick_open.term_max_arg = '--fullscreen'
 quick_open.explorer = 'nautilus'
 quick_open.git_client = 'gitui'
 ```
