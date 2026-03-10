@@ -192,13 +192,16 @@ end
 if GTK then
 	local function get_display_names(buffer)
 		local filename = buffer.filename or buffer._type or _L['Untitled']
-		if buffer.filename then filename = select(2, pcall(string.iconv, filename, 'UTF-8', _CHARSET)) end
+		if buffer.filename then
+			filename = select(2, pcall(string.iconv, filename, 'UTF-8', _CHARSET))
+		end
 		return filename, buffer.filename and filename:match('[^/\\]+$') or filename
 	end
 
-	events.connect(events.INITIALIZED, function ()
-			local filename, basename = get_display_names(buffer)
-			local title = string.format('%s %s Textadept (%s)', basename, buffer.modify and '*' or '-', filename)
-			os.execute('wmctrl -a "' .. title .. '"')
+	events.connect(events.INITIALIZED, function()
+		local filename, basename = get_display_names(buffer)
+		local title = string.format('%s %s Textadept (%s)', basename, buffer.modify and '*' or '-',
+			filename)
+		os.execute('wmctrl -a "' .. title .. '"')
 	end)
 end
