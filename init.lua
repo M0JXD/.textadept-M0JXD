@@ -29,21 +29,21 @@ end
 -- require('debugger')
 -- require('export')
 require('file_diff')
-format = require('format')
-format.commands.python = WIN32 and 'py -m ' or '' .. 'black -'
-local function get_prettier_parser()
+local format = require('format')
+local function prettier_formatter()
 	-- Most parsers are the same as the lexer name
 	local parser = buffer:get_lexer()
 	if parser == 'javascript' then parser = 'babel' end
 	return format.config_file_contains('package.json', 'prettier') and 'npx prettier --parser ' ..
 		parser or nil
 end
-format.commands.html = get_prettier_parser
-format.commands.css = get_prettier_parser
-format.commands.javascript = get_prettier_parser
-format.commands.typescript = get_prettier_parser
-format.commands.markdown = get_prettier_parser
-format.commands.yaml = get_prettier_parser
+format.commands.html = prettier_formatter
+format.commands.css = prettier_formatter
+format.commands.javascript = prettier_formatter
+format.commands.typescript = prettier_formatter
+format.commands.markdown = prettier_formatter
+format.commands.yaml = prettier_formatter
+format.commands.python = WIN32 and 'py' or 'python' .. ' -m black -'
 
 local lsp = false
 if not BSD then
@@ -99,9 +99,13 @@ lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/* | */'
 textadept.editing.comment_string.lua = '-- '
 textadept.editing.comment_string.python = '# '
--- ui.find.highlight_all_matches = true
+textadept.editing.comment_string.bash = '# '
+textadept.editing.comment_string.cpp = '// '
+textadept.editing.comment_string.dart = '// '
+textadept.editing.comment_string.javascript = '// '
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+-- ui.find.highlight_all_matches = true
 local lex_handler = 0
 local auto_pairs = textadept.editing.auto_pairs
 events.connect('SETTINGS_HANDLER', function(from)
@@ -149,6 +153,7 @@ events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLE
 
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
+textadept.run.compile_commands.python = (WIN32 and 'py' or 'python') .. ' -m flake8 %f'  -- Run a linter
 textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"' -- Verify
 textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0' -- Upload
 
@@ -188,7 +193,7 @@ elseif WIN32 then
 	keys['ctrl+alt+|'] = nil
 end
 
--- Dirty fix for X11
+-- Dirty fix for X11 focus
 if GTK then
 	local function get_display_names(buffer)
 		local filename = buffer.filename or buffer._type or _L['Untitled']
