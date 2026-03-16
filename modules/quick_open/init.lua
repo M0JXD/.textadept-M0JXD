@@ -41,7 +41,7 @@ M.explorer = 'xdg-open'
 M.git_client = 'lazygit'
 
 if WIN32 then
-	M.terminal = 'cmd.exe'
+	M.terminal = 'cmd.exe /f:on'
 	M.explorer = 'explorer.exe'
 	M.git_client = 'lazygit.exe'
 end
@@ -61,9 +61,13 @@ local function openTerminalHere(arg)
 		io.popen(M.terminal .. ' ' .. argString)
 	elseif WIN32 then
 		local prePath = buffer.filename:match('.+\\')
+		local start = 'start '
 		argString = ' /K "cd /d ' .. prePath .. '"'
-		if arg then argString = ' /C "cd /d ' .. prePath .. ' & ' .. arg .. '"' end
-		io.popen('start ' .. M.terminal .. ' ' .. argString)
+		if arg then
+			argString = ' /C "cd /d ' .. prePath .. ' & ' .. arg .. '"'
+			start = 'start /MAX '
+		end
+		io.popen(start .. M.terminal .. ' ' .. argString)
 	end
 end
 
