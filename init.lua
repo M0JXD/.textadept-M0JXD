@@ -15,6 +15,7 @@ view.edge_column = 100
 require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
+
 local ds = require('doc_stats')
 ds.display.lines = true
 
@@ -92,8 +93,7 @@ end
 -- Buffer/Language Settings
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
-lexer.detect_extensions.H = 'cpp'
-lexer.detect_extensions.ino = 'cpp'
+lexer.detect_extensions.ino = 'arduino'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/* | */'
