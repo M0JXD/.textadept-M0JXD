@@ -179,6 +179,15 @@ events.connect(events.UPDATE_UI, function(updated)
 		ui.buffer_statusbar_text:bst_count() - 1, strip)
 end)
 
+_L['Rename File'] = '_Rename File'
+table.insert(textadept.menu.menubar[_L['File']], 8, {
+	_L['Rename File'], function()
+		local oldname = buffer.filename
+		buffer:save_as()
+		os.remove(oldname)
+	end
+})
+
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''}
