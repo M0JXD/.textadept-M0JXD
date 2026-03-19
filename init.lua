@@ -179,9 +179,9 @@ events.connect(events.UPDATE_UI, function(updated)
 		ui.buffer_statusbar_text:bst_count() - 1, strip)
 end)
 
-_L['Rename File'] = '_Rename File'
+_L['Rename'] = '_Rename'
 table.insert(textadept.menu.menubar[_L['File']], 8, {
-	_L['Rename File'], function()
+	_L['Rename'], function()
 		local oldname = buffer.filename
 		buffer:save_as()
 		os.remove(oldname)
