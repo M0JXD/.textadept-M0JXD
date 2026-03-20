@@ -9,16 +9,13 @@ theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family= 'FreeMono'
 theme_mgr.font.size = 12
 theme_mgr()
-view.edge_column = 100
 
 -- Modules (M0JXD)
 require('bfstatbar_utils')
 require('distraction_free')
 require('quick_open')
-
 local ds = require('doc_stats')
 ds.display.lines = true
-
 local drpc = false
 if not BSD then
 	drpc = require('discord_rpc')
@@ -45,7 +42,6 @@ format.commands.typescript = prettier_formatter
 format.commands.markdown = prettier_formatter
 format.commands.yaml = prettier_formatter
 format.commands.python = WIN32 and 'py' or 'python' .. ' -m black -'
-
 local lsp = false
 if not BSD then
 	lsp = require('lsp')
@@ -69,15 +65,7 @@ update_notifier.check_on_startup = true
 -- minimap = require('minimap')
 -- keys['ctrl+@'] = function () minimap() end
 
--- Hide some folders from the quick open list
-table.insert(lfs.default_filter, '!.xmake')
-table.insert(lfs.default_filter, '!build_dir')
-table.insert(lfs.default_filter, '!build')
-table.insert(lfs.default_filter, '!assets')
-table.insert(lfs.default_filter, '!.vs')
-table.insert(lfs.default_filter, '!.vscode')
-
--- Match some VSCode bindings
+-- Keybindings
 if not CURSES then
 	keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
 	keys['ctrl+K'] = function() buffer:line_delete() end
@@ -91,6 +79,7 @@ else
 end
 
 -- Buffer/Language Settings
+view.edge_column = 100
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.ino = 'arduino'
@@ -151,6 +140,7 @@ end)
 events.connect(events.BUFFER_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
 events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
 
+-- Tools
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
 textadept.run.compile_commands.python = (WIN32 and 'py' or 'python') .. ' -m flake8 %f'  -- Run a linter
@@ -158,27 +148,6 @@ textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%
 textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0' -- Upload
 
 -- Extra Utilities
-_L['Toggle Line Guide'] = 'Toggle _Line Guide'
-table.insert(textadept.menu.menubar[_L['View']], 18, {
-	_L['Toggle Line Guide'],
-	function() view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE end
-})
-
-_L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
-table.insert(textadept.menu.menubar[_L['View']], 19, {
-	_L['Toggle Strip Trailing Whitespace'], function()
-		textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
-		events.emit(events.UPDATE_UI, 3)
-	end
-})
-
-events.connect(events.UPDATE_UI, function(updated)
-	if not updated or updated & 3 == 0 then return end
-	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
-	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(
-		ui.buffer_statusbar_text:bst_count() - 1, strip)
-end)
-
 _L['Rename'] = '_Rename'
 table.insert(textadept.menu.menubar[_L['File']], 8, {
 	_L['Rename'], function()
@@ -193,6 +162,36 @@ _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''}
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
+_L['Toggle Line Guide'] = 'Toggle _Line Guide'
+table.insert(textadept.menu.menubar[_L['View']], 18, {
+	_L['Toggle Line Guide'],
+	function() view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE end
+})
+
+_L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
+table.insert(textadept.menu.menubar[_L['View']], 19, {
+	_L['Toggle Strip Trailing Whitespace'], function()
+		textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
+		events.emit(events.UPDATE_UI, 3)
+	end
+})
+
+-- UI Adjustments
+events.connect(events.UPDATE_UI, function(updated)
+	if not updated or updated & 3 == 0 then return end
+	local strip = 'Strip: ' .. (textadept.editing.strip_trailing_spaces and 'On' or 'Off')
+	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(
+		ui.buffer_statusbar_text:bst_count() - 1, strip)
+end)
+
+-- Hide some folders from the quick open list
+table.insert(lfs.default_filter, '!.xmake')
+table.insert(lfs.default_filter, '!build_dir')
+table.insert(lfs.default_filter, '!build')
+table.insert(lfs.default_filter, '!assets')
+table.insert(lfs.default_filter, '!.vs')
+table.insert(lfs.default_filter, '!.vscode')
+
 -- Platform Specific Adjustments
 if CURSES then
 	-- Add a suspend menu entry
@@ -200,10 +199,8 @@ if CURSES then
 elseif WIN32 then
 	-- Disable due to weird UK keyboard
 	keys['ctrl+alt+|'] = nil
-end
-
--- Dirty fix for X11 focus
-if GTK then
+elseif GTK then
+	-- Dirty fix for X11 focus
 	local function get_display_names(buffer)
 		local filename = buffer.filename or buffer._type or _L['Untitled']
 		if buffer.filename then
