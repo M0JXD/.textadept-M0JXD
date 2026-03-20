@@ -25,7 +25,7 @@ end
 
 -- Modules (Official)
 -- require('debugger')
--- require('export')
+require('export')
 require('file_diff')
 local format = require('format')
 local function prettier_formatter()
@@ -58,7 +58,7 @@ spellcheck.check_spelling_on_save = false
 local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
 
--- Modules (external)
+-- Modules (External)
 -- require('textredux').hijack()
 -- Experimental features by @Fwirt (requires custom build)
 -- local textbar = require('textbar')
