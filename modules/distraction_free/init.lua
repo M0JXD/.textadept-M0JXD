@@ -10,7 +10,7 @@ M.clear_statusbar = true
 M.hide_margins = false
 M.hide_curses_title = true
 M.maximise = false
-M.toggle_shortcut = 'ctrl+f12'
+M.toggle_shortcut = BSD and 'f11' or 'ctrl+f11'
 
 -- NB: This is carefully connected to the right events instead of generic UPDATE_UI
 -- Otherwise it just flickers all the time.
