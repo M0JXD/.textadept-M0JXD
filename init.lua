@@ -143,7 +143,7 @@ events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLE
 -- Tools
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
-textadept.run.compile_commands.python = (WIN32 and 'py' or 'python') .. ' -m flake8 %f'  -- Run a linter
+textadept.run.compile_commands.python = (WIN32 and 'py' or 'python') .. ' -m flake8 %f' -- Run a linter
 textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"' -- Verify
 textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0' -- Upload
 
