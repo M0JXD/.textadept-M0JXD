@@ -6,6 +6,12 @@ local M = {}
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
 
+M.bindings = {
+	terminal = 'ctrl+T',
+	explorer = 'ctrl+E',
+	git_client = 'ctrl+G'
+}
+
 -- Most GTK terminals use these
 M.term_dir_arg = '--working-directory='
 M.term_max_arg = '--maximize'
@@ -46,7 +52,7 @@ if WIN32 then
 	M.git_client = 'lazygit.exe'
 end
 
-local function openTerminalHere(arg)
+function M.openTerminalHere(arg)
 	local argString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
@@ -71,7 +77,7 @@ local function openTerminalHere(arg)
 	end
 end
 
-local function openFileBrowserHere()
+function M.openFileBrowserHere()
 	local pathString = '~'
 	if LINUX or BSD then
 		if buffer.filename then pathString = buffer.filename:match('.+/') end
@@ -83,28 +89,30 @@ local function openFileBrowserHere()
 	end
 end
 
-local function openGitClientHere()
-	openTerminalHere(M.git_client)
+function M.openGitClientHere()
+	M.openTerminalHere(M.git_client)
 end
 
--- Add them to the menu with keybindings
 local quick_open = textadept.menu.menubar[_L['Tools/Quick Open']]
-keys['ctrl+T'] = openTerminalHere
 _L['Open Terminal Here...'] = 'Open _Terminal Here...'
 table.insert(quick_open, 5, {
-	_L['Open Terminal Here...'], openTerminalHere
+	_L['Open Terminal Here...'], M.openTerminalHere
 })
 
-keys['ctrl+E'] = openFileBrowserHere
 _L['Open File Browser Here...'] = 'Open _File Browser Here...'
 table.insert(quick_open, 6, {
-	_L['Open File Browser Here...'], openFileBrowserHere
+	_L['Open File Browser Here...'], M.openFileBrowserHere
 })
 
-keys['ctrl+G'] = openGitClientHere
 _L['Open Git Client Here...'] = 'Open _Git Client Here...'
 table.insert(quick_open, 7, {
-	_L['Open Git Client Here...'], openGitClientHere
+	_L['Open Git Client Here...'], M.openGitClientHere
 })
+
+events.connect(events.INITIALIZED, function ()
+	keys[M.bindings.terminal] = M.openTerminalHere
+	keys[M.bindings.explorer] = M.openFileBrowserHere
+	keys[M.bindings.git_client] = M.openGitClientHere
+end)
 
 return M
