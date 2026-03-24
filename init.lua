@@ -95,7 +95,7 @@ textadept.editing.comment_string.dart = '// '
 textadept.editing.comment_string.javascript = '// '
 textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
--- ui.find.highlight_all_matches = true
+ui.find.highlight_all_matches = true
 local lex_handler = 0
 local auto_pairs = textadept.editing.auto_pairs
 events.connect('SETTINGS_HANDLER', function(from)
@@ -161,8 +161,7 @@ table.insert(textadept.menu.menubar[_L['File']], 8, {
 -- Pandoc conversions are weird so this is handy
 _L['Delete Blank Lines'] = 'Delete Blank _Lines'
 table.insert(textadept.menu.menubar[_L['Edit']], 11, {
-	_L['Delete Blank Lines'],
-	function()
+	_L['Delete Blank Lines'], function()
 		local i = 1
 		while i < buffer.line_count do
 			local line = buffer:get_line(i)
