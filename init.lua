@@ -218,13 +218,16 @@ elseif GTK then
 	end)
 end
 
--- Pandoc lists conversions are weird so this is handy
+-- Pandoc list conversions are weird so this is handy
 function blank_line_killer()
-	for i=1, buffer.line_count do
+	local i = 1
+	while i < buffer.line_count do
 		local line = buffer:get_line(i)
 		if line:match("^%s*$") then
 			buffer:goto_line(i)
 			buffer:line_delete()
+		else
+			i = i + 1
 		end
 	end
 end
