@@ -218,7 +218,7 @@ elseif GTK then
 	end)
 end
 
--- Pandoc list conversions are weird so this is handy
+-- Pandoc conversions are weird so this is handy
 function blank_line_killer()
 	local i = 1
 	while i < buffer.line_count do
