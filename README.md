@@ -34,7 +34,7 @@ theme_mgr()
 
 Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module.
 Also added the ability to hide the tab bar, and allows you to configure what you want to hide.
-Also works on CURSES and hides the title. Defaults to my preferences, as I prefer `Ctrl+F12`.
+Also works on CURSES and hides the title. Defaults to my preferences.
 
 Example usage:
 
@@ -46,7 +46,7 @@ distraction_free.hide_scrollbars = true
 distraction_free.clear_statusbar = false
 distraction_free.hide_margins = true
 distraction_free.maximise = true
-distraction_free.toggle_shortcut = 'ctrl+f11'
+distraction_free.toggle_shortcut = 'ctrl+f12'
 ```
 
 ## Quick Open Module
