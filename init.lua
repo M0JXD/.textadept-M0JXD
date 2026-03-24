@@ -158,6 +158,24 @@ table.insert(textadept.menu.menubar[_L['File']], 8, {
 	end
 })
 
+-- Pandoc conversions are weird so this is handy
+_L['Delete Blank Lines'] = 'Delete Blank _Lines'
+table.insert(textadept.menu.menubar[_L['Edit']], 11, {
+	_L['Delete Blank Lines'],
+	function()
+		local i = 1
+		while i < buffer.line_count do
+			local line = buffer:get_line(i)
+			if line:match("^%s*$") then
+				buffer:goto_line(i)
+				buffer:line_delete()
+			else
+				i = i + 1
+			end
+		end
+	end
+})
+
 local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
 tools[#tools + 1] = {''}
@@ -216,18 +234,4 @@ elseif GTK then
 			filename)
 		os.execute('wmctrl -a "' .. title .. '"')
 	end)
-end
-
--- Pandoc conversions are weird so this is handy
-function blank_line_killer()
-	local i = 1
-	while i < buffer.line_count do
-		local line = buffer:get_line(i)
-		if line:match("^%s*$") then
-			buffer:goto_line(i)
-			buffer:line_delete()
-		else
-			i = i + 1
-		end
-	end
 end
