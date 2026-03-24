@@ -80,6 +80,7 @@ end
 
 -- Buffer/Language Settings
 view.edge_column = 100
+-- io.track_changes = true  -- This doesn't work?
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.ino = 'arduino'
@@ -215,4 +216,15 @@ elseif GTK then
 			filename)
 		os.execute('wmctrl -a "' .. title .. '"')
 	end)
+end
+
+-- Pandoc lists conversions are weird so this is handy
+function blank_line_killer()
+	for i=1, buffer.line_count do
+		local line = buffer:get_line(i)
+		if line:match("^%s*$") then
+			buffer:goto_line(i)
+			buffer:line_delete()
+		end
+	end
 end
