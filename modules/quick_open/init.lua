@@ -104,7 +104,7 @@ function M.openViewerHere()
 	if outfile ~= file then
 		os.remove(outfile)
 		os.execute(
-			'pandoc --pdf-engine=xelatex -V geometry:margin=2cm -V mainfont="DejaVu Sans" -s -o ' ..
+			'pandoc --pdf-engine=xelatex -V geometry:margin=1.5cm -V mainfont="DejaVu Sans" -s -o ' ..
 				outfile .. ' ' .. file)
 	end
 	os.execute((WIN32 and 'start ' or 'xdg-open ') .. outfile)
