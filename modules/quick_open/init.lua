@@ -60,7 +60,6 @@ function M.openTerminalHere(arg)
 			argString = '"' .. buffer.filename:match('.+/') .. '"'
 			argString = M.term_dir_arg .. argString
 		end
-
 		if arg then
 			argString = argString .. ' ' .. M.term_max_arg .. ' -e ' .. arg
 		else
