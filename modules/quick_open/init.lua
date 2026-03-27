@@ -56,7 +56,7 @@ function M.openTerminalHere(arg)
 	local argString = '~'
 	if LINUX or BSD then
 		if buffer.filename then
-			argString = buffer.filename:match('.+/')
+			argString = '"' .. buffer.filename:match('.+/') .. '"'
 			argString = M.term_dir_arg .. argString
 		end
 		if arg then
@@ -81,7 +81,7 @@ function M.openFileBrowserHere()
 	local pathString = '~'
 	if LINUX or BSD then
 		if buffer.filename then pathString = buffer.filename:match('.+/') end
-		io.popen(M.explorer .. ' ' .. pathString .. ' &')
+		io.popen(M.explorer .. ' "' .. pathString .. '" &')
 	elseif WIN32 then
 		local prePath = buffer.filename:match('.+\\')
 		pathString = ' /e,' .. prePath
