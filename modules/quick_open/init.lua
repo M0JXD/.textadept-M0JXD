@@ -7,10 +7,7 @@ local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
 
 M.bindings = {
-	terminal = 'ctrl+T',
-	explorer = 'ctrl+E',
-	git_client = 'ctrl+G',
-	viewer = ''
+	terminal = 'ctrl+T', explorer = 'ctrl+E', git_client = 'ctrl+G', viewer = ''
 }
 
 -- Most GTK terminals use these
@@ -106,7 +103,9 @@ function M.openViewerHere()
 
 	if outfile ~= file then
 		os.remove(outfile)
-		os.execute('pandoc -V geometry:margin=2cm -s -o ' .. outfile .. ' ' .. file)
+		os.execute(
+			'pandoc --pdf-engine=xelatex -V geometry:margin=2cm -V mainfont="DejaVu Sans" -s -o ' ..
+				outfile .. ' ' .. file)
 	end
 	os.execute((WIN32 and 'start ' or 'xdg-open ') .. outfile)
 end
@@ -132,7 +131,7 @@ table.insert(quick_open, 8, {
 	_L['Open Viewer Here...'], M.openViewerHere
 })
 
-events.connect(events.INITIALIZED, function ()
+events.connect(events.INITIALIZED, function()
 	keys[M.bindings.terminal] = M.openTerminalHere
 	keys[M.bindings.explorer] = M.openFileBrowserHere
 	keys[M.bindings.git_client] = M.openGitClientHere
