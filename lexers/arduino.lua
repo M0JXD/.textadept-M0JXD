@@ -15,15 +15,7 @@ lex:set_word_list(lexer.KEYWORD, {
 	'PROGMEM' -- Arduino
 }, true)
 
-lex:set_word_list(lexer.TYPE, {
-	-- Additional C++ Types (they highlight in Arduino IDE v1.8)
-	'wchar_t', --
-	'char16_t', 'char32_t', -- C++11
-	-- <cstddef>
-	'byte', -- C++17
-	-- Arduino
-	'word', 'String'
-}, true)
+lex:set_word_list(lexer.TYPE, 'byte word String', true)
 
 lex:set_word_list(lexer.FUNCTION_BUILTIN, {
 	-- I/O
