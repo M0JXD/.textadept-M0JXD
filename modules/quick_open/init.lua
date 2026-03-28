@@ -7,7 +7,7 @@ local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
 
 M.bindings = {
-	terminal = 'ctrl+T', explorer = 'ctrl+E', git_client = 'ctrl+G', viewer = ''
+	terminal = 'ctrl+T', explorer = 'ctrl+E', git_client = 'ctrl+G'
 }
 
 -- Most GTK terminals use these
@@ -91,25 +91,6 @@ function M.openGitClientHere()
 	M.openTerminalHere(M.git_client)
 end
 
-function M.openViewerHere()
-	local lex = buffer:get_lexer()
-	local file = '"' .. buffer.filename .. '"'
-	local outfile = file
-	if lex == 'markdown' then
-		outfile = file:gsub('.md', '.pdf')
-	elseif lex == 'latex' then
-		outfile = file:gsub('.tex', '.pdf')
-	end
-
-	if outfile ~= file then
-		os.remove(outfile)
-		os.execute(
-			'pandoc --pdf-engine=xelatex -V geometry:margin=1.5cm -V mainfont="DejaVu Sans" -s -o ' ..
-				outfile .. ' ' .. file)
-	end
-	os.execute((WIN32 and 'start ' or 'xdg-open ') .. outfile)
-end
-
 local quick_open = textadept.menu.menubar[_L['Tools/Quick Open']]
 _L['Open Terminal Here...'] = 'Open _Terminal Here...'
 table.insert(quick_open, 5, {
@@ -126,16 +107,10 @@ table.insert(quick_open, 7, {
 	_L['Open Git Client Here...'], M.openGitClientHere
 })
 
-_L['Open Viewer Here...'] = 'Open _Viewer Here...'
-table.insert(quick_open, 8, {
-	_L['Open Viewer Here...'], M.openViewerHere
-})
-
 events.connect(events.INITIALIZED, function()
 	keys[M.bindings.terminal] = M.openTerminalHere
 	keys[M.bindings.explorer] = M.openFileBrowserHere
 	keys[M.bindings.git_client] = M.openGitClientHere
-	keys[M.bindings.viewer] = M.openViewerHere
 end)
 
 return M
