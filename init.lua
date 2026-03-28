@@ -10,19 +10,6 @@ theme_mgr.font.family = 'Noto Mono'
 theme_mgr.font.size = 12
 theme_mgr()
 
--- Modules (M0JXD)
-require('bfstatbar_utils')
-require('distraction_free')
-require('quick_open')
-local ds = require('doc_stats')
-ds.display.lines = true
-local drpc = false
-if not BSD then
-	drpc = require('discord_rpc')
-	drpc.private_mode = true
-	drpc.init()
-end
-
 -- Modules (Official)
 -- require('debugger')
 require('export')
@@ -57,6 +44,20 @@ local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
 local update_notifier = require('update_notifier')
 update_notifier.check_on_startup = true
+
+-- Modules (M0JXD)
+require('bfstatbar_utils')
+require('distraction_free')
+require('quick_open')
+require('export_ext')
+local ds = require('doc_stats')
+ds.display.lines = true
+local drpc = false
+if not BSD then
+	drpc = require('discord_rpc')
+	drpc.private_mode = true
+	drpc.init()
+end
 
 -- Modules (External)
 -- require('textredux').hijack()
