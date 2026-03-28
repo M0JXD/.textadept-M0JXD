@@ -16,7 +16,9 @@ function M.markdown_to_html()
 		-- Prompt the user for the HTML file to export to, if necessary.
 		filename = filename or buffer.filename or ''
 		local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
-		local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.html'}
+		local out_filename = ui.dialogs.save{
+			title = _L['Save File'], dir = dir, file = name .. '.html'
+		}
 		if not out_filename then return end
 		local htmlout = require('export_ext/markdown')(buffer:get_text())
 		io.open(out_filename, 'w'):write(htmlout):close()
@@ -39,7 +41,7 @@ function M.to_pdf()
 	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
 	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.pdf'}
 	if not out_filename then return end
-	os.remove('"'.. out_filename .. '"')
+	os.remove('"' .. out_filename .. '"')
 	os.execute(
 		'pandoc --pdf-engine=xelatex -V geometry:margin=1.5cm -V mainfont="DejaVu Sans" -s -o "' ..
 			out_filename .. '" ' .. file)

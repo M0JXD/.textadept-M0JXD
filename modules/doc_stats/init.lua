@@ -111,8 +111,9 @@ end
 
 function M.count_chars(spaces, all)
 	local start_pos = all and 0 or buffer.selection_empty and 0 or buffer.selection_start
-	local end_pos = all and buffer.line_end_position[buffer.line_count] or buffer.selection_empty and
-		0 or buffer.selection_end
+	local end_pos =
+		all and buffer.line_end_position[buffer.line_count] or buffer.selection_empty and 0 or
+			buffer.selection_end
 	-- Textadept doth provide
 	local amount = buffer:count_characters(start_pos, end_pos)
 	if spaces == M.DISCARD_SPACES then
@@ -126,12 +127,13 @@ end
 local function stats_dialog()
 	ui.dialogs.message{
 		title = 'Document Statistics',
-		text = 'Details are shown as "Selected/Total":\n\n' .. 'Rows:  ' .. (M.count_rows() or 0) .. '/' ..
-			buffer.line_count .. '\n' .. 'Words:  ' .. (M.count_words(false) or 0) .. '/' ..
+		text = 'Details are shown as "Selected/Total":\n\n' .. 'Rows:  ' .. (M.count_rows() or 0) ..
+			'/' .. buffer.line_count .. '\n' .. 'Words:  ' .. (M.count_words(false) or 0) .. '/' ..
 			(M.count_words(true) or 0) .. '\n' .. 'Bytes:  ' .. (M.count_bytes(false) or 0) .. '/' ..
 			(M.count_bytes(true) or 0) .. '\n' .. 'Characters (inc. spaces):  ' ..
-			(M.count_chars(M.ALL_SPACES, false) or 0) .. '/' .. (M.count_chars(M.ALL_SPACES, true) or 0) ..
-			'\n' .. 'Characters (No spaces):  ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' ..
+			(M.count_chars(M.ALL_SPACES, false) or 0) .. '/' ..
+			(M.count_chars(M.ALL_SPACES, true) or 0) .. '\n' .. 'Characters (No spaces):  ' ..
+			(M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' ..
 			(M.count_chars(M.DISCARD_SPACES, true) or 0) .. '\n' .. 'Characters (No newlines):  ' ..
 			(M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' ..
 			(M.count_chars(M.DISCARD_NEWLINES, true) or 0)
@@ -216,9 +218,8 @@ events.connect(events.UPDATE_UI, function(updated)
 	local bst_text = ui.buffer_statusbar_text
 	if M.display.lines then
 		local rows = M.count_rows()
-		rows =
-			'Lines: ' .. (rows > 0 and rows or buffer:line_from_position(buffer.current_pos)) .. '/' ..
-				buffer.line_count
+		rows = 'Lines: ' .. (rows > 0 and rows or buffer:line_from_position(buffer.current_pos)) ..
+			'/' .. buffer.line_count
 		bst_text = bst_text:bst_replace(1, rows)
 	end
 
@@ -233,15 +234,15 @@ events.connect(events.UPDATE_UI, function(updated)
 	end
 
 	if M.display.chars_nl then
-		bst_text = bst_text:bst_insert(
-			type(M.display.chars_nl) == 'boolean' and 1 or M.display.chars_nl,
+		bst_text = bst_text:bst_insert(type(M.display.chars_nl) == 'boolean' and 1 or
+			M.display.chars_nl,
 			'Chars (NL): ' .. (M.count_chars(M.DISCARD_NEWLINES, false) or 0) .. '/' ..
 				(M.count_chars(M.DISCARD_NEWLINES, true) or 0))
 	end
 
 	if M.display.chars_ns then
-		bst_text = bst_text:bst_insert(
-			type(M.display.chars_ns) == 'boolean' and 1 or M.display.chars_ns,
+		bst_text = bst_text:bst_insert(type(M.display.chars_ns) == 'boolean' and 1 or
+			M.display.chars_ns,
 			'Chars (NS): ' .. (M.count_chars(M.DISCARD_SPACES, false) or 0) .. '/' ..
 				(M.count_chars(M.DISCARD_SPACES, true) or 0))
 	end

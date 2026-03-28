@@ -183,8 +183,9 @@ tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
 table.insert(textadept.menu.menubar[_L['View']], 18, {
-	_L['Toggle Line Guide'],
-	function() view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE end
+	_L['Toggle Line Guide'], function()
+		view.edge_mode = view.edge_mode == view.EDGE_LINE and view.EDGE_NONE or view.EDGE_LINE
+	end
 })
 
 _L['Toggle Strip Trailing Whitespace'] = 'Toggle Strip _Trailing Whitespace'
