@@ -47,10 +47,10 @@ function M.to_pdf()
 end
 
 -- Add a sub-menu.
-_L['Export Markdown to HTML...'] = 'Export _Markdown to HTML...'
-_L['Export to PDF...'] = 'Export to _PDF...'
+_L['Convert Markdown to HTML...'] = 'Convert _Markdown to HTML...'
+_L['Convert to PDF...'] = 'Convert to _PDF...'
 local m_export = textadept.menu.menubar['File/Export']
-table.insert(m_export, {_L['Export Markdown to HTML...'], M.markdown_to_html})
-table.insert(m_export, {_L['Export to PDF...'], M.to_pdf})
+table.insert(m_export, {_L['Convert Markdown to HTML...'], M.markdown_to_html})
+table.insert(m_export, {_L['Convert to PDF...'], M.to_pdf})
 
 return M
