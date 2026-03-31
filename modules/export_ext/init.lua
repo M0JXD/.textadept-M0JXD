@@ -47,6 +47,26 @@ function M.pandoc_html()
 	os.execute(M.browser .. ' "' .. out_filename .. '"')
 end
 
+function M.pandoc_odt()
+	local lex = buffer:get_lexer()
+	local file = '"' .. buffer.filename .. '"'
+	if not (lex == 'markdown' or lex == 'latex') then
+		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to ODT!'
+		return
+	end
+
+	-- Prompt the user for the ODT file to export to
+	local filename = buffer.filename or ''
+	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
+	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.odt'}
+	if not out_filename then return end
+	os.remove('"' .. out_filename .. '"')
+	os.execute(
+		'pandoc --reference-doc '.. _USERHOME .. '/modules/export_ext/reference.odt' .. ' -s -o "' ..
+			out_filename .. '" ' .. file)
+	os.execute(M.browser .. ' "' .. out_filename .. '"')
+end
+
 function M.pandoc_pdf()
 	local lex = buffer:get_lexer()
 	local file = '"' .. buffer.filename .. '"'
@@ -54,7 +74,6 @@ function M.pandoc_pdf()
 		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to PDF!'
 		return
 	end
-
 	-- Prompt the user for the PDF file to export to
 	local filename = buffer.filename or ''
 	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
@@ -62,7 +81,7 @@ function M.pandoc_pdf()
 	if not out_filename then return end
 	os.remove('"' .. out_filename .. '"')
 	os.execute(
-		'pandoc --pdf-engine=xelatex -V geometry:margin=1.5cm -V mainfont="DejaVu Sans" -s -o "' ..
+		'pandoc -V geometry:margin=1.5cm -s -o "' ..
 			out_filename .. '" ' .. file)
 	os.execute(M.browser .. ' "' .. out_filename .. '"')
 end
@@ -73,6 +92,7 @@ _L['Convert to PDF...'] = 'Convert to _PDF...'
 local m_export = textadept.menu.menubar['File/Export']
 table.insert(m_export, {_L['Convert Markdown to HTML...'], M.markdown_to_html})
 table.insert(m_export, {_L['Pandoc to HTML...'], M.pandoc_html})
+table.insert(m_export, {_L['Pandoc to ODT...'], M.pandoc_odt})
 table.insert(m_export, {_L['Pandoc to PDF...'], M.pandoc_pdf})
 
 return M
