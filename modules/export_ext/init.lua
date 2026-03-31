@@ -13,8 +13,8 @@ M.browser = WIN32 and 'start ""' or OSX and 'open' or LINUX and 'xdg-open'
 
 function M.markdown_to_html()
 	if buffer:get_lexer() == 'markdown' then
-		-- Prompt the user for the HTML file to export to, if necessary.
-		filename = filename or buffer.filename or ''
+		-- Prompt the user for the HTML file to export to
+		local filename = buffer.filename or ''
 		local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
 		local out_filename = ui.dialogs.save{
 			title = _L['Save File'], dir = dir, file = name .. '.html'
@@ -28,7 +28,26 @@ function M.markdown_to_html()
 	end
 end
 
-function M.to_pdf()
+-- Markdown to HTML is fast, but doesn't support some markdown things like tables
+-- Pandoc by default also applies some nice styling etc.
+function M.pandoc_html()
+	local lex = buffer:get_lexer()
+	local file = '"' .. buffer.filename .. '"'
+	if not (lex == 'markdown' or lex == 'latex') then
+		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to HTML!'
+		return
+	end
+	-- Prompt the user for the HTML file to export to
+	local filename = buffer.filename or ''
+	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
+	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.html'}
+	if not out_filename then return end
+	os.remove('"' .. out_filename .. '"')
+	os.execute('pandoc -s -o "' .. out_filename .. '" ' .. file)
+	os.execute(M.browser .. ' "' .. out_filename .. '"')
+end
+
+function M.pandoc_pdf()
 	local lex = buffer:get_lexer()
 	local file = '"' .. buffer.filename .. '"'
 	if not (lex == 'markdown' or lex == 'latex') then
@@ -36,8 +55,8 @@ function M.to_pdf()
 		return
 	end
 
-	-- Prompt the user for the PDF file to export to, if necessary.
-	filename = filename or buffer.filename or ''
+	-- Prompt the user for the PDF file to export to
+	local filename = buffer.filename or ''
 	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
 	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.pdf'}
 	if not out_filename then return end
@@ -53,6 +72,7 @@ _L['Convert Markdown to HTML...'] = 'Convert _Markdown to HTML...'
 _L['Convert to PDF...'] = 'Convert to _PDF...'
 local m_export = textadept.menu.menubar['File/Export']
 table.insert(m_export, {_L['Convert Markdown to HTML...'], M.markdown_to_html})
-table.insert(m_export, {_L['Convert to PDF...'], M.to_pdf})
+table.insert(m_export, {_L['Pandoc to HTML...'], M.pandoc_html})
+table.insert(m_export, {_L['Pandoc to PDF...'], M.pandoc_pdf})
 
 return M
