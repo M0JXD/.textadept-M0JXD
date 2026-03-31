@@ -11,6 +11,7 @@ local M = {}
 --- Command used to open exported HTML files in the user's default web browser.
 M.browser = WIN32 and 'start ""' or OSX and 'open' or LINUX and 'xdg-open'
 
+-- TODO: Add Tables to this exporter
 function M.markdown_to_html()
 	if buffer:get_lexer() == 'markdown' then
 		-- Prompt the user for the HTML file to export to
@@ -28,62 +29,40 @@ function M.markdown_to_html()
 	end
 end
 
--- Markdown to HTML is fast, but doesn't support some markdown things like tables
--- Pandoc by default also applies some nice styling etc.
-function M.pandoc_html()
-	local lex = buffer:get_lexer()
-	local file = '"' .. buffer.filename .. '"'
-	if not (lex == 'markdown' or lex == 'latex') then
-		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to HTML!'
-		return
+function check(type)
+	if not (buffer:get_lexer() == 'markdown' or buffer:get_lexer() == 'latex') then
+		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to ' .. type .. '!'
+		return false
 	end
-	-- Prompt the user for the HTML file to export to
-	local filename = buffer.filename or ''
-	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
-	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.html'}
-	if not out_filename then return end
-	os.remove('"' .. out_filename .. '"')
-	os.execute('pandoc -s -o "' .. out_filename .. '" ' .. file)
-	os.execute(M.browser .. ' "' .. out_filename .. '"')
+	return true
 end
 
-function M.pandoc_odt()
-	local lex = buffer:get_lexer()
-	local file = '"' .. buffer.filename .. '"'
-	if not (lex == 'markdown' or lex == 'latex') then
-		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to ODT!'
-		return
-	end
+function M.pandoc(type)
+	if check(type:upper()) then
+		-- Prompt the user for the file to export to
+		local filename = buffer.filename or ''
+		local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
+		local out_filename = ui.dialogs.save{
+			title = _L['Save File'], dir = dir, file = name .. '.' .. type
+		}
+		if not out_filename then return end
 
-	-- Prompt the user for the ODT file to export to
-	local filename = buffer.filename or ''
-	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
-	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.odt'}
-	if not out_filename then return end
-	os.remove('"' .. out_filename .. '"')
-	os.execute(
-		'pandoc --reference-doc '.. _USERHOME .. '/modules/export_ext/reference.odt' .. ' -s -o "' ..
-			out_filename .. '" ' .. file)
-	os.execute(M.browser .. ' "' .. out_filename .. '"')
-end
-
-function M.pandoc_pdf()
-	local lex = buffer:get_lexer()
-	local file = '"' .. buffer.filename .. '"'
-	if not (lex == 'markdown' or lex == 'latex') then
-		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to PDF!'
-		return
+		local pandoc_str = 'pandoc '
+		if type == 'html' then
+			-- TODO, apply some default CSS for tables
+			-- pandoc_str = pandoc_str
+		elseif type == 'pdf' then
+			pandoc_str = pandoc_str .. '-V geometry:margin=1.5cm'
+		elseif type == 'odt' then
+			pandoc_str = pandoc_str .. '--reference-doc ' .. _USERHOME ..
+				(WIN32 and '\\modules\\export_ext\\reference.odt' or
+					'/modules/export_ext/reference.odt')
+		end
+		pandoc_str = pandoc_str .. ' -s -o "' .. out_filename .. '" "' .. filename .. '"'
+		os.remove('"' .. out_filename .. '"')
+		os.execute(pandoc_str)
+		os.execute(M.browser .. ' "' .. out_filename .. '"')
 	end
-	-- Prompt the user for the PDF file to export to
-	local filename = buffer.filename or ''
-	local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
-	local out_filename = ui.dialogs.save{title = _L['Save File'], dir = dir, file = name .. '.pdf'}
-	if not out_filename then return end
-	os.remove('"' .. out_filename .. '"')
-	os.execute(
-		'pandoc -V geometry:margin=1.5cm -s -o "' ..
-			out_filename .. '" ' .. file)
-	os.execute(M.browser .. ' "' .. out_filename .. '"')
 end
 
 -- Add a sub-menu.
@@ -91,8 +70,8 @@ _L['Convert Markdown to HTML...'] = 'Convert _Markdown to HTML...'
 _L['Convert to PDF...'] = 'Convert to _PDF...'
 local m_export = textadept.menu.menubar['File/Export']
 table.insert(m_export, {_L['Convert Markdown to HTML...'], M.markdown_to_html})
-table.insert(m_export, {_L['Pandoc to HTML...'], M.pandoc_html})
-table.insert(m_export, {_L['Pandoc to ODT...'], M.pandoc_odt})
-table.insert(m_export, {_L['Pandoc to PDF...'], M.pandoc_pdf})
+table.insert(m_export, {_L['Pandoc to HTML...'], function() M.pandoc('html') end})
+table.insert(m_export, {_L['Pandoc to ODT...'], function() M.pandoc('odt') end})
+table.insert(m_export, {_L['Pandoc to PDF...'], function() M.pandoc('pdf') end})
 
 return M
