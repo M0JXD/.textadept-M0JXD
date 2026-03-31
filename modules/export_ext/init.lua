@@ -11,9 +11,17 @@ local M = {}
 --- Command used to open exported HTML files in the user's default web browser.
 M.browser = WIN32 and 'start ""' or OSX and 'open' or LINUX and 'xdg-open'
 
+function check(type)
+	if not (buffer:get_lexer() == 'markdown' or buffer:get_lexer() == 'latex') then
+		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to ' .. type .. '!'
+		return false
+	end
+	return true
+end
+
 -- TODO: Add Tables to this exporter
 function M.markdown_to_html()
-	if buffer:get_lexer() == 'markdown' then
+	if check('HTML') then
 		-- Prompt the user for the HTML file to export to
 		local filename = buffer.filename or ''
 		local dir, name = filename:match('^(.-)[/\\]?([^/\\]-)%.?[^.]*$')
@@ -24,17 +32,7 @@ function M.markdown_to_html()
 		local htmlout = require('export_ext/markdown')(buffer:get_text())
 		io.open(out_filename, 'w'):write(htmlout):close()
 		os.spawn(string.format('%s "%s"', M.browser, out_filename))
-	else
-		ui.statusbar_text = 'Not a Markdown file!'
 	end
-end
-
-function check(type)
-	if not (buffer:get_lexer() == 'markdown' or buffer:get_lexer() == 'latex') then
-		ui.statusbar_text = "Can't convert " .. buffer:get_lexer() .. ' to ' .. type .. '!'
-		return false
-	end
-	return true
 end
 
 function M.pandoc(type)
