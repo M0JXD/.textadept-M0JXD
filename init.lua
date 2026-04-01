@@ -81,10 +81,8 @@ end
 
 -- Buffer/Language Settings
 view.edge_column = 100
--- io.track_changes = true  -- This doesn't work?
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
-lexer.detect_extensions.ino = 'arduino'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.comment_string.c = '/* | */'
