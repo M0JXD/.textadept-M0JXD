@@ -85,6 +85,8 @@ lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
+textadept.editing.auto_pairs.text = {}
+textadept.editing.auto_pairs.markdown = {}
 textadept.editing.comment_string.c = '/* | */'
 textadept.editing.comment_string.lua = '-- '
 textadept.editing.comment_string.python = '# '
@@ -96,18 +98,16 @@ textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 ui.find.highlight_all_matches = true
 local lex_handler = 0
-local auto_pairs = textadept.editing.auto_pairs
-events.connect('SETTINGS_HANDLER', function(from)
+local function lexer_settings()
 	buffer.tab_width = 4
 	buffer.use_tabs = false
 	view.wrap_mode = view.WRAP_NONE
-	textadept.editing.auto_pairs = auto_pairs
 	textadept.editing.strip_trailing_spaces = true
 	if format then format.on_save = false end
 	ds.display.words = false
 	ds.display.chars = false
 
-	name = buffer:get_lexer()
+	local name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
 		buffer.use_tabs = true
 	elseif name == 'dart' then
@@ -115,30 +115,14 @@ events.connect('SETTINGS_HANDLER', function(from)
 		if format then format.on_save = true end
 	elseif name == 'text' or name == 'markdown' then
 		view.wrap_mode = view.WRAP_WHITESPACE
-		textadept.editing.auto_pairs = nil
 		textadept.editing.strip_trailing_spaces = false
 		ds.display.chars = 3
 		ds.display.words = 3
 	end
-
-	-- We need to run lexer loaded handlers again now everything is set
-	if from == 'LEXER_LOADED' then
-		if lex_handler == 1 then
-			events.emit(events.LEXER_LOADED)
-		else
-			lex_handler = 0
-		end
-	elseif from == 'SWITCH' then
-		lex_handler = 1
-		events.emit(events.LEXER_LOADED)
-	end
-end)
-events.connect(events.LEXER_LOADED, function()
-	lex_handler = lex_handler + 1;
-	events.emit('SETTINGS_HANDLER', 'LEXER_LOADED')
-end)
-events.connect(events.BUFFER_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
-events.connect(events.VIEW_AFTER_SWITCH, function() events.emit('SETTINGS_HANDLER', 'SWITCH') end)
+end
+events.connect(events.LEXER_LOADED, lexer_settings)
+events.connect(events.BUFFER_AFTER_SWITCH, lexer_settings)
+events.connect(events.VIEW_AFTER_SWITCH, lexer_settings)
 
 -- Tools
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
