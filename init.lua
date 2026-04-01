@@ -80,7 +80,6 @@ else
 end
 
 -- Buffer/Language Settings
-view.edge_column = 100
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.njk = 'html'
@@ -94,10 +93,10 @@ textadept.editing.comment_string.bash = '# '
 textadept.editing.comment_string.cpp = '// '
 textadept.editing.comment_string.dart = '// '
 textadept.editing.comment_string.javascript = '// '
-textadept.run.run_in_background = true
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+textadept.run.run_in_background = true
 ui.find.highlight_all_matches = true
-local lex_handler = 0
+view.edge_column = 100
 local function lexer_settings()
 	buffer.tab_width = 4
 	buffer.use_tabs = false
