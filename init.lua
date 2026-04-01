@@ -69,11 +69,15 @@ end
 -- Keybindings
 if not CURSES then
 	keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
+	keys['ctrl+l'] = textadept.menu.menubar['Edit/Select/Select Line'][2]
+	keys['ctrl+L'] = textadept.menu.menubar['Search/Go To Line...'][2]
 	keys['ctrl+K'] = function() buffer:line_delete() end
 	keys['alt+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 	keys['alt+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
 else
 	keys['meta+,'] = textadept.menu.menubar['Edit/Preferences'][2]
+	keys['ctrl+l'] = textadept.menu.menubar['Edit/Select/Select Line'][2]
+	keys['ctrl+L'] = textadept.menu.menubar['Search/Go To Line...'][2]
 	keys['ctrl+k'] = function() buffer:line_delete() end
 	keys['meta+up'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
 	keys['meta+down'] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
