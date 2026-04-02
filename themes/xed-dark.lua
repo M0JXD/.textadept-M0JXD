@@ -118,7 +118,7 @@ view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.lig
 view.element_color[view.ELEMENT_CARET] = colors.white
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_black | 0x80000000
+	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.black
 end
 view.caret_line_layer = view.LAYER_UNDER_TEXT
 
