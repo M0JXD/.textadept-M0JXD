@@ -1,26 +1,35 @@
--- Copyright 2025 Jamie Drinkell. MIT License.
--- Hand rolled Ayu-Evolve (Dark) theme for Textadept.
+-- Copyright 2025-2026 Jamie Drinkell. MIT License.
+-- VSCode/Helix Matching Ayu-Evolve (Dark) theme for Textadept.
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black =  0x000000 -- AYU: 0x140E0B -- BLACK: 0x000000
-colors.light_black = 0x3b3532 -- ATTEMPTS 0x4a423f--  0x3b3331 --  0x423632 -- 0x426332  -- 0x323642 -- 0x423632
-colors.dark_grey = 0x665B56
-colors.grey = 0x80736C
-colors.light_grey = 0xB6BDBF
-colors.white = 0xFFFFFF
+colors.black =  0x000000 -- ayu: 0x140e0b
+colors.light_black = 0x52241b -- 0x3b3532 -- attempts 0x4a423f -- 0x3b3331 -- 0x423632 -- 0x426332 -- 0x323642 -- 0x423632
+colors.dark_grey = 0x665b56
+colors.grey = 0x101010 -- 0x80736c
+colors.light_grey = 0xb6bdbf
+colors.white = 0xffffff
+-- Greyscale colors.
+colors.black = 0x000000
+colors.light_black = 0x333333
+colors.dark_grey = 0x666666
+colors.grey = 0x999999 -- unused
+colors.light_grey = 0xCCCCCC
+colors.white = 0xFFFFFF -- unused
 
-colors.red = 0x7871F0
+
+
+colors.red = 0x7871f0
 colors.orange = 0x168aff
-colors.yellow = 0x50B4E6
-colors.lime = 0x62D97F
-colors.green = 0x4DEB8B
-colors.teal = 0xCBE695
-colors.blue = 0xE6BA39
-colors.violet = 0xFFA6D2
-colors.purple = 0xFFA6D2
-colors.magenta = 0x78F071
+colors.yellow = 0x50b4e6
+colors.lime = 0x62d97f
+colors.green = 0x4deb8b
+colors.teal = 0xcbe695
+colors.blue = 0xe6ba39
+colors.violet = 0xffa6d2
+colors.purple = 0xffa6d2
+colors.magenta = 0x78f071
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
@@ -44,7 +53,7 @@ styles[lexer.ATTRIBUTE] = {fore = colors.violet}
 styles[lexer.BOLD] = {bold = true}
 styles[lexer.CLASS] = {fore = colors.yellow}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
-styles[lexer.COMMENT] = {fore = colors.dark_grey}
+styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
 -- styles[lexer.CONSTANT] = {}
 styles[lexer.CONSTANT_BUILTIN] = {fore = colors.blue}  -- was purple
 styles[lexer.EMBEDDED] = {fore = colors.purple}
@@ -52,7 +61,7 @@ styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.red}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
-styles[lexer.HEADING] = {fore = colors.magenta}
+styles[lexer.HEADING] = {fore = colors.green, bold = true}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
@@ -108,7 +117,7 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.light_grey
+ --view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.light_grey
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
 view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
