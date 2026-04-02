@@ -52,7 +52,7 @@ styles[lexer.FUNCTION_METHOD] = {fore = colors.white}
 styles[lexer.HEADING] = {fore = colors.blue}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
-styles[lexer.KEYWORD] = {fore = colors.red}
+styles[lexer.KEYWORD] = {fore = colors.red, bold = true}
 styles[lexer.LABEL] = {fore = colors.blue}
 styles[lexer.LINK] = {fore = colors.purple, underline = true}
 styles[lexer.LIST] = {fore = colors.red}
