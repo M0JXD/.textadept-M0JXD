@@ -49,7 +49,7 @@ styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.black}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.purple}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.black}
-styles[lexer.HEADING] = {fore = colors.blue}
+styles[lexer.HEADING] = {fore = colors.blue, bold = true}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.red, bold = true}
@@ -63,7 +63,7 @@ styles[lexer.REFERENCE] = {underline = true}
 styles[lexer.REGEX] = {fore = colors.lime}
 styles[lexer.STRING] = {fore = colors.green}
 styles[lexer.TAG] = {fore = colors.blue}
-styles[lexer.TYPE] = {fore = colors.blue}
+styles[lexer.TYPE] = {fore = colors.blue, bold = true}
 styles[lexer.UNDERLINE] = {underline = true}
 -- styles[lexer.VARIABLE] = {}
 styles[lexer.VARIABLE_BUILTIN] = {fore = colors.purple}
@@ -105,7 +105,7 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
+view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.white
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
