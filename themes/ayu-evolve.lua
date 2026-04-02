@@ -4,21 +4,12 @@
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black =  0x000000 -- ayu: 0x140e0b
-colors.light_black = 0x52241b -- 0x3b3532 -- attempts 0x4a423f -- 0x3b3331 -- 0x423632 -- 0x426332 -- 0x323642 -- 0x423632
-colors.dark_grey = 0x665b56
-colors.grey = 0x101010 -- 0x80736c
-colors.light_grey = 0xb6bdbf
-colors.white = 0xffffff
--- Greyscale colors.
 colors.black = 0x000000
 colors.light_black = 0x333333
 colors.dark_grey = 0x666666
 colors.grey = 0x999999 -- unused
 colors.light_grey = 0xCCCCCC
 colors.white = 0xFFFFFF -- unused
-
-
 
 colors.red = 0x7871f0
 colors.orange = 0x168aff
