@@ -27,7 +27,7 @@ if not size then size = not OSX and 10 or 12 end
 styles[view.STYLE_DEFAULT] = {
 	font = font, size = size, fore = colors.black, back = colors.white
 }
-styles[view.STYLE_LINENUMBER] = {fore = colors.dark_grey, back = colors.white}
+styles[view.STYLE_LINENUMBER] = {fore = colors.black, back = colors.white}
 styles[view.STYLE_BRACELIGHT] = {fore = colors.yellow, bold = true}
 styles[view.STYLE_BRACEBAD] = {fore = colors.red}
 -- styles[view.STYLE_CONTROLCHAR] = {}
@@ -115,11 +115,8 @@ view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
 view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
-view.element_color[view.ELEMENT_CARET] = colors.dark_grey
+view.element_color[view.ELEMENT_CARET] = colors.black
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
-if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.white
-end
 view.caret_line_layer = view.LAYER_UNDER_TEXT
 
 -- Fold Margin.
