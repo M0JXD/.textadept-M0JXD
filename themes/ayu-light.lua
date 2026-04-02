@@ -1,4 +1,4 @@
--- Copyright 2025 Jamie Drinkell. MIT License.
+-- Copyright 2025-2026 Jamie Drinkell. MIT License.
 -- VSCode Matching Ayu-Light theme for Textadept.
 
 local view, colors, styles = view, view.colors, view.styles
