@@ -18,7 +18,7 @@ colors.lime =  0x62d97f
 colors.green = 0x04c466
 colors.teal = 0xcbe695
 colors.blue = 0xf09f19
-colors.violet = 0xcc5cb4-- 0xd55fb4
+colors.violet = 0xcc5cb4 -- 0xd55fb4
 colors.purple = 0xffa6d2
 colors.magenta = 0x5cc966 -- 0x43cb6c -- old: 0x78f071
 
