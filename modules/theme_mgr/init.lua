@@ -111,10 +111,10 @@ function M.select_theme(mode)
 		M.set_themes(view)
 	end
 end
+
 _L['Change Theme...'] = 'Change _Theme...'
 _L['Light Theme'] = '_Light Theme'
 _L['Dark Theme'] = '_Dark Theme'
-
 local view_menu = textadept.menu.menubar[_L['View']]
 if not CURSES then
 	table.insert(view_menu, #view_menu - 2, {title = _L['Change Theme...'],
