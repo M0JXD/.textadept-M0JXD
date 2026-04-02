@@ -1,26 +1,27 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- VSCode Matching Ayu-Light theme for Textadept.
+-- Ayu-Light theme for Textadept.
+-- Using colours from https://ayutheme.com/
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black =  0x66605b -- old ayu: 0x140e0b
-colors.light_black = 0xf6dade -- 0xf2c2bb
-colors.dark_grey = 0xb1aead -- 0x665b56
-colors.grey = 0x80736c
-colors.light_grey = 0xb6bdbf
-colors.white = 0xfcfcfc -- 0xfaf9f8 -- ayu: faf9f8
+colors.black = 0x66615c  -- foreground
+colors.light_black = 0x26d65b03 -- Selection
+colors.dark_grey = 0xb1aead -- Comment
+-- colors.grey = --unused
+colors.light_grey = 0x1a9f8e82 -- 0xf1eeec no alpha -- Current Line
+colors.white = 0xfcfcfc  -- background
 
-colors.red = 0x645cff
-colors.orange = 0x007fff -- 0x168aff
-colors.yellow = 0x00aaf5 -- 0x34b3fc
-colors.lime =  0x62d97f
-colors.green = 0x04c466
-colors.teal = 0xcbe695
-colors.blue = 0xf09f19
-colors.violet = 0xcc5cb4 -- 0xd55fb4
-colors.purple = 0xffa6d2
-colors.magenta = 0x5cc966 -- 0x43cb6c -- old: 0x78f071
+colors.red = 0x7171f0  -- Markup
+colors.pink = 0x91a1f2  -- Operator  (Really a light orange)
+colors.orange = 0x3285fa  -- Keyword
+colors.yellow = 0x00a4eb  -- Function
+colors.beige = 0x4596e5 -- Special
+colors.violet = 0xcc7aa3  -- Constant
+colors.green = 0x00b386  -- String
+colors.turquoise = 0x99bf4c  -- REGEXP
+colors.blue = 0xe6a422  -- Entity
+colors.aqua = 0xd4b455  -- Tag
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
@@ -37,37 +38,37 @@ styles[view.STYLE_CALLTIP] = {fore = colors.black}
 styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.dark_grey, back = colors.light_grey}
 
 -- Tag styles.
-styles[lexer.ANNOTATION] = {fore = colors.magenta}
+styles[lexer.ANNOTATION] = {fore = colors.beige}
 styles[lexer.ATTRIBUTE] = {fore = colors.violet}
 styles[lexer.BOLD] = {bold = true}
 styles[lexer.CLASS] = {fore = colors.yellow}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
 -- styles[lexer.CONSTANT] = {}
-styles[lexer.CONSTANT_BUILTIN] = {fore = colors.blue}  -- was purple
-styles[lexer.EMBEDDED] = {fore = colors.purple}
+styles[lexer.CONSTANT_BUILTIN] = {fore = colors.aqua}  -- was purple
+styles[lexer.EMBEDDED] = {fore = colors.beige}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
-styles[lexer.FUNCTION_BUILTIN] = {fore = colors.red}
+styles[lexer.FUNCTION_BUILTIN] = {fore = colors.beige}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
-styles[lexer.HEADING] = {fore = colors.magenta, bold = true}
+styles[lexer.HEADING] = {fore = colors.green, bold = true}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
-styles[lexer.LABEL] = {fore = colors.magenta}
+styles[lexer.LABEL] = {fore = colors.blue}
 styles[lexer.LINK] = {underline = true}
-styles[lexer.LIST] = {fore = colors.teal}
+styles[lexer.LIST] = {fore = colors.red}
 styles[lexer.NUMBER] = {fore = colors.violet}
 -- styles[lexer.OPERATOR] = {fore = colors.orange}
 styles[lexer.PREPROCESSOR] = {fore = colors.orange}
 styles[lexer.REFERENCE] = {underline = true}
-styles[lexer.REGEX] = {fore = colors.lime}
+styles[lexer.REGEX] = {fore = colors.turquoise}
 styles[lexer.STRING] = {fore = colors.green}
-styles[lexer.TAG] = {fore = colors.blue}
-styles[lexer.TYPE] = {fore = colors.blue}
+styles[lexer.TAG] = {fore = colors.aqua}
+styles[lexer.TYPE] = {fore = colors.aqua}
 styles[lexer.UNDERLINE] = {underline = true}
 -- styles[lexer.VARIABLE] = {}
-styles[lexer.VARIABLE_BUILTIN] = {fore = colors.purple}
+styles[lexer.VARIABLE_BUILTIN] = {fore = colors.blue}
 -- styles[lexer.WHITESPACE] = {}
 
 -- CSS.
@@ -94,7 +95,7 @@ styles.environment_math = styles[lexer.NUMBER]
 styles.csi = {visible = false}
 local csi_colors = {
 	black = colors.black, red = colors.red, green = colors.green, yellow = colors.yellow,
-	blue = colors.blue, magenta = colors.magenta, cyan = colors.teal, white = colors.white
+	blue = colors.blue, magenta = colors.beige, cyan = colors.aqua, white = colors.white
 }
 for k, v in pairs(csi_colors) do styles['csi_' .. k] = {fore = v} end
 for k, v in pairs(csi_colors) do styles['csi_' .. k .. '_bright'] = {fore = v, bold = true} end
@@ -106,7 +107,8 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
-view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
+view.selection_layer = view.LAYER_OVER_TEXT
+-- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
@@ -119,7 +121,7 @@ view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.lig
 view.element_color[view.ELEMENT_CARET] = colors.dark_grey
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_grey | 0x60000000
+	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_grey
 end
 view.caret_line_layer = view.LAYER_UNDER_TEXT
 
