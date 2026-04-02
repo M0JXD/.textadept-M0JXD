@@ -89,7 +89,7 @@ lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.auto_pairs.text = {}
-textadept.editing.auto_pairs.markdown = { ['*'] = '*' }
+textadept.editing.auto_pairs.markdown = {['*'] = '*'}
 textadept.editing.comment_string.c = '/* | */'
 textadept.editing.comment_string.lua = '-- '
 textadept.editing.comment_string.python = '# '
