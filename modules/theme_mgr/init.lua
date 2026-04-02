@@ -83,7 +83,7 @@ M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
 setmetatable(M, M.mt)
 
 -- Theme selector by @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
-function M.select_theme()
+function M.select_theme(mode)
 	local themes = {}
 	for _, dir in ipairs{_USERHOME .. '/themes', _HOME .. '/themes'} do
 		if lfs.attributes(dir, 'mode') == 'directory' then
@@ -104,11 +104,26 @@ function M.select_theme()
 		end
 	end
 	local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
-	if i then view:set_theme(themes[i], {font = M.font.family, size = M.font.size}) end
+	if i then
+		if mode == 'light' then M.theme.light = themes[i]
+		elseif mode == 'dark' then M.theme.dark = themes[i]
+		else M.theme.term = themes[i] end
+		M.set_themes(view)
+	end
 end
+_L['Change Theme...'] = 'Change _Theme...'
+_L['Light Theme'] = '_Light Theme'
+_L['Dark Theme'] = '_Dark Theme'
 
 local view_menu = textadept.menu.menubar[_L['View']]
-table.insert(view_menu, #view_menu - 2, {_L['Select Theme'], M.select_theme})
+if not CURSES then
+	table.insert(view_menu, #view_menu - 2, {title = _L['Change Theme...'],
+		{_L['Light Theme'], function () M.select_theme('light') end },
+		{ _L['Dark Theme'], function () M.select_theme('dark') end }
+	})
+else
+	table.insert(view_menu, #view_menu - 2, {_L['Change Theme...'], function () M.select_theme('term') end})
+end
 table.insert(view_menu, #view_menu - 2, {''})
 
 return M
