@@ -4,7 +4,7 @@
 local theme_mgr = require('theme_mgr')
 theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
-theme_mgr.theme.term = 'ayu-evolve'
+-- theme_mgr.theme.term = 'ayu-evolve'
 theme_mgr.font.family = 'Droid Sans Mono'
 -- theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family= 'FreeMono'
