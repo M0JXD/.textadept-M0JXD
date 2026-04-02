@@ -89,7 +89,7 @@ lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
 textadept.editing.auto_pairs.text = {}
-textadept.editing.auto_pairs.markdown = {}
+textadept.editing.auto_pairs.markdown = { ['*'] = '*' }
 textadept.editing.comment_string.c = '/* | */'
 textadept.editing.comment_string.lua = '-- '
 textadept.editing.comment_string.python = '# '
@@ -107,8 +107,8 @@ local function lexer_settings()
 	view.wrap_mode = view.WRAP_NONE
 	textadept.editing.strip_trailing_spaces = true
 	if format then format.on_save = false end
-	ds.display.words = false
 	ds.display.chars = false
+	ds.display.words = false
 
 	local name = buffer:get_lexer()
 	if name == 'makefile' or name == 'lua' then
@@ -144,7 +144,7 @@ table.insert(textadept.menu.menubar[_L['File']], 8, {
 	end
 })
 
--- Pandoc conversions are weird so this is handy
+-- Pandoc conversions to Markdown often have extra blank lines
 _L['Delete Blank Lines'] = 'Delete Blank _Lines'
 table.insert(textadept.menu.menubar[_L['Edit']], 11, {
 	_L['Delete Blank Lines'], function()
