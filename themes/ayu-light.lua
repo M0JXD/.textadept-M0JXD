@@ -1,26 +1,26 @@
 -- Copyright 2025 Jamie Drinkell. MIT License.
--- Hand rolled Ayu-Light theme for Textadept.
+-- VSCode Matching Ayu-Light theme for Textadept.
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black =  0x000000 -- AYU: 0x140E0B  -- BLACK: 0x000000
-colors.light_black = 0xf2c2bb
-colors.dark_grey = 0x665B56
-colors.grey = 0x80736C
-colors.light_grey = 0xB6BDBF
-colors.white = 0xFAF9F8  -- AYU: FAF9F8  -- WHITE: 0xFFFFFF
+colors.black =  0x66605b -- old ayu: 0x140e0b
+colors.light_black = 0xf6dade -- 0xf2c2bb
+colors.dark_grey = 0xb1aead -- 0x665b56
+colors.grey = 0x80736c
+colors.light_grey = 0xb6bdbf
+colors.white = 0xfcfcfc -- 0xfaf9f8 -- ayu: faf9f8
 
-colors.red = 0x645CFF
-colors.orange = 0x168aff
-colors.yellow = 0x34B3FC
-colors.lime =  0x62D97F
+colors.red = 0x645cff
+colors.orange = 0x007fff -- 0x168aff
+colors.yellow = 0x00aaf5 -- 0x34b3fc
+colors.lime =  0x62d97f
 colors.green = 0x04c466
-colors.teal = 0xCBE695
-colors.blue = 0xF09F19
-colors.violet = 0xD55FB4
-colors.purple = 0xFFA6D2
-colors.magenta = 0x43CB6C -- OLD: 0x78F071
+colors.teal = 0xcbe695
+colors.blue = 0xf09f19
+colors.violet = 0xcc5cb4-- 0xd55fb4
+colors.purple = 0xffa6d2
+colors.magenta = 0x5cc966 -- 0x43cb6c -- old: 0x78f071
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
@@ -42,7 +42,7 @@ styles[lexer.ATTRIBUTE] = {fore = colors.violet}
 styles[lexer.BOLD] = {bold = true}
 styles[lexer.CLASS] = {fore = colors.yellow}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
-styles[lexer.COMMENT] = {fore = colors.dark_grey}
+styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
 -- styles[lexer.CONSTANT] = {}
 styles[lexer.CONSTANT_BUILTIN] = {fore = colors.blue}  -- was purple
 styles[lexer.EMBEDDED] = {fore = colors.purple}
@@ -50,7 +50,7 @@ styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.red}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
-styles[lexer.HEADING] = {fore = colors.magenta}
+styles[lexer.HEADING] = {fore = colors.magenta, bold = true}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
@@ -106,7 +106,7 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
+view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 -- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
