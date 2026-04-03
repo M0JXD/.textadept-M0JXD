@@ -5,7 +5,7 @@
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x000000 -- background 0x1c1410 for true ayu-dark
+colors.black = 0x020202 -- background 0x1c1410 for true ayu-dark, Helix evolve uses 0x020202
 colors.light_black = 0x40ff8833 -- selection
 colors.dark_grey = 0x73665a  -- comment
 colors.grey = 0x241a16 -- current line
