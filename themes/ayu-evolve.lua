@@ -109,9 +109,9 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
+view.element_color[view.ELEMENT_SELECTION_BACK] = CURSES and 0x41230e or colors.light_black
 if not CURSES then
 	view.selection_layer = view.LAYER_OVER_TEXT
-	view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
 	view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
 	-- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.light_grey
@@ -126,6 +126,8 @@ if not CURSES then
 		view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.grey
 	end
 	view.caret_line_layer = view.LAYER_UNDER_TEXT
+else
+	view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.white
 end
 
 -- Fold Margin.
