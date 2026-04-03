@@ -5,7 +5,7 @@ My collection of things I use/modified for Textadept. There's:
 - My init.lua
 - Various simple utility modules
 - Four themes
-    - Two Ayu-like themes, ayu-light and ayu-evolve, which are made to match VSCode's highlighting better than the base16 ones.
+    - Two Ayu themes, *ayu-light* and *ayu-evolve*, which are made to match the Ayu spec more than the base16 ones. *ayu-evolve* adapts to work well in CURSES.
     - Two Xed themes to match the default highlighting in Linux Mint's default editor.
 
 Mainly here so I can grab them wherever I need them.
