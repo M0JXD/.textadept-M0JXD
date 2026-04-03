@@ -46,7 +46,7 @@ styles[lexer.BOLD] = {bold = true}
 styles[lexer.CLASS] = {fore = colors.blue}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
--- styles[lexer.CONSTANT] = {}
+-- styles[lexer.CONSTANT] = {fore = colors.violet}
 styles[lexer.CONSTANT_BUILTIN] = {fore = colors.aqua}
 styles[lexer.EMBEDDED] = {fore = colors.beige}
 styles[lexer.ERROR] = {fore = colors.red}
@@ -54,7 +54,7 @@ styles[lexer.FUNCTION] = {fore = colors.yellow}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.pink}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
 styles[lexer.HEADING] = {fore = colors.green, bold = true}
--- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
+-- styles[lexer.IDENTIFIER] = {fore = colors.blue}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
 styles[lexer.LABEL] = {fore = colors.blue}
@@ -109,27 +109,30 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
-view.selection_layer = view.LAYER_OVER_TEXT
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.light_grey
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
-view.element_color[view.ELEMENT_CARET] = colors.light_grey
--- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
-if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.grey
+if not CURSES then
+	view.selection_layer = view.LAYER_OVER_TEXT
+	view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
+	view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.light_grey
+	view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.light_grey
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.light_grey
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
+	view.element_color[view.ELEMENT_CARET] = colors.light_grey
+	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
+	if view ~= ui.command_entry then
+		view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.grey
+	end
+	view.caret_line_layer = view.LAYER_UNDER_TEXT
 end
-view.caret_line_layer = view.LAYER_UNDER_TEXT
 
 -- Fold Margin.
-view:set_fold_margin_color(true, colors.black)
-view:set_fold_margin_hi_color(true, colors.black)
+if not CURSES then
+	view:set_fold_margin_color(true, colors.black)
+	view:set_fold_margin_hi_color(true, colors.black)
+end
 
 -- Markers.
 -- view.marker_fore[textadept.bookmarks.MARK_BOOKMARK] = colors.black
@@ -138,10 +141,12 @@ view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
 view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.black
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
-for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = colors.black
-	view.marker_back[i] = colors.dark_grey
-	view.marker_back_selected[i] = colors.light_grey
+if not CURSES then
+	for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
+		view.marker_fore[i] = colors.black
+		view.marker_back[i] = colors.dark_grey
+		view.marker_back_selected[i] = colors.light_grey
+	end
 end
 
 -- Indicators.
