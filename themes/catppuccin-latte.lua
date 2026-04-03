@@ -4,6 +4,7 @@
 
 local view, colors, styles = view, view.colors, view.styles
 
+-- LuaFormatter off
 colors.rosewater = 0x788adc
 colors.flamingo  = 0x7878dd
 colors.pink      = 0xcb76ea
@@ -30,6 +31,7 @@ colors.surface_0 = 0xdad0cc
 colors.base      = 0xf5f1ef
 colors.mantle    = 0xefe9e6
 colors.crust     = 0xe8e0dc
+-- LuaFormatter on
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
