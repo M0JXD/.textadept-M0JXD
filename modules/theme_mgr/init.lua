@@ -46,6 +46,33 @@ function M.check_platform_limits()
 	end
 end
 
+local function reset_view(view)
+	-- Reset some commonly adjusted things that cause problems when switching themes
+	view.caret_style = view.CARETSTYLE_LINE
+	view.caret_line_layer = view.LAYER_BASE
+	view.selection_layer = view.LAYER_BASE
+	view:style_reset_default()
+	view:style_clear_all()
+	-- Reset all the element colours
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT)
+	view:reset_element_color(view.ELEMENT_SELECTION_BACK)
+	view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_TEXT)
+	view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_BACK)
+	view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_TEXT)
+	view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_BACK)
+	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_TEXT)
+	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_BACK)
+	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT)
+	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK)
+	view:reset_element_color(view.ELEMENT_CARET)
+	view:reset_element_color(view.ELEMENT_CARET_ADDITIONAL)
+	view:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
+	view:reset_element_color(view.ELEMENT_WHITE_SPACE)
+	view:reset_element_color(view.ELEMENT_WHITE_SPACE_BACK)
+	view:reset_element_color(view.ELEMENT_FOLD_LINE)
+	view:reset_element_color(view.ELEMENT_HIDDEN_LINE)
+end
+
 function M.set_themes(view)
 	if CURSES then
 		view:set_theme(M.theme.term)
@@ -61,13 +88,12 @@ end
 if not CURSES then
 	events.connect(events.VIEW_NEW, function() M.set_themes(view) end)
 	events.connect(events.MODE_CHANGED, function()
+		for _, view in ipairs(_VIEWS) do reset_view(view) M.set_themes(view) end
 		if _THEME == 'dark' then
-			for _, view in ipairs(_VIEWS) do M.set_themes(view) end
 			pcall(function()
 				ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
 			end)
 		else
-			for _, view in ipairs(_VIEWS) do M.set_themes(view) end
 			pcall(function()
 				ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
 			end)
@@ -108,6 +134,7 @@ function M.select_theme(mode)
 		if mode == 'light' then M.theme.light = themes[i]
 		elseif mode == 'dark' then M.theme.dark = themes[i]
 		else M.theme.term = themes[i] end
+		reset_view(view)
 		M.set_themes(view)
 	end
 end
