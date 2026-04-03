@@ -1,27 +1,27 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- Ayu-Evolve (Dark) theme for Textadept.
--- Using colours from https://ayutheme.com/ but modified to a black background
+-- Ayu Evolve (Dark) theme for Textadept.
+-- Using colours from https://ayutheme.com/ but with Helix ayu-evolve bg
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x020202 -- background 0x1c1410 for true ayu-dark, Helix evolve uses 0x020202
+colors.black = 0x020202 -- background 0x1c1410 for ayu-dark
 colors.light_black = 0x40ff8833 -- selection
-colors.dark_grey = 0x73665a  -- comment
+colors.dark_grey = 0x73665a -- comment
 colors.grey = 0x241a16 -- current line
-colors.light_grey = 0xb6bdbf  -- foreground
+colors.light_grey = 0xb6bdbf -- foreground
 colors.white = 0xffffff -- unused
 
-colors.red = 0x7871f0  -- markup
-colors.pink = 0x6896f2  -- operator
-colors.orange = 0x408fff  -- keyword
-colors.yellow = 0x54b4ff  -- function
-colors.beige = 0x8ac0e6  -- special
-colors.violet = 0xffa6d2  -- constant
-colors.green = 0x4cd9aa  -- string, sRGB faulty VSCode is 0x4deb8b
-colors.turquoise = 0xcbe695  -- regexp
-colors.blue = 0xffc259  -- entity
-colors.aqua = 0xe6ba39  -- tag
+colors.red = 0x7871f0 -- markup
+colors.pink = 0x6896f2 -- operator
+colors.orange = 0x408fff -- keyword
+colors.yellow = 0x54b4ff -- function
+colors.beige = 0x8ac0e6 -- special
+colors.violet = 0xffa6d2 -- constant
+colors.green = 0x4cd9aa -- string, sRGB faulty VSCode is 0x4deb8b
+colors.turquoise = 0xcbe695 -- regexp
+colors.blue = 0xffc259 -- entity
+colors.aqua = 0xe6ba39 -- tag
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end

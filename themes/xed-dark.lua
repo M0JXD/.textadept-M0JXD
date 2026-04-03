@@ -1,23 +1,23 @@
- --Copyright 2025-2026 Jamie Drinkell. MIT License.
+-- Copyright 2025-2026 Jamie Drinkell. MIT License.
 -- Xed Dark theme for Textadept.
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x332E2E
-colors.light_black = 0x7A7370
-colors.dark_grey = 0x858A88
-colors.grey = 0xB6BDBF
-colors.white = 0xDADADA
+colors.black = 0x332e2e
+colors.light_black = 0x7a7370
+colors.dark_grey = 0x858a88
+colors.grey = 0xb6bdbf
+colors.white = 0xdadada
 
-colors.red = 0x0000A4
-colors.orange = 0x02598F
-colors.yellow = 0x00A0C4 -- 0x4FE9FC
-colors.lime = 0x4FE9FC
-colors.green = 0xA87FAD
-colors.blue = 0x069A4E
-colors.violet = 0xA87FAD
-colors.purple = 0xA46534
+colors.red = 0x0000a4
+colors.orange = 0x02598f
+colors.yellow = 0x00a0c4 -- 0x4fe9fc
+colors.lime = 0x4fe9fc
+colors.green = 0xa87fad
+colors.blue = 0x069a4e
+colors.violet = 0xa87fad
+colors.purple = 0xa46534
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end

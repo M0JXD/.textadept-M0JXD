@@ -1,27 +1,27 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- Ayu-Light theme for Textadept.
+-- Ayu Light theme for Textadept.
 -- Using colours from https://ayutheme.com/
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x66615c  -- foreground
-colors.light_black = 0x26d65b03 -- Selection
-colors.dark_grey = 0xb1aead -- Comment
+colors.black = 0x66615c -- foreground
+colors.light_black = 0x26d65b03 -- selection
+colors.dark_grey = 0xb1aead -- comment
 -- colors.grey = --unused
-colors.light_grey = 0x1a9f8e82 -- 0xf1eeec no alpha -- Current Line
-colors.white = 0xfcfcfc  -- background
+colors.light_grey = 0x1a9f8e82 -- 0xf1eeec no alpha -- current line
+colors.white = 0xfcfcfc -- background
 
-colors.red = 0x7171f0  -- Markup
-colors.pink = 0x91a1f2  -- Operator  (Really a light orange)
-colors.orange = 0x3285fa  -- Keyword
-colors.yellow = 0x00a4eb  -- Function
-colors.beige = 0x4596e5 -- Special
-colors.violet = 0xcc7aa3  -- Constant
-colors.green = 0x00b386  -- String
-colors.turquoise = 0x99bf4c  -- REGEXP
-colors.blue = 0xe6a422  -- Entity
-colors.aqua = 0xd4b455  -- Tag
+colors.red = 0x7171f0 -- markup
+colors.pink = 0x91a1f2 -- operator
+colors.orange = 0x3285fa -- keyword
+colors.yellow = 0x00a4eb -- function
+colors.beige = 0x4596e5 -- special
+colors.violet = 0xcc7aa3 -- constant
+colors.green = 0x00b386 -- string
+colors.turquoise = 0x99bf4c -- regexp
+colors.blue = 0xe6a422 -- entity
+colors.aqua = 0xd4b455 -- tag
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
@@ -45,7 +45,7 @@ styles[lexer.CLASS] = {fore = colors.blue}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
 -- styles[lexer.CONSTANT] = {}
-styles[lexer.CONSTANT_BUILTIN] = {fore = colors.aqua}  -- was purple
+styles[lexer.CONSTANT_BUILTIN] = {fore = colors.aqua}
 styles[lexer.EMBEDDED] = {fore = colors.beige}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
