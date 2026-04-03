@@ -1,35 +1,35 @@
 -- Copyright 2026 Jamie Drinkell. MIT License.
--- Catppuccin Latte theme for Textadept.
+-- Catppuccin Mocha theme for Textadept.
 -- Using https://catppuccin.com/palette/ and https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
 
 local view, colors, styles = view, view.colors, view.styles
 
-colors.rosewater = 0x788adc
-colors.flamingo  = 0x7878dd
-colors.pink      = 0xcb76ea
-colors.mauve     = 0xef3988
-colors.red       = 0x390fd2
-colors.maroon    = 0x5345e6
-colors.peach     = 0x0b64fe
-colors.yellow    = 0x1d8edf
-colors.green     = 0x2ba040
-colors.teal      = 0x999217
-colors.sky       = 0xe5a504
-colors.sapphire  = 0xb59f20
-colors.blue      = 0xf5661e
-colors.lavender  = 0xfd8772
-colors.text      = 0x694f4c
-colors.subtext_1 = 0x775f5c
-colors.subtext_0 = 0x856f6c
-colors.overlay_2 = 0xb0a09c
-colors.overlay_1 = 0xa18f8c
-colors.overlay_0 = 0xb0a09c
-colors.surface_2 = 0xbeb0ac
-colors.surface_1 = 0xccc0bc
-colors.surface_0 = 0xdad0cc
-colors.base      = 0xf5f1ef
-colors.mantle    = 0xefe9e6
-colors.crust     = 0xe8e0dc
+colors.rosewater = 0xdce0f5
+colors.flamingo  = 0xcdcdf2
+colors.pink      = 0xe7c2f5
+colors.mauve     = 0xf7a6cb
+colors.red       = 0xa88bf3
+colors.maroon    = 0xaca0eb
+colors.peach     = 0x87b3fa
+colors.yellow    = 0xafe2f9
+colors.green     = 0xa1e3a6
+colors.teal      = 0xd5e294
+colors.sky       = 0xebdc89
+colors.sapphire  = 0xecc774
+colors.blue      = 0xfab489
+colors.lavender  = 0xfebeb4
+colors.text      = 0xf4d6cd
+colors.subtext_1 = 0xdec2ba
+colors.subtext_0 = 0xc8ada6
+colors.overlay_2 = 0xb29993
+colors.overlay_1 = 0x9c847f
+colors.overlay_0 = 0x86706c
+colors.surface_2 = 0x705b58
+colors.surface_1 = 0x5a4745
+colors.surface_0 = 0x443231
+colors.base      = 0x2e1e1e
+colors.mantle    = 0x251818
+colors.crust     = 0x1b1111
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
