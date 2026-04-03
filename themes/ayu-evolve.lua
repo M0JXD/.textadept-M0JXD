@@ -18,7 +18,7 @@ colors.orange = 0x408fff  -- keyword
 colors.yellow = 0x54b4ff  -- function
 colors.beige = 0x8ac0e6  -- special
 colors.violet = 0xffa6d2  -- constant
-colors.green = 0x4cd9aa  -- string
+colors.green = 0x4cd9aa  -- string, sRGB faulty VSCode is 0x4deb8b
 colors.turquoise = 0xcbe695  -- regexp
 colors.blue = 0xffc259  -- entity
 colors.aqua = 0xe6ba39  -- tag
@@ -41,9 +41,9 @@ styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.dark_grey, back = colors.gre
 
 -- Tag styles.
 styles[lexer.ANNOTATION] = {fore = colors.beige}
-styles[lexer.ATTRIBUTE] = {fore = colors.violet}
+styles[lexer.ATTRIBUTE] = {fore = colors.beige}
 styles[lexer.BOLD] = {bold = true}
-styles[lexer.CLASS] = {fore = colors.yellow}
+styles[lexer.CLASS] = {fore = colors.blue}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey, italic = true}
 -- styles[lexer.CONSTANT] = {}
@@ -51,7 +51,7 @@ styles[lexer.CONSTANT_BUILTIN] = {fore = colors.aqua}
 styles[lexer.EMBEDDED] = {fore = colors.beige}
 styles[lexer.ERROR] = {fore = colors.red}
 styles[lexer.FUNCTION] = {fore = colors.yellow}
-styles[lexer.FUNCTION_BUILTIN] = {fore = colors.beige}
+styles[lexer.FUNCTION_BUILTIN] = {fore = colors.pink}
 styles[lexer.FUNCTION_METHOD] = {fore = colors.yellow}
 styles[lexer.HEADING] = {fore = colors.green, bold = true}
 -- styles[lexer.IDENTIFIER] = {fore = colors.yellow}
@@ -59,7 +59,7 @@ styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.orange}
 styles[lexer.LABEL] = {fore = colors.blue}
 styles[lexer.LINK] = {underline = true}
-styles[lexer.LIST] = {fore = colors.red}
+styles[lexer.LIST] = {fore = colors.pink}
 styles[lexer.NUMBER] = {fore = colors.violet}
 -- styles[lexer.OPERATOR] = {fore = colors.pink}
 styles[lexer.PREPROCESSOR] = {fore = colors.orange}
