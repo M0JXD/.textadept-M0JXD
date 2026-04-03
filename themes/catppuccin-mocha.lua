@@ -45,7 +45,7 @@ styles[view.STYLE_BRACEBAD] = {fore = colors.red}
 -- styles[view.STYLE_CONTROLCHAR] = {}
 styles[view.STYLE_INDENTGUIDE] = {fore = colors.overlay_1}
 styles[view.STYLE_CALLTIP] = {fore = colors.overlay_0}
-styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.crust, back = colors.mantle}
+styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.surface_2, back = colors.surface_0}
 
 -- Tag styles.
 styles[lexer.ANNOTATION] = {fore = colors.yellow}
