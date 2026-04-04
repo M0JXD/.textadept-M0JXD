@@ -6,7 +6,7 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black = 0x020202 -- background 0x1c1410 for ayu-dark
-colors.light_black = 0x40ff8833 -- selection
+colors.light_black = CURSES and 0x41230e or 0x40ff8833 -- selection
 colors.dark_grey = 0x73665a -- comment
 colors.grey = 0x241a16 -- current line
 colors.light_grey = 0xb6bdbf -- foreground
@@ -109,7 +109,7 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
-view.element_color[view.ELEMENT_SELECTION_BACK] = CURSES and 0x41230e or colors.light_black
+view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
 if not CURSES then
 	view.selection_layer = view.LAYER_OVER_TEXT
 	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.light_grey
