@@ -124,7 +124,7 @@ if not CURSES then
 	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 	view.caret_line_layer = view.LAYER_UNDER_TEXT
 else
-	view:reset_element_color(view.ELEMENT_SELECTION_TEXT)  -- For whatever reason the default ain't default in CURSES
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in CURSES
 end
 
 if view ~= ui.command_entry then
@@ -142,12 +142,10 @@ view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
 view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.black
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
-if not CURSES then
-	for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-		view.marker_fore[i] = colors.black
-		view.marker_back[i] = colors.dark_grey
-		view.marker_back_selected[i] = colors.light_grey
-	end
+for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
+	view.marker_fore[i] = CURSES and colors.dark_grey or colors.black
+	view.marker_back[i] = CURSES and colors.black or colors.dark_grey
+	view.marker_back_selected[i] = colors.light_grey
 end
 
 -- Indicators.
