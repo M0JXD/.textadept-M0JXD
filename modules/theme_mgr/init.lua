@@ -14,8 +14,8 @@ M.theme.term = 'term'
 M.font.size = 12
 M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 
+-- Reset some commonly adjusted things that cause problems when switching themes
 local function reset_view(view)
-	-- Reset some commonly adjusted things that cause problems when switching themes
 	view.caret_style = view.CARETSTYLE_LINE
 	view.caret_line_layer = view.LAYER_BASE
 	view.selection_layer = view.LAYER_BASE
@@ -84,10 +84,10 @@ end
 
 function M.set_themes()
 	for _, view in ipairs(_VIEWS) do
-		reset_view(view)
 		if CURSES then
 			view:set_theme(M.theme.term)
 		else
+			reset_view(view)
 			theme_mode(view)
 		end
 	end
