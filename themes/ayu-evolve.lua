@@ -132,10 +132,8 @@ if view ~= ui.command_entry then
 end
 
 -- Fold Margin.
-if not CURSES then
-	view:set_fold_margin_color(true, colors.black)
-	view:set_fold_margin_hi_color(true, colors.black)
-end
+view:set_fold_margin_color(true, colors.black)
+view:set_fold_margin_hi_color(true, colors.black)
 
 -- Markers.
 -- view.marker_fore[textadept.bookmarks.MARK_BOOKMARK] = colors.black
