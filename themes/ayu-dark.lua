@@ -1,11 +1,11 @@
--- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- Ayu Evolve theme for Textadept.
--- Using colours from https://ayutheme.com/ but with Helix ayu-evolve bg
+-- Copyright 2026 Jamie Drinkell. MIT License.
+-- Ayu Dark theme for Textadept.
+-- Using colours from https://ayutheme.com/
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x020202 -- background
+colors.black = 0x1c1410 -- background
 colors.light_black = CURSES and 0x41230e or 0x40ff8833 -- selection
 colors.dark_grey = 0x73665a -- comment
 colors.grey = 0x241a16 -- current line
@@ -18,7 +18,7 @@ colors.orange = 0x408fff -- keyword
 colors.yellow = 0x54b4ff -- function
 colors.beige = 0x8ac0e6 -- special
 colors.violet = 0xffa6d2 -- constant
-colors.green = 0x4cd9aa -- string, sRGB faulty VSCode is 0x4deb8b
+colors.green = 0x4cd9aa -- string
 colors.turquoise = 0xcbe695 -- regexp
 colors.blue = 0xffc259 -- entity
 colors.aqua = 0xe6ba39 -- tag

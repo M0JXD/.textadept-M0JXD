@@ -1,27 +1,27 @@
--- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- Ayu Evolve theme for Textadept.
--- Using colours from https://ayutheme.com/ but with Helix ayu-evolve bg
+-- Copyright 2026 Jamie Drinkell. MIT License.
+-- Ayu Mirage theme for Textadept.
+-- Using colours from https://ayutheme.com/
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x020202 -- background
-colors.light_black = CURSES and 0x41230e or 0x40ff8833 -- selection
-colors.dark_grey = 0x73665a -- comment
-colors.grey = 0x241a16 -- current line
-colors.light_grey = 0xb6bdbf -- foreground
+colors.black = 0x362924 -- background
+colors.light_black = CURSES and 0x644327 or 0x40ff9f40 -- selection
+colors.dark_grey = 0x8f7c6e -- comment
+colors.grey = 0x291f1a -- current line
+colors.light_grey = 0xc2cacc -- foreground
 colors.white = 0xffffff -- unused
 
-colors.red = 0x7871f0 -- markup
-colors.pink = 0x6896f2 -- operator
-colors.orange = 0x408fff -- keyword
-colors.yellow = 0x54b4ff -- function
-colors.beige = 0x8ac0e6 -- special
-colors.violet = 0xffa6d2 -- constant
-colors.green = 0x4cd9aa -- string, sRGB faulty VSCode is 0x4deb8b
+colors.red = 0x7987f2 -- markup
+colors.pink = 0x749ef2 -- operator
+colors.orange = 0x59a6ff -- keyword
+colors.yellow = 0x66cdff -- function
+colors.beige = 0x98bed9 -- special
+colors.violet = 0xffbfdf -- constant
+colors.green = 0x80ffd5 -- string
 colors.turquoise = 0xcbe695 -- regexp
-colors.blue = 0xffc259 -- entity
-colors.aqua = 0xe6ba39 -- tag
+colors.blue = 0xffd073 -- entity
+colors.aqua = 0xe6cf5c -- tag
 
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
