@@ -122,12 +122,13 @@ if not CURSES then
 	view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
 	view.element_color[view.ELEMENT_CARET] = colors.light_grey
 	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
-	if view ~= ui.command_entry then
-		view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.grey
-	end
 	view.caret_line_layer = view.LAYER_UNDER_TEXT
 else
-	view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.white
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT)  -- For whatever reason the default ain't default in CURSES
+end
+
+if view ~= ui.command_entry then
+	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.grey
 end
 
 -- Fold Margin.
