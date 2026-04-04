@@ -94,7 +94,10 @@ function M.set_themes()
 end
 
 if not CURSES then
-	events.connect(events.VIEW_NEW, function() theme_mode(view) end)
+	events.connect(events.VIEW_NEW, function()
+		reset_view(view)
+		theme_mode(view)
+	end)
 	events.connect(events.MODE_CHANGED, function()
 		if _THEME == 'dark' then
 			pcall(function()
@@ -156,7 +159,8 @@ _L['Select Dark Theme'] = 'Select _Dark Theme'
 local view_menu = textadept.menu.menubar[_L['View']]
 if not CURSES then
 	table.insert(view_menu, #view_menu - 2, {
-		title = _L['Change Theme...'], {_L['Select Light Theme'], function() M.select_theme('light') end},
+		title = _L['Change Theme...'],
+		{_L['Select Light Theme'], function() M.select_theme('light') end},
 		{_L['Select Dark Theme'], function() M.select_theme('dark') end}
 	})
 else
