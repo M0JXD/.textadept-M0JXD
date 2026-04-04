@@ -33,6 +33,9 @@ colors.mantle    = 0x251818
 colors.crust     = 0x1b1111
 -- LuaFormatter on
 
+colors.lineback = CURSES and 0x422d2c or (0x18000000 + colors.lavender)
+colors.selection = CURSES and 0x4f3c3b  or (0x40000000 + colors.overlay_2)
+
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
 if not size then size = not OSX and 10 or 12 end
@@ -117,23 +120,28 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
-view.selection_layer = view.LAYER_OVER_TEXT
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_BACK] = 0x40000000 + colors.overlay_2
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = 0x40000000 + colors.overlay_2
--- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = 0x40000000 + colors.overlay_2
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = 0x40000000 + colors.overlay_2
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = 0x40000000 + colors.overlay_2
-view.element_color[view.ELEMENT_CARET] = colors.rosewater
--- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
-if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = 0x18000000 + colors.lavender
+view.element_color[view.ELEMENT_SELECTION_BACK] = colors.selection
+if not CURSES then
+	view.selection_layer = view.LAYER_OVER_TEXT
+	-- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
+	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.selection
+	-- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.selection
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.selection
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.selection
+	view.element_color[view.ELEMENT_CARET] = colors.rosewater
+	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
+	view.caret_line_layer = view.LAYER_UNDER_TEXT
+else
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in CURSES
 end
-view.caret_line_layer = view.LAYER_UNDER_TEXT
+
+if view ~= ui.command_entry then
+	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.lineback
+end
 
 -- Fold Margin.
 view:set_fold_margin_color(true, colors.base)
@@ -147,8 +155,8 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = colors.crust
-	view.marker_back[i] = colors.overlay_1
+	view.marker_fore[i] = CURSES and colors.subtext_1 or colors.crust
+	view.marker_back[i] = CURSES and colors.base or colors.overlay_1
 	view.marker_back_selected[i] = colors.overlay_2
 end
 
