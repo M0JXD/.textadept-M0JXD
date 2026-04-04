@@ -6,10 +6,10 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black = 0x66615c -- foreground
-colors.light_black = 0x26d65b03 -- selection
+colors.light_black = CURSES and 0xf6e4d6 or 0x26d65b03 -- selection
 colors.dark_grey = 0xb1aead -- comment
 -- colors.grey = --unused
-colors.light_grey = 0x1a9f8e82 -- 0xf1eeec no alpha -- current line
+colors.light_grey = CURSES and 0xf1eeec or 0x1a9f8e82 -- current line
 colors.white = 0xfcfcfc -- background
 
 colors.red = 0x7171f0 -- markup
@@ -107,23 +107,27 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
-view.selection_layer = view.LAYER_OVER_TEXT
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
-view.element_color[view.ELEMENT_CARET] = colors.dark_grey
--- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
+if not CURSES then
+	view.selection_layer = view.LAYER_OVER_TEXT
+	-- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
+	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_black
+	-- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
+	view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black
+	view.element_color[view.ELEMENT_CARET] = colors.dark_grey
+	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
+	view.caret_line_layer = view.LAYER_UNDER_TEXT
+else
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in CURSES
+end
 if view ~= ui.command_entry then
 	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_grey
 end
-view.caret_line_layer = view.LAYER_UNDER_TEXT
 
 -- Fold Margin.
 view:set_fold_margin_color(true, colors.white)
@@ -137,8 +141,8 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = colors.white
-	view.marker_back[i] = colors.dark_grey
+	view.marker_fore[i] = CURSES and colors.dark_grey or colors.white
+	view.marker_back[i] = CURSES and colors.white or colors.dark_grey
 	view.marker_back_selected[i] = colors.black
 end
 
