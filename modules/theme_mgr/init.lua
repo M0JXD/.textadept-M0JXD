@@ -14,38 +14,6 @@ M.theme.term = 'term'
 M.font.size = 12
 M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 
-function M.check_platform_limits()
-	if not CURSES then
-		local font_check_cmd
-		if WIN32 then
-			-- Source - https://superuser.com/a/1534136
-			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
-			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
-			font_check_cmd = 'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s'
-			-- Source - https://superuser.com/a/1534136
-			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
-			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
-			-- font_check_cmd= 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
-		else
-			font_check_cmd = 'fc-list' -- Linux/BSD
-		end
-		local proc = os.spawn(font_check_cmd)
-		local list = proc:read('a')
-		local font_exists = list:match(M.font.family)
-		if not font_exists then
-			M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
-		end
-	else
-		-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
-		-- Alacritty reports 'alacritty'
-		local terminal = os.getenv("TERM")
-		if terminal == nil then terminal = 'WIN' end
-		if terminal == 'xterm' or terminal == 'linux' or terminal == 'cons25' or terminal == 'WIN' then
-			M.theme.term = 'term'
-		end
-	end
-end
-
 local function reset_view(view)
 	-- Reset some commonly adjusted things that cause problems when switching themes
 	view.caret_style = view.CARETSTYLE_LINE
@@ -73,22 +41,61 @@ local function reset_view(view)
 	view:reset_element_color(view.ELEMENT_HIDDEN_LINE)
 end
 
-function M.set_themes(view)
-	if CURSES then
-		view:set_theme(M.theme.term)
+local function theme_mode(view)
+	if _THEME == 'dark' then
+		view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
 	else
-		if _THEME == 'dark' then
-			view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+		view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+	end
+end
+
+function M.check_platform_limits()
+	if not CURSES then
+		local font_check_cmd
+		if WIN32 then
+			-- Source - https://superuser.com/a/1534136
+			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+			font_check_cmd =
+				'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s'
+			-- Source - https://superuser.com/a/1534136
+			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+			-- font_check_cmd= 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
 		else
-			view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+			font_check_cmd = 'fc-list' -- Linux/BSD
+		end
+		local proc = os.spawn(font_check_cmd)
+		local list = proc:read('a')
+		local font_exists = list:match(M.font.family)
+		if not font_exists then
+			M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+		end
+	else
+		-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
+		-- Alacritty reports 'alacritty'
+		local terminal = os.getenv("TERM")
+		if terminal == nil then terminal = 'WIN' end
+		if terminal == 'xterm' or terminal == 'linux' or terminal == 'cons25' or terminal == 'WIN' then
+			M.theme.term = 'term'
+		end
+	end
+end
+
+function M.set_themes()
+	for _, view in ipairs(_VIEWS) do
+		reset_view(view)
+		if CURSES then
+			view:set_theme(M.theme.term)
+		else
+			theme_mode(view)
 		end
 	end
 end
 
 if not CURSES then
-	events.connect(events.VIEW_NEW, function() M.set_themes(view) end)
+	events.connect(events.VIEW_NEW, function() theme_mode(view) end)
 	events.connect(events.MODE_CHANGED, function()
-		for _, view in ipairs(_VIEWS) do reset_view(view) M.set_themes(view) end
 		if _THEME == 'dark' then
 			pcall(function()
 				ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
@@ -98,12 +105,13 @@ if not CURSES then
 				ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
 			end)
 		end
+		M.set_themes()
 	end)
 end
 
 M.mt.__call = function()
 	M.check_platform_limits();
-	M.set_themes(_G.view)
+	M.set_themes()
 end
 M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
 setmetatable(M, M.mt)
@@ -131,25 +139,29 @@ function M.select_theme(mode)
 	end
 	local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
 	if i then
-		if mode == 'light' then M.theme.light = themes[i]
-		elseif mode == 'dark' then M.theme.dark = themes[i]
-		else M.theme.term = themes[i] end
-		reset_view(view)
-		M.set_themes(view)
+		if mode == 'light' then
+			M.theme.light = themes[i]
+		elseif mode == 'dark' then
+			M.theme.dark = themes[i]
+		elseif mode == 'term' then
+			M.theme.term = themes[i]
+		end
+		M.set_themes()
 	end
 end
 
 _L['Change Theme...'] = 'Change _Theme...'
-_L['Light Theme'] = '_Light Theme'
-_L['Dark Theme'] = '_Dark Theme'
+_L['Select Light Theme'] = 'Select _Light Theme'
+_L['Select Dark Theme'] = 'Select _Dark Theme'
 local view_menu = textadept.menu.menubar[_L['View']]
 if not CURSES then
-	table.insert(view_menu, #view_menu - 2, {title = _L['Change Theme...'],
-		{_L['Light Theme'], function () M.select_theme('light') end },
-		{ _L['Dark Theme'], function () M.select_theme('dark') end }
+	table.insert(view_menu, #view_menu - 2, {
+		title = _L['Change Theme...'], {_L['Select Light Theme'], function() M.select_theme('light') end},
+		{_L['Select Dark Theme'], function() M.select_theme('dark') end}
 	})
 else
-	table.insert(view_menu, #view_menu - 2, {_L['Change Theme...'], function () M.select_theme('term') end})
+	table.insert(view_menu, #view_menu - 2,
+		{_L['Change Theme...'], function() M.select_theme('term') end})
 end
 table.insert(view_menu, #view_menu - 2, {''})
 
