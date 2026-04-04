@@ -131,7 +131,7 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.black
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = CURSES and colors.white or colors.black
+	view.marker_fore[i] = CURSES and colors.dark_grey or colors.black
 	view.marker_back[i] = CURSES and colors.black or colors.dark_grey
 	view.marker_back_selected[i] = colors.light_black
 end
