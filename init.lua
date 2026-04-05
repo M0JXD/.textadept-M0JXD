@@ -64,11 +64,11 @@ if not BSD then require('discord_rpc')() end
 
 -- Keybindings
 keys[(CURSES and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
-keys[(CURSES and 'meta+l' or 'ctrl+l')] = textadept.menu.menubar['Edit/Select/Select Line'][2]
 keys[(CURSES and 'meta+L' or 'ctrl+L')] = textadept.menu.menubar['Search/Go To Line...'][2]
+keys[(CURSES and 'meta+l' or 'ctrl+l')] = textadept.editing.select_line
 keys[(CURSES and 'ctrl+k' or 'ctrl+K')] = function() buffer:line_delete() end
-keys[(CURSES and 'meta+up' or 'alt+up')] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Up'][2]
-keys[(CURSES and 'meta+down' or 'alt+down')] = textadept.menu.menubar['Edit/Selection/Move Selected Lines Down'][2]
+keys[(CURSES and 'meta+up' or 'alt+up')] = function() buffer:move_selected_lines_up() end
+keys[(CURSES and 'meta+down' or 'alt+down')] = function() buffer:move_selected_lines_down() end
 
 -- Buffer/Language Settings
 lexer.detect_extensions.h = 'c'
