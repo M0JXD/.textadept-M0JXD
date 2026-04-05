@@ -53,11 +53,8 @@ require('quick_open')
 require('export_ext')
 local ds = require('doc_stats')
 ds.display.lines = true
-local drpc = false
 if not BSD then
-	drpc = require('discord_rpc')
-	drpc.private_mode = true
-	drpc.init()
+	require('discord_rpc')()
 end
 
 -- Modules (External)
