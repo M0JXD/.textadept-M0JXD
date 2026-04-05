@@ -53,9 +53,7 @@ require('quick_open')
 require('export_ext')
 local ds = require('doc_stats')
 ds.display.lines = true
-if not BSD then
-	require('discord_rpc')()
-end
+if not BSD then require('discord_rpc')() end
 
 -- Modules (External)
 -- require('textredux').hijack()
