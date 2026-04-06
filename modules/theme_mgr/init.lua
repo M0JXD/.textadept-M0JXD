@@ -1,5 +1,4 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
-
 -- A simple theme manager for Textadept.
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to achieve this.
@@ -7,12 +6,45 @@
 
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
-local M = {theme = {}, font = {}, mt = {}}
+local M = {theme = {}, font = {}, mt = {}, defaults = {}}
 M.theme.light = 'light'
 M.theme.dark = 'dark'
-M.theme.term = 'term'
 M.font.size = 12
-M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+-- Metatable provided defaults
+M.defaults.term = 'term'
+M.defaults.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+
+local function check_font(font)
+	local font_check_cmd
+	if WIN32 then
+		-- Source - https://superuser.com/a/1534136
+		-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+		-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+		font_check_cmd =
+			'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s'
+		-- Source - https://superuser.com/a/1534136
+		-- Posted by phuclv, modified by community. See post 'Timeline' for change history
+		-- Retrieved 2026-02-27, License - CC BY-SA 4.0
+		-- font_check_cmd = 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
+	else
+		font_check_cmd = 'fc-list' -- Linux/BSD
+	end
+	local proc = os.spawn(font_check_cmd)
+	local list = proc:read('a')
+	local font_exists = list:match(font)
+	if font_exists then return true end
+end
+
+local function check_term()
+	-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
+	-- Alacritty reports 'alacritty'
+	local terminal = os.getenv("TERM")
+	if terminal == nil then terminal = 'WIN' end
+	if terminal == 'xterm' or terminal == 'linux' or terminal == 'cons25' or terminal == 'WIN' then
+		return false
+	end
+	return true
+end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
 local function reset_view(view)
@@ -49,40 +81,7 @@ local function theme_mode(view)
 	end
 end
 
-function M.check_platform_limits()
-	if not CURSES then
-		local font_check_cmd
-		if WIN32 then
-			-- Source - https://superuser.com/a/1534136
-			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
-			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
-			font_check_cmd =
-				'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s'
-			-- Source - https://superuser.com/a/1534136
-			-- Posted by phuclv, modified by community. See post 'Timeline' for change history
-			-- Retrieved 2026-02-27, License - CC BY-SA 4.0
-			-- font_check_cmd= 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
-		else
-			font_check_cmd = 'fc-list' -- Linux/BSD
-		end
-		local proc = os.spawn(font_check_cmd)
-		local list = proc:read('a')
-		local font_exists = list:match(M.font.family)
-		if not font_exists then
-			M.font.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
-		end
-	else
-		-- GNOME Terminal, Tilix, Konsole, XFCE, LXDE etc. all report 'xterm-256color'
-		-- Alacritty reports 'alacritty'
-		local terminal = os.getenv("TERM")
-		if terminal == nil then terminal = 'WIN' end
-		if terminal == 'xterm' or terminal == 'linux' or terminal == 'cons25' or terminal == 'WIN' then
-			M.theme.term = 'term'
-		end
-	end
-end
-
-function M.set_command_entry()
+function M.theme_command_entry()
 	if _THEME == 'dark' then
 		pcall(function()
 			ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
@@ -111,17 +110,11 @@ if not CURSES then
 		theme_mode(view)
 	end)
 	events.connect(events.MODE_CHANGED, function()
-		M.set_command_entry()
+		M.theme_command_entry()
 		M.set_themes()
 	end)
 end
-
-M.mt.__call = function()
-	M.check_platform_limits();
-	M.set_themes()
-end
-M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
-setmetatable(M, M.mt)
+events.connect(events.INITIALIZED, M.set_themes)
 
 -- Theme selector by @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
 function M.select_theme(mode)
@@ -153,10 +146,29 @@ function M.select_theme(mode)
 		elseif mode == 'term' then
 			M.theme.term = themes[i]
 		end
-		M.set_command_entry()
+		M.theme_command_entry()
 		M.set_themes()
 	end
 end
+
+M.mt.__call = function()
+	events.disconnect(events.INITIALIZED, M.set_themes)
+	M.set_themes()
+end
+
+M.mt.__index = M.defaults
+M.mt.__newindex = function(t, k, v)
+	if k == 'family' and check_font(v) then
+		rawset(t, k, v)
+	elseif k == 'term' and CURSES and check_term() then
+		rawset(t, k, v)
+	end
+end
+M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
+
+setmetatable(M, M.mt)
+setmetatable(M.font, M.mt)
+setmetatable(M.theme, M.mt)
 
 _L['Change Theme...'] = 'Change _Theme...'
 _L['Select Light Theme'] = 'Select _Light Theme'
