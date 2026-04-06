@@ -82,6 +82,18 @@ function M.check_platform_limits()
 	end
 end
 
+function M.set_command_entry()
+	if _THEME == 'dark' then
+		pcall(function()
+			ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+		end)
+	else
+		pcall(function()
+			ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+		end)
+	end
+end
+
 function M.set_themes()
 	for _, view in ipairs(_VIEWS) do
 		if CURSES then
@@ -99,15 +111,7 @@ if not CURSES then
 		theme_mode(view)
 	end)
 	events.connect(events.MODE_CHANGED, function()
-		if _THEME == 'dark' then
-			pcall(function()
-				ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
-			end)
-		else
-			pcall(function()
-				ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
-			end)
-		end
+		M.set_command_entry()
 		M.set_themes()
 	end)
 end
@@ -149,6 +153,7 @@ function M.select_theme(mode)
 		elseif mode == 'term' then
 			M.theme.term = themes[i]
 		end
+		M.set_command_entry()
 		M.set_themes()
 	end
 end
