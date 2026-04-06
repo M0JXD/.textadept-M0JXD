@@ -93,12 +93,12 @@ function M.theme_command_entry()
 	end
 end
 
-function M.set_themes()
+function M.set_themes(reset)
 	for _, view in ipairs(_VIEWS) do
 		if CURSES then
 			view:set_theme(M.theme.term)
 		else
-			reset_view(view)
+			if reset then reset_view(view) end
 			theme_mode(view)
 		end
 	end
@@ -111,10 +111,11 @@ if not CURSES then
 	end)
 	events.connect(events.MODE_CHANGED, function()
 		M.theme_command_entry()
-		M.set_themes()
+		M.set_themes(true)
 	end)
 end
-events.connect(events.INITIALIZED, M.set_themes)
+local init = function() M.set_themes(false) end
+events.connect(events.INITIALIZED, init)
 
 -- Theme selector by @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
 function M.select_theme(mode)
@@ -147,13 +148,13 @@ function M.select_theme(mode)
 			M.theme.term = themes[i]
 		end
 		M.theme_command_entry()
-		M.set_themes()
+		M.set_themes(true)
 	end
 end
 
 M.mt.__call = function()
-	events.disconnect(events.INITIALIZED, M.set_themes)
-	M.set_themes()
+	events.disconnect(events.INITIALIZED, init)
+	init()
 end
 
 M.mt.__index = M.defaults
