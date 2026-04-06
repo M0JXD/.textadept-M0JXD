@@ -3,7 +3,6 @@
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to achieve this.
 -- (Leaving a fallback for when you edit your themes and crash everything...)
-
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
 local M = {theme = {}, font = {}, mt = {}, defaults = {}}
