@@ -76,6 +76,7 @@ lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
 lexer.detect_extensions.njk = 'html'
 lexer.detect_extensions.blp = 'blueprint'
+lexer.detect_extensions.adoc = 'asciidoc'
 textadept.editing.auto_pairs.text = {}
 textadept.editing.auto_pairs.markdown = {['*'] = '*'}
 textadept.editing.comment_string.c = '/* | */'
