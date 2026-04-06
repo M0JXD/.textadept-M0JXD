@@ -17,5 +17,5 @@ theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'catppuccin-latte'
 theme_mgr.font.family= 'Comic Sans MS'
 theme_mgr.font.size = 14
-theme_mgr()
 ```
+By default, theme_mgr connects to `events.INITIALISED` to set your themes after your init.lua finishes, however if you're using a module that needs the themes set upfront (e.g. Textredux) you may call the module `theme_mgr()` to do it right away.
