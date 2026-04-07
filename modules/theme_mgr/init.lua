@@ -1,8 +1,9 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
--- A simple theme manager for Textadept.
+-- Theme manager for Textadept.
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to achieve this.
 -- (Leaving a fallback for when you edit your themes and crash everything...)
+-- TODO: Per lexer themes would be AWESOME
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
 local M = {theme = {}, font = {}, mt = {}, defaults = {}}
@@ -47,36 +48,30 @@ end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
 local function reset_view(view)
-	view.caret_style = view.CARETSTYLE_LINE
-	view.caret_line_layer = view.LAYER_BASE
-	view.selection_layer = view.LAYER_BASE
 	view:style_reset_default()
 	view:style_clear_all()
-	-- Reset all the element colours
-	view:reset_element_color(view.ELEMENT_SELECTION_TEXT)
 	view:reset_element_color(view.ELEMENT_SELECTION_BACK)
-	view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_TEXT)
-	view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_BACK)
-	view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_TEXT)
-	view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_BACK)
-	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_TEXT)
-	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_BACK)
-	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT)
-	view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK)
-	view:reset_element_color(view.ELEMENT_CARET)
-	view:reset_element_color(view.ELEMENT_CARET_ADDITIONAL)
 	view:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
-	view:reset_element_color(view.ELEMENT_WHITE_SPACE)
-	view:reset_element_color(view.ELEMENT_WHITE_SPACE_BACK)
-	view:reset_element_color(view.ELEMENT_FOLD_LINE)
-	view:reset_element_color(view.ELEMENT_HIDDEN_LINE)
-end
-
-local function theme_mode(view)
-	if _THEME == 'dark' then
-		view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
-	else
-		view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+	if not CURSES then
+		view.caret_style = view.CARETSTYLE_LINE
+		view.caret_line_layer = view.LAYER_BASE
+		view.selection_layer = view.LAYER_BASE
+		-- Reset all the element colours
+		view:reset_element_color(view.ELEMENT_SELECTION_TEXT)
+		view:reset_element_color(view.ELEMENT_WHITE_SPACE)
+		view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_TEXT)
+		view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_BACK)
+		view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_TEXT)
+		view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_BACK)
+		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_TEXT)
+		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_BACK)
+		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT)
+		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK)
+		view:reset_element_color(view.ELEMENT_CARET)
+		view:reset_element_color(view.ELEMENT_CARET_ADDITIONAL)
+		view:reset_element_color(view.ELEMENT_WHITE_SPACE_BACK)
+		view:reset_element_color(view.ELEMENT_FOLD_LINE)
+		view:reset_element_color(view.ELEMENT_HIDDEN_LINE)
 	end
 end
 
@@ -94,25 +89,29 @@ end
 
 function M.set_themes(reset)
 	for _, view in ipairs(_VIEWS) do
+		if reset then reset_view(view) end
 		if CURSES then
 			view:set_theme(M.theme.term)
+		elseif _THEME == 'dark' then
+			view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
 		else
-			if reset then reset_view(view) end
-			theme_mode(view)
+			view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
 		end
 	end
 end
 
+events.connect(events.VIEW_NEW, function()
+	reset_view(view)
+	M.set_themes(true)
+end)
+
 if not CURSES then
-	events.connect(events.VIEW_NEW, function()
-		reset_view(view)
-		theme_mode(view)
-	end)
 	events.connect(events.MODE_CHANGED, function()
 		M.theme_command_entry()
 		M.set_themes(true)
 	end)
 end
+
 local init = function() M.set_themes(false) end
 events.connect(events.INITIALIZED, init)
 
@@ -160,7 +159,7 @@ M.mt.__index = M.defaults
 M.mt.__newindex = function(t, k, v)
 	if k == 'family' and check_font(v) then
 		rawset(t, k, v)
-	elseif k == 'term' and CURSES and check_term() then
+	elseif CURSES and k == 'term' and check_term() then
 		rawset(t, k, v)
 	end
 end
