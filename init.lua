@@ -58,8 +58,7 @@ if not BSD then require('discord_rpc')() end
 -- require('textredux').hijack()
 -- Experimental features by @Fwirt (requires custom build)
 -- local textbar = require('textbar')
--- minimap = require('minimap')
--- keys['ctrl+@'] = function () minimap() end
+keys['ctrl+@'] = require('minimap')
 
 -- Keybindings
 keys['ctrl+l'] = textadept.editing.select_line
