@@ -73,9 +73,13 @@ function M.pandoc(type)
 	end
 end
 
+-- TODO: Once there's an Asciidoc lexer, add Asciidoc tooling
+
 -- Add a sub-menu.
 _L['Convert Markdown to HTML...'] = 'Convert _Markdown to HTML...'
-_L['Convert to PDF...'] = 'Convert to _PDF...'
+_L['Pandoc to HTML...'] = 'Pandoc to H_TML...'
+_L['Pandoc to ODT...'] = 'Pandoc to _ODT...'
+_L['Pandoc to PDF...'] = 'Pandoc to _PDF...'
 local m_export = textadept.menu.menubar['File/Export']
 table.insert(m_export, {_L['Convert Markdown to HTML...'], M.markdown_to_html})
 table.insert(m_export, {_L['Pandoc to HTML...'], function() M.pandoc('html') end})
