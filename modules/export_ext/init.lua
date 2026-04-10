@@ -19,7 +19,6 @@ function check(type)
 	return true
 end
 
--- TODO: Add Tables to this exporter
 function M.markdown_to_html()
 	if check('HTML') then
 		-- Prompt the user for the HTML file to export to
@@ -29,7 +28,18 @@ function M.markdown_to_html()
 			title = _L['Save File'], dir = dir, file = name .. '.html'
 		}
 		if not out_filename then return end
-		local htmlout = require('export_ext/markdown')(buffer:get_text())
+
+		-- Check if a "markdown" command exists (Perl, Discount etc.)
+		local htmlout
+		local mdproc = os.spawn('markdown')
+		if mdproc == nil then
+			-- Fall back to built in Lua script that lacks some features
+			htmlout = require('export_ext/markdown')(buffer:get_text())
+		else
+			mdproc:write(buffer:get_text())
+			mdproc:close()
+			htmlout = mdproc:read('a')
+		end
 		io.open(out_filename, 'w'):write(htmlout):close()
 		os.spawn(string.format('%s "%s"', M.browser, out_filename))
 	end
