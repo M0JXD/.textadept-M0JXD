@@ -7,3 +7,5 @@ For it to work right it must be added after the official Export module.
 local export = require('export')  -- Official Module
 require('export_ext')
 ```
+
+Markdown to HTML conversion checks to see if your system has a `markdown` command, such as Discount or the original Perl implementation, and falls back on the bundled *markdown.lua* from LDoc if not.
