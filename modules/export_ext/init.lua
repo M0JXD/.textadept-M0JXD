@@ -33,7 +33,7 @@ function M.markdown_to_html()
 		local htmlout
 		local mdproc = os.spawn('markdown')
 		if mdproc == nil then
-			-- Fall back to built in Lua script that lacks some features
+			-- Fallback to bundled Lua implementation
 			htmlout = require('export_ext/markdown')(buffer:get_text())
 		else
 			mdproc:write(buffer:get_text())
@@ -57,7 +57,7 @@ function M.pandoc(type)
 
 		local pandoc_str = 'pandoc '
 		if type == 'html' then
-			-- TODO, apply some default CSS for tables
+			-- TODO: Apply some default CSS for tables?
 			-- pandoc_str = pandoc_str
 		elseif type == 'pdf' then
 			pandoc_str = pandoc_str .. '-V geometry:margin=1.5cm'
