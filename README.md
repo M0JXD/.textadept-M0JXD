@@ -6,9 +6,9 @@ They're mainly here so I can grab them wherever I need them, but anyone is welco
 - My init.lua
 - Various simple utility modules
 - Themes that match specifications better than the base16 ones, and include fixes to adapt to CURSES:
-    - Ayu themes *ayu-light* and *ayu-evolve*
-    - Catppuccin Latte, Frappé, Macchiato and Mocha
-    - Xed themes *xed-light* and *xed-dark* to match Linux Mint's default editor.
+    - Ayu Light, Mirage, Dark and Evolve (Evolve is Dark with near Black background, based on the Helix theme).
+    - Catppuccin Latte, Frappé, Macchiato and Mocha.
+    - Xed Light and Dark to match Linux Mint's default editor.
 
 All of the modules I've made have their own README that explains them. In short, there is:
 
