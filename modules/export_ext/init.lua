@@ -5,7 +5,7 @@
 -- local export = require('export')
 -- require('export_ext')
 -- ```
--- @module export
+-- @module export_ext
 local M = {}
 
 --- Command used to open exported HTML files in the user's default web browser.
@@ -75,7 +75,7 @@ end
 
 -- TODO: Once there's an Asciidoc lexer, add Asciidoc tooling
 
--- Add a sub-menu.
+-- Add to Export sub-menu.
 _L['Convert Markdown to HTML...'] = 'Convert _Markdown to HTML...'
 _L['Pandoc to HTML...'] = 'Pandoc to H_TML...'
 _L['Pandoc to ODT...'] = 'Pandoc to _ODT...'
