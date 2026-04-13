@@ -6,13 +6,13 @@
 -- TODO: Per lexer themes would be AWESOME
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
-local M = {theme = {}, font = {}, mt = {}, defaults = {}}
+local M = {theme = {}, font = {}, mt = {}}
+local default_font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
 M.theme.light = 'light'
 M.theme.dark = 'dark'
+M.theme.term = 'term'
 M.font.size = 12
--- Metatable provided defaults
-M.defaults.term = 'term'
-M.defaults.family = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+M.font.family = default_font
 
 local function check_font(font)
 	local font_check_cmd
@@ -31,8 +31,7 @@ local function check_font(font)
 	end
 	local proc = os.spawn(font_check_cmd)
 	local list = proc:read('a')
-	local font_exists = list:match(font)
-	if font_exists then return true end
+	return list:match(font)
 end
 
 local function check_term()
@@ -47,31 +46,33 @@ local function check_term()
 end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
-local function reset_view(view)
-	view:style_reset_default()
-	view:style_clear_all()
-	view:reset_element_color(view.ELEMENT_SELECTION_BACK)
-	view:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
+local function reset_view(view_to_reset)
+	if CURSES and not M.theme.term == 'term' then
+		view_to_reset:style_reset_default()
+		view_to_reset:style_clear_all()
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
+	end
 	if not CURSES then
 		view.caret_style = view.CARETSTYLE_LINE
 		view.caret_line_layer = view.LAYER_BASE
 		view.selection_layer = view.LAYER_BASE
 		-- Reset all the element colours
-		view:reset_element_color(view.ELEMENT_SELECTION_TEXT)
-		view:reset_element_color(view.ELEMENT_WHITE_SPACE)
-		view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_TEXT)
-		view:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_BACK)
-		view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_TEXT)
-		view:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_BACK)
-		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_TEXT)
-		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_BACK)
-		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT)
-		view:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK)
-		view:reset_element_color(view.ELEMENT_CARET)
-		view:reset_element_color(view.ELEMENT_CARET_ADDITIONAL)
-		view:reset_element_color(view.ELEMENT_WHITE_SPACE_BACK)
-		view:reset_element_color(view.ELEMENT_FOLD_LINE)
-		view:reset_element_color(view.ELEMENT_HIDDEN_LINE)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_TEXT)
+		view_to_reset:reset_element_color(view.ELEMENT_WHITE_SPACE)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_TEXT)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_ADDITIONAL_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_TEXT)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_SECONDARY_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_TEXT)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT)
+		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_CARET)
+		view_to_reset:reset_element_color(view.ELEMENT_CARET_ADDITIONAL)
+		view_to_reset:reset_element_color(view.ELEMENT_WHITE_SPACE_BACK)
+		view_to_reset:reset_element_color(view.ELEMENT_FOLD_LINE)
+		view_to_reset:reset_element_color(view.ELEMENT_HIDDEN_LINE)
 	end
 end
 
@@ -87,33 +88,38 @@ function M.theme_command_entry()
 	end
 end
 
-function M.set_themes(reset)
-	for _, view in ipairs(_VIEWS) do
-		if reset then reset_view(view) end
+function M.set_themes(view_reset)
+	for _, view_to_change in ipairs(_VIEWS) do
+		if view_reset then reset_view(view_to_change) end
 		if CURSES then
-			view:set_theme(M.theme.term)
+			view_to_change:set_theme(M.theme.term)
 		elseif _THEME == 'dark' then
-			view:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+			view_to_change:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
 		else
-			view:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+			view_to_change:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
 		end
 	end
 end
 
-events.connect(events.VIEW_NEW, function()
-	reset_view(view)
-	M.set_themes(true)
-end)
-
-if not CURSES then
-	events.connect(events.MODE_CHANGED, function()
-		M.theme_command_entry()
-		M.set_themes(true)
-	end)
+local function init()
+	if M.font.family ~= default_font and not check_font(M.font.family) then
+		M.font.family = default_font
+	elseif CURSES and not check_term() then
+		M.theme.term = 'term'
+	end
+	events.connect(events.VIEW_NEW, function() M.set_themes(true) end)
+	M.set_themes(false)
 end
-
-local init = function() M.set_themes(false) end
 events.connect(events.INITIALIZED, init)
+events.connect(events.INITIALIZED, function()
+	if not CURSES then
+		-- For whatever reason, if we connect this before init view:set_theme doesn't work right
+		events.connect(events.MODE_CHANGED, function()
+			M.set_themes(true)
+			M.theme_command_entry()
+		end)
+	end
+end)
 
 -- Theme selector by @kbarni! https://github.com/orbitalquark/textadept/pull/690#issue-3996335774
 function M.select_theme(mode)
@@ -154,20 +160,7 @@ M.mt.__call = function()
 	events.disconnect(events.INITIALIZED, init)
 	init()
 end
-
-M.mt.__index = M.defaults
-M.mt.__newindex = function(t, k, v)
-	if k == 'family' and check_font(v) then
-		rawset(t, k, v)
-	elseif CURSES and k == 'term' and check_term() then
-		rawset(t, k, v)
-	end
-end
-M.mt.__metatable = 'Don\'t change Theme Manager Metatable'
-
 setmetatable(M, M.mt)
-setmetatable(M.font, M.mt)
-setmetatable(M.theme, M.mt)
 
 _L['Change Theme...'] = 'Change _Theme...'
 _L['Select Light Theme'] = 'Select _Light Theme'
