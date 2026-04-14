@@ -114,9 +114,9 @@ local function init()
 	-- Check for any lexer specific themes, because then we need to theme on switches
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
-			events.connect(events.LEXER_LOADED, function() M.set_themes(true) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(true) end)
-			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(true) end)
+			events.connect(events.LEXER_LOADED, function() M.set_themes(false) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(false) end)
+			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(false) end)
 			break
 		end
 	end
