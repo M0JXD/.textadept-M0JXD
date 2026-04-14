@@ -56,10 +56,8 @@ ds.display.lines = true
 if not BSD then require('discord_rpc')() end
 
 -- Modules (External)
--- require('textredux').hijack()
--- Experimental features by @Fwirt (requires custom build)
--- local textbar = require('textbar')
-keys['ctrl+@'] = require('minimap')
+-- theme_mgr() ; require('textredux').hijack() -- @rgieseke
+-- keys['ctrl+@'] = require('minimap') -- @Fwirt
 
 -- Keybindings
 keys['ctrl+l'] = textadept.editing.select_line
