@@ -112,14 +112,12 @@ function M.set_themes(view_reset)
 	end
 end
 
-local function init()
+local function init_checks()
 	if M.font.family ~= default_font and not check_font(M.font.family) then
 		M.font.family = default_font
 	elseif CURSES and not check_term() then
 		M.theme.term = 'term'
 	end
-	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
-
 	-- Check for any lexer specific themes, because then we need to theme on switches
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
@@ -129,10 +127,16 @@ local function init()
 			break
 		end
 	end
+	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
 	events.connect(events.VIEW_NEW, function() M.set_themes(true) end)
+end
+
+local function init()
+	init_checks()
 	M.set_themes(false)
 end
 events.connect(events.INITIALIZED, init)
+
 events.connect(events.INITIALIZED, function()
 	if not CURSES then
 		-- For whatever reason, if we connect this before init view:set_theme doesn't work right
@@ -180,7 +184,9 @@ end
 
 M.mt.__call = function()
 	events.disconnect(events.INITIALIZED, init)
-	init()
+	init_checks()
+	local theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
+	view:set_theme(theme, {font = M.font.family, size = M.font.size})
 end
 setmetatable(M, M.mt)
 
