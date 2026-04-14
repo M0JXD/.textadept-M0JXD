@@ -147,8 +147,8 @@ table.insert(textadept.menu.menubar[_L['Edit']], 11, {
 	end
 })
 
-local tools = textadept.menu.menubar[_L['Tools']]
 _L['Reset Lua State'] = 'Reset L_ua State'
+local tools = textadept.menu.menubar[_L['Tools']]
 tools[#tools + 1] = {''}
 tools[#tools + 1] = {_L['Reset Lua State'], reset}
 
