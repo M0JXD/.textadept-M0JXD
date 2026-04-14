@@ -1,6 +1,6 @@
 -- Copyright 2025-2026 Jamie Drinkell. MIT License.
 
--- Themeing
+-- Theming
 local theme_mgr = require('theme_mgr')
 theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
