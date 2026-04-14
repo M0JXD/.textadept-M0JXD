@@ -7,8 +7,9 @@ Theme manager is a module for setting themes that switch with the system in the 
 - Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support and fallback to the default terminal theme if necessary.
 - I've added [@kbarni's theme selector](https://github.com/orbitalquark/textadept/pull/690#issue-3996335774) too just for fun!
 - Theme manager allows for per lexer theming, see the example usage. Note this can fail to reset and apply to split-views properly.
+- If using a GTK2 build, it attempts to detect if the system GTK theme is a dark one so it can apply your chosen dark theme. There is no mode changed support for GTK (but I don't think any GTK2 DEs had such capability anyway). NB: The check relies on Textadept being in your PATH.
 
-By default it uses Textadept's default themes and settings.
+By default, Theme Manager uses Textadept's default themes and settings.
 Example usage:
 
 ```lua
