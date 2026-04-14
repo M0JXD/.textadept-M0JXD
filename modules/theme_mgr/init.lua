@@ -3,7 +3,6 @@
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to achieve this.
 -- (Leaving a fallback for when you edit your themes and crash everything...)
--- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
 local M = {theme = {}, font = {}, mt = {}}
 local default_font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
@@ -42,6 +41,14 @@ local function check_term()
 		return false
 	end
 	return true
+end
+
+local function check_gtk2_dark()
+	local path = os.spawn('which textadept-gtk'):read('a'):match("^%s*(.-)%s*$")
+	if os.execute('ldd ' .. path .. ' | grep gtk-x11-2') then
+		return os.spawn('gsettings get org.gnome.desktop.interface gtk-theme'):read('a'):match(
+			'd-D-ark')
+	end
 end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
@@ -111,6 +118,8 @@ local function init()
 	elseif CURSES and not check_term() then
 		M.theme.term = 'term'
 	end
+	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
+
 	-- Check for any lexer specific themes, because then we need to theme on switches
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
