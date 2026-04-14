@@ -6,8 +6,9 @@ Theme manager is a module for setting themes that switch with the system in the 
 - When changing themes, it resets some parameters to Textadept's defaults to avoid spurious behaviours.
 - Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support and fallback to the default terminal theme if necessary.
 - I've added [@kbarni's theme selector](https://github.com/orbitalquark/textadept/pull/690#issue-3996335774) too just for fun!
+- Theme manager allows for per lexer theming, see the example usage. Note this can fail to reset and apply to split-views properly.
 
-By default it uses Textadept's default themes and settings. You need to call the module to set everything up properly!
+By default it uses Textadept's default themes and settings.
 Example usage:
 
 ```lua
@@ -17,5 +18,8 @@ theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'catppuccin-latte'
 theme_mgr.font.family= 'Comic Sans MS'
 theme_mgr.font.size = 14
+theme_mgr.theme.python = 'xed-dark' -- Set a lexer specific theme
+theme_mgr.theme.markdown = {'ayu-mirage', 'catppuccin-macchiato'}  -- Light then dark
+-- theme_mgr() -- Call the module if you need themes set before events.INITIALIZED
 ```
 By default, theme_mgr connects to `events.INITIALISED` to set your themes after your *init.lua* finishes, however if you're using a module that needs the themes set upfront (e.g. Textredux) you may call the module `theme_mgr()` to do it right away.

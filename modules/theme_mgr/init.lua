@@ -3,7 +3,6 @@
 -- Allow system switching and automatic detection/application of what's best in some environments.
 -- Handy if you don't want to override the default themes to achieve this.
 -- (Leaving a fallback for when you edit your themes and crash everything...)
--- TODO: Per lexer themes would be AWESOME
 -- TODO: GTK2 version doesn't know the system colour scheme. Maybe we can obtain in manually?
 
 local M = {theme = {}, font = {}, mt = {}}
@@ -91,13 +90,18 @@ end
 function M.set_themes(view_reset)
 	for _, view_to_change in ipairs(_VIEWS) do
 		if view_reset then reset_view(view_to_change) end
-		if CURSES then
-			view_to_change:set_theme(M.theme.term)
-		elseif _THEME == 'dark' then
-			view_to_change:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
+		local theme
+		local lex = view_to_change.buffer:get_lexer()
+		if M.theme[lex] then
+			if type(M.theme[lex]) == 'table' then
+				theme = (_THEME == 'light') and M.theme[lex][1] or M.theme[lex][2]
+			else
+				theme = M.theme[lex]
+			end
 		else
-			view_to_change:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
+			theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
 		end
+		view_to_change:set_theme(theme, {font = M.font.family, size = M.font.size})
 	end
 end
 
@@ -106,6 +110,15 @@ local function init()
 		M.font.family = default_font
 	elseif CURSES and not check_term() then
 		M.theme.term = 'term'
+	end
+	-- Check for any lexer specific themes, because then we need to theme on switches
+	for k, v in pairs(M.theme) do
+		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
+			events.connect(events.LEXER_LOADED, function() M.set_themes(true) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(true) end)
+			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(true) end)
+			break
+		end
 	end
 	events.connect(events.VIEW_NEW, function() M.set_themes(true) end)
 	M.set_themes(false)
