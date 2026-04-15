@@ -53,7 +53,7 @@ end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
 local function reset_view(view_to_reset)
-	if CURSES and not M.theme.term == 'term' then
+	if not CURSES or (CURSES and not M.theme.term == 'term') then
 		view_to_reset:style_reset_default()
 		view_to_reset:style_clear_all()
 		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_BACK)
@@ -121,9 +121,10 @@ local function init_checks()
 	-- Check for any lexer specific themes, because then we need to theme on switches
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
-			events.connect(events.LEXER_LOADED, function() M.set_themes(false) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(false) end)
-			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(false) end)
+			-- Views except the last get upset if we reset styles (because some styles are global)
+			events.connect(events.LEXER_LOADED, function() M.set_themes(#_VIEWS < 2) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(#_VIEWS < 2) end)
+			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(#_VIEWS < 2) end)
 			break
 		end
 	end
