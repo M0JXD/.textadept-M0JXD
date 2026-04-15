@@ -1,13 +1,14 @@
 # Theme Manager Module
 
-To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).
+To truly change themes with the system in Textadept [is a bit complicated if you don't want to override the default theme files](https://github.com/orbitalquark/textadept/issues/602#issuecomment-2758753214).  
 Theme manager is a module for setting themes that switch with the system in the GUI version, and carefully applies theme aspects depending on system limitations, such as:
+
 - If a requested font is missing, it will opt to use Textadept's default font instead of the OS default font. The matching is very simple so if you've put 'Comic Sans' instead of 'Comic Sans MS' it can still fail to fallback properly.
-- When changing themes, it resets some parameters to Textadept's defaults to avoid spurious behaviours.
+- When changing themes, it resets styles to Textadept's defaults to avoid spurious behaviours like current line backgrounds persisting on themes that don't have them.
 - Since 12.7, Textadept supports arbitrary RGB colours in the terminal version, which means many GUI themes also work in terminals with true-colour support. The module will attempt to detect if a terminal has true-colour support and fallback to the default terminal theme if necessary.
 - I've added [@kbarni's theme selector](https://github.com/orbitalquark/textadept/pull/690#issue-3996335774) too just for fun!
-- Theme manager allows for per lexer theming, see the example usage. Note this can fail to reset and apply to split-views properly.
-- If using a GTK2 build, it attempts to detect if the system GTK theme is a dark one so it can apply your chosen dark theme. There is no mode changed support for GTK (but I don't think any GTK2 DEs had such capability anyway). NB: The check relies on Textadept being in your PATH.
+- Theme manager allows for per lexer theming, see the example usage. As some styles are global, some themes may not look correct when there are multiple views.
+- If using a GTK2 build, it attempts to detect if the system GTK theme is a dark one so it can apply your chosen dark theme. There is no mode changed support for GTK2 (but I don't think any GTK2 DEs had such capability anyway). NB: The check relies on `textadept-gtk` being in your PATH.
 
 By default, Theme Manager uses Textadept's default themes and settings.
 Example usage:
