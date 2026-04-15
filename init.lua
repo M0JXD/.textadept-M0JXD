@@ -6,6 +6,7 @@ theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'ayu-evolve'
 theme_mgr.theme.markdown = {'catppuccin-latte', 'catppuccin-macchiato'}
+if LINUX then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
 -- theme_mgr.font.family = 'Droid Sans Mono'
 -- theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family = 'FreeMono'
