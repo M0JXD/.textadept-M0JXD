@@ -47,7 +47,7 @@ local function check_gtk2_dark()
 	local path = os.spawn('which textadept-gtk'):read('a'):match("^%s*(.-)%s*$")
 	if os.execute('ldd ' .. path .. ' | grep gtk-x11-2') then
 		return os.spawn('gsettings get org.gnome.desktop.interface gtk-theme'):read('a'):match(
-			'd-D-ark')
+			'[dD][aA][rR][kK]')
 	end
 end
 
@@ -123,7 +123,9 @@ local function init_checks()
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
 			-- Views except the last get upset if we reset styles (because some styles are global)
 			events.connect(events.LEXER_LOADED, function() M.set_themes(#_VIEWS < 2) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(#_VIEWS < 2) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function()
+				M.set_themes(#_VIEWS < 2)
+			end)
 			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(#_VIEWS < 2) end)
 			break
 		end
