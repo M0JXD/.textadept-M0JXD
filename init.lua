@@ -191,16 +191,12 @@ elseif WIN32 then
 	keys['ctrl+alt+|'] = nil -- Disable due to weird UK keyboard
 elseif GTK then
 	-- Dirty fix for X11 focus
-	local function get_display_names(buffer)
+	events.connect(events.INITIALIZED, function()
 		local filename = buffer.filename or buffer._type or _L['Untitled']
 		if buffer.filename then
 			filename = select(2, pcall(string.iconv, filename, 'UTF-8', _CHARSET))
 		end
-		return filename, buffer.filename and filename:match('[^/\\]+$') or filename
-	end
-
-	events.connect(events.INITIALIZED, function()
-		local filename, basename = get_display_names(buffer)
+		local basename = buffer.filename and filename:match('[^/\\]+$') or filename
 		local title = string.format('%s %s Textadept (%s)', basename, buffer.modify and '*' or '-',
 			filename)
 		os.execute('wmctrl -a "' .. title .. '"')
