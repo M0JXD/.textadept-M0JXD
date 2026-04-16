@@ -83,6 +83,7 @@ textadept.editing.comment_string.python = '# '
 textadept.editing.comment_string.bash = '# '
 textadept.editing.comment_string.cpp = '// '
 textadept.editing.comment_string.dart = '// '
+textadept.editing.comment_string.java = '// '
 textadept.editing.comment_string.javascript = '// '
 textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
 textadept.run.run_in_background = true
