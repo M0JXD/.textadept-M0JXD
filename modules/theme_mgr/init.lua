@@ -23,7 +23,8 @@ local function check_font(font)
 		-- Source - https://superuser.com/a/1534136
 		-- Posted by phuclv, modified by community. See post 'Timeline' for change history
 		-- Retrieved 2026-02-27, License - CC BY-SA 4.0
-		-- font_check_cmd = 'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
+		-- font_check_cmd =
+		--	'Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts\\\''
 	else
 		font_check_cmd = 'fc-list' -- Linux/BSD
 	end
@@ -141,8 +142,8 @@ events.connect(events.INITIALIZED, function()
 	if not CURSES then
 		-- For whatever reason, if we connect this before init view:set_theme doesn't work right
 		events.connect(events.MODE_CHANGED, function()
-			M.theme_all_views(true)
 			M.theme_command_entry()
+			M.theme_all_views(true)
 		end)
 	end
 end)
