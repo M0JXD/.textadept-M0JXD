@@ -82,34 +82,31 @@ local function reset_view(view_to_reset)
 	end
 end
 
-function M.theme_command_entry()
-	if _THEME == 'dark' then
-		pcall(function()
-			ui.command_entry:set_theme(M.theme.dark, {font = M.font.family, size = M.font.size})
-		end)
+function M.theme_view(view_reset, view)
+	if view_reset then reset_view(view) end
+	local theme
+	local lex = view.buffer:get_lexer()
+	if M.theme[lex] then
+		if type(M.theme[lex]) == 'table' then
+			theme = (_THEME == 'light') and M.theme[lex][1] or M.theme[lex][2]
+		else
+			theme = M.theme[lex]
+		end
 	else
-		pcall(function()
-			ui.command_entry:set_theme(M.theme.light, {font = M.font.family, size = M.font.size})
-		end)
+		theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
 	end
+	view:set_theme(theme, {font = M.font.family, size = M.font.size})
 end
 
-function M.set_themes(view_reset)
-	for _, view_to_change in ipairs(_VIEWS) do
-		if view_reset then reset_view(view_to_change) end
-		local theme
-		local lex = view_to_change.buffer:get_lexer()
-		if M.theme[lex] then
-			if type(M.theme[lex]) == 'table' then
-				theme = (_THEME == 'light') and M.theme[lex][1] or M.theme[lex][2]
-			else
-				theme = M.theme[lex]
-			end
-		else
-			theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
-		end
-		view_to_change:set_theme(theme, {font = M.font.family, size = M.font.size})
-	end
+function M.theme_all_views(view_reset)
+	for _, view in ipairs(_VIEWS) do M.theme_view(view_reset, view) end
+end
+
+function M.theme_command_entry()
+	local theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
+	pcall(function()
+		ui.command_entry:set_theme(theme, {font = M.font.family, size = M.font.size})
+	end)
 end
 
 local function init_checks()
@@ -122,19 +119,21 @@ local function init_checks()
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
 			-- Views except the last get upset if we reset styles (because some styles are global)
-			events.connect(events.LEXER_LOADED, function() M.set_themes(true) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(true) end)
-			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(true) end)
+			events.connect(events.VIEW_AFTER_SWITCH, function() M.theme_view(true, view) end)
+			events.connect(events.LEXER_LOADED, function() M.theme_view(true, view) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function()
+				M.theme_view(true, view)
+			end)
 			break
 		end
 	end
 	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
-	events.connect(events.VIEW_NEW, function() M.set_themes(true) end)
+	events.connect(events.VIEW_NEW, function() M.theme_view(true, view) end)
 end
 
 local function init()
 	init_checks()
-	M.set_themes(false)
+	M.theme_all_views(false)
 end
 events.connect(events.INITIALIZED, init)
 
@@ -142,7 +141,7 @@ events.connect(events.INITIALIZED, function()
 	if not CURSES then
 		-- For whatever reason, if we connect this before init view:set_theme doesn't work right
 		events.connect(events.MODE_CHANGED, function()
-			M.set_themes(true)
+			M.theme_all_views(true)
 			M.theme_command_entry()
 		end)
 	end
@@ -179,7 +178,7 @@ function M.select_theme(mode)
 			M.theme.term = themes[i]
 		end
 		M.theme_command_entry()
-		M.set_themes(true)
+		M.theme_all_views(true)
 	end
 end
 
