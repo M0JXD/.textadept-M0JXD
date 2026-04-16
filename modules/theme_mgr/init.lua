@@ -60,9 +60,9 @@ local function reset_view(view_to_reset)
 		view_to_reset:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
 	end
 	if not CURSES then
-		view.caret_style = view.CARETSTYLE_LINE
-		view.caret_line_layer = view.LAYER_BASE
-		view.selection_layer = view.LAYER_BASE
+		view_to_reset.caret_style = view.CARETSTYLE_LINE
+		view_to_reset.caret_line_layer = view.LAYER_BASE
+		view_to_reset.selection_layer = view.LAYER_BASE
 		-- Reset all the element colours
 		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_TEXT)
 		view_to_reset:reset_element_color(view.ELEMENT_WHITE_SPACE)
@@ -122,11 +122,9 @@ local function init_checks()
 	for k, v in pairs(M.theme) do
 		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
 			-- Views except the last get upset if we reset styles (because some styles are global)
-			events.connect(events.LEXER_LOADED, function() M.set_themes(#_VIEWS < 2) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function()
-				M.set_themes(#_VIEWS < 2)
-			end)
-			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(#_VIEWS < 2) end)
+			events.connect(events.LEXER_LOADED, function() M.set_themes(true) end)
+			events.connect(events.BUFFER_AFTER_SWITCH, function() M.set_themes(true) end)
+			events.connect(events.VIEW_AFTER_SWITCH, function() M.set_themes(true) end)
 			break
 		end
 	end
