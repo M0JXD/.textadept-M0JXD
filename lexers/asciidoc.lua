@@ -23,7 +23,7 @@ lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
 lex:add_rule('title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
 
 lex:add_rule('hr',
-	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
+	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S("*-'")), true), function(input, index, c)
 		local line = input:match('[^\r\n]*', index):gsub('[ \t]', '')
 		if line:find('[^' .. c .. ']') or #line < 2 then return nil end
 		return (select(2, input:find('\r?\n', index)) or #input) + 1 -- include \n for eolfilled styles
@@ -88,7 +88,7 @@ local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range
 	#(punct_space + -1)
 lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
 
--- TODO: Bold and Italic doesn't work, but it doesn't on the site either
+-- TODO: Bold with Italic doesn't work, but it doesn't on the site either
 -- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#text-formatting
 
 local attribute = flanked_range(':')
