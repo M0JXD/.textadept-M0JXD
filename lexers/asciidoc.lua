@@ -12,7 +12,8 @@ local P, S, B = lpeg.P, lpeg.S, lpeg.B
 local lex = lexer.new(...)
 
 -- Admonitions.
-lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD) * #S(':')))
+lex:add_rule('admonition', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD) * #S(':')))
+lex:add_rule('block_admonition', lex:tag(lexer.KEYWORD, P('[') * lex:word_match(lexer.KEYWORD) * P(']')))
 lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTION", "TESTME"})
 
 -- Block elements.
@@ -87,7 +88,7 @@ lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT,
-	lexer.starts_line(lexer.to_eol('// ')) +
+	lexer.starts_line(lexer.to_eol('//')) +
 	lexer.range(lexer.starts_line('////'))))
 
 lexer.property['scintillua.comment'] = '//'
