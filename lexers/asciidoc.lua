@@ -5,14 +5,11 @@
 local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
--- TODO: Asciidoctor notes Markdown compatibility
+-- TODO: Asciidoctor notes *OPTIONAL* Markdown compatibility
 -- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#markdown-compatibility
--- Do we inherit? It only works with asciidoctor anyway
+-- Do we inherit? It only works with asciidoctor, so not all implementations.
 
 local lex = lexer.new(...)
-
--- Distinguish between horizontal and vertical space so html start rule has a chance to match.
-lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + S('\r\n')^1))
 
 -- Admonitions.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD) * #S(':')))
@@ -87,12 +84,6 @@ lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
 
 local attribute = flanked_range(':')
 lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
-
--- Embedded HTML.
-local html = lexer.load('html')
-local start_rule = lexer.starts_line(P(' ')^-3) * #P('<') * html:get_rule('tag') -- P(' ')^4 starts code_line
-local end_rule = #blank_line * ws
-lex:embed(html, start_rule, end_rule)
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT,
