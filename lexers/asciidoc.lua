@@ -32,10 +32,7 @@ lex:add_rule('hr',
 lex:add_rule('list', lex:tag(lexer.LIST,
 	lexer.starts_line(S('*.')^1, true) * S(' \t')))
 
-
 local hspace = lexer.space - '\n'
-local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
-
 local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol(), true)
 local code_block =
 	lexer.range(lexer.starts_line('```', true), '\n```' * hspace^0 * ('\n' + P(-1))) +
@@ -72,6 +69,7 @@ local ref_link_title = lex:tag(lexer.STRING, lexer.range('"', true, false) +
 lex:add_rule('link_ref', link_ref + ref_link_label * ws * ref_link_url * (ws * ref_link_title)^-1)
 
 local punct_space = lexer.punct + lexer.space
+local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
 -- Handles flanking delimiters as described in
 -- https://github.github.com/gfm/#emphasis-and-strong-emphasis in the cases where simple
@@ -83,15 +81,18 @@ local function flanked_range(s, not_inword)
 	return left_fl * (lexer.any - blank_line - (not_inword and s * #punct_space or s))^0 * right_fl
 end
 
-local asterisk_strong = flanked_range('**')
-local underscore_strong = (B(punct_space) + #lexer.starts_line('_')) * flanked_range('__', true) *
-	#(punct_space + -1)
-lex:add_rule('strong', lex:tag(lexer.BOLD, asterisk_strong + underscore_strong))
+local asterisk_strong = flanked_range('*')
+lex:add_rule('strong', lex:tag(lexer.BOLD, asterisk_strong))
 
-local asterisk_em = flanked_range('*')
 local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range('_', true) *
 	#(punct_space + -1)
-lex:add_rule('em', lex:tag(lexer.ITALIC, asterisk_em + underscore_em))
+lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
+
+-- TODO: Bold and Italic doesn't work, but it doesn't on the site either
+-- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#text-formatting
+
+local attribute = flanked_range(':')
+lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
 
 -- Embedded HTML.
 local html = lexer.load('html')
@@ -105,6 +106,5 @@ lex:add_rule('comment', lex:tag(lexer.COMMENT,
 	lexer.range(lexer.starts_line('////'))))
 
 lexer.property['scintillua.comment'] = '//'
-
 
 return lex
