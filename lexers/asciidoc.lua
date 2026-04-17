@@ -5,12 +5,16 @@
 local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
+-- TODO: Asciidoctor notes Markdown compatibility
+-- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#markdown-compatibility
+-- Do we inherit? It only works with asciidoctor anyway
+
 local lex = lexer.new(...)
 
 -- Distinguish between horizontal and vertical space so html start rule has a chance to match.
 lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + S('\r\n')^1))
 
--- Admonitions
+-- Admonitions.
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD) * #S(':')))
 lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTION", "TESTME"})
 
@@ -32,24 +36,6 @@ lex:add_rule('hr',
 lex:add_rule('list', lex:tag(lexer.LIST,
 	lexer.starts_line(S('*.')^1, true) * S(' \t')))
 
-local hspace = lexer.space - '\n'
-local code_line = lexer.starts_line((B('    ') + B('\t')) * lexer.to_eol(), true)
-local code_block =
-	lexer.range(lexer.starts_line('```', true), '\n```' * hspace^0 * ('\n' + P(-1))) +
-		lexer.range(lexer.starts_line('~~~', true), '\n~~~' * hspace^0 * ('\n' + P(-1)))
-local code_inline = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
-	-- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.
-	local _, e = input:find('[^`]' .. bt .. '%f[^`]', index)
-	return (e or #input) + 1
-end)
-lex:add_rule('block_code', lex:tag(lexer.CODE, code_line + code_block + code_inline))
-
-lex:add_rule('blockquote',
-	lex:tag(lexer.STRING, lpeg.Cmt(lexer.starts_line('>', true), function(input, index)
-		local _, e = input:find('\n[ \t]*\r?\n', index) -- the next blank line (possibly with indentation)
-		return (e or #input) + 1
-	end)))
-
 -- Span elements.
 lex:add_rule('escape', lex:tag(lexer.DEFAULT, P('\\') * 1))
 
@@ -68,7 +54,15 @@ local ref_link_title = lex:tag(lexer.STRING, lexer.range('"', true, false) +
 	lexer.range("'", true, false) + lexer.range('(', ')', true))
 lex:add_rule('link_ref', link_ref + ref_link_label * ws * ref_link_url * (ws * ref_link_title)^-1)
 
+local monospace = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
+	-- `foo`, ``foo``, ``foo`bar``, `foo``bar` are all allowed.
+	local _, e = input:find('[^`]' .. bt .. '%f[^`]', index)
+	return (e or #input) + 1
+end)
+lex:add_rule('monospace', lex:tag(lexer.CODE, monospace))
+
 local punct_space = lexer.punct + lexer.space
+local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 
 -- Handles flanking delimiters as described in
