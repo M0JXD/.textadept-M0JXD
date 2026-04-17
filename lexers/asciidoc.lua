@@ -30,7 +30,8 @@ lex:add_rule('hr',
 	end)))
 
 lex:add_rule('list', lex:tag(lexer.LIST,
-	lexer.starts_line(lexer.digit^1 * '.' + S('*+-'), true) * S(' \t')))
+	lexer.starts_line(S('*.')^1, true) * S(' \t')))
+
 
 local hspace = lexer.space - '\n'
 local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
