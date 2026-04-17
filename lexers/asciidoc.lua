@@ -22,7 +22,7 @@ local function h(n)
 		lexer.to_eol(lexer.starts_line(string.rep('=', n))))
 end
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
-lex:add_rule('title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
+lex:add_rule('block_title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
 
 lex:add_rule('hr',
 	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S("*-'")), true), function(input, index, c)
