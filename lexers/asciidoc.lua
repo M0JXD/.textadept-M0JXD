@@ -88,8 +88,8 @@ lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
 
 -- Comments.
 lex:add_rule('comment', lex:tag(lexer.COMMENT,
-	lexer.starts_line(lexer.to_eol('//')) +
-	lexer.range(lexer.starts_line('////'))))
+	lexer.range(lexer.starts_line('////')) +
+	lexer.starts_line(lexer.to_eol('//'))))
 
 lexer.property['scintillua.comment'] = '//'
 
