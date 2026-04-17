@@ -1,16 +1,16 @@
 -- Copyright 2025 Matěj Cepl. See LICENSE.
--- Modified to inherit from Markdown lexer by Jamie Drinkell
+-- Copyright 2026 Jamie Drinkell. See LICENSE
 -- Asciidoc LPeg lexer.
 
 local lexer = lexer
 local P, S, B = lpeg.P, lpeg.S, lpeg.B
 
-local lex = lexer.new(..., {inherit = lexer.load('markdown')})
+local lex = lexer.new(...)
 
 -- Distinguish between horizontal and vertical space so html start rule has a chance to match.
 lex:modify_rule('whitespace', lex:tag(lexer.WHITESPACE, S(' \t')^1 + S('\r\n')^1))
 
--- Keywords
+-- Admonitions
 lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
 lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTION", "TESTME"})
 
@@ -19,7 +19,9 @@ local function h(n)
 	return lex:tag(string.format('%s.h%s', lexer.HEADING, n),
 		lexer.to_eol(lexer.starts_line(string.rep('=', n))))
 end
+
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
+lex:add_rule('title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.'))))
 
 lex:add_rule('hr',
 	lex:tag('hr', lpeg.Cmt(lexer.starts_line(lpeg.C(S('*-_')), true), function(input, index, c)
