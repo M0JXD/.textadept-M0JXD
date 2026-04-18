@@ -87,7 +87,7 @@ function M.theme_view(view_reset, view)
 	if view_reset then reset_view(view) end
 	local theme
 	local lex = view.buffer:get_lexer()
-	if M.theme[lex] then
+	if M.theme[lex] and not CURSES then
 		if type(M.theme[lex]) == 'table' then
 			theme = (_THEME == 'light') and M.theme[lex][1] or M.theme[lex][2]
 		else
@@ -116,16 +116,18 @@ local function init_checks()
 	elseif CURSES and not check_term() then
 		M.theme.term = 'term'
 	end
-	-- Check for any lexer specific themes, because then we need to theme on switches
-	for k, v in pairs(M.theme) do
-		if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
-			-- Views except the last get upset if we reset styles (because some styles are global)
-			events.connect(events.VIEW_AFTER_SWITCH, function() M.theme_view(true, view) end)
-			events.connect(events.LEXER_LOADED, function() M.theme_view(true, view) end)
-			events.connect(events.BUFFER_AFTER_SWITCH, function()
-				M.theme_view(true, view)
-			end)
-			break
+	if not CURSES then
+		-- Check for any lexer specific themes, because then we need to theme on switches
+		for k, v in pairs(M.theme) do
+			if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
+				-- Views except the last get upset if we reset styles (because some styles are global)
+				events.connect(events.VIEW_AFTER_SWITCH, function() M.theme_view(true, view) end)
+				events.connect(events.LEXER_LOADED, function() M.theme_view(true, view) end)
+				events.connect(events.BUFFER_AFTER_SWITCH, function()
+					M.theme_view(true, view)
+				end)
+				break
+			end
 		end
 	end
 	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
