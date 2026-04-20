@@ -23,6 +23,9 @@ colors.purple = 0xa46534
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
 if not size then size = not OSX and 10 or 12 end
 
+-- Reset line back
+view:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
+
 -- Predefined styles.
 styles[view.STYLE_DEFAULT] = {
 	font = font, size = size, fore = colors.white, back = colors.black
