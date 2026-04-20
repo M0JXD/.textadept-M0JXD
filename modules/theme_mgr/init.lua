@@ -182,6 +182,8 @@ function M.select_theme(mode)
 		end
 		M.theme_command_entry()
 		M.theme_all_views(true)
+		reset_view(view)
+		view:set_theme(themes[i], {font = M.font.family, size = M.font.size})
 	end
 end
 
