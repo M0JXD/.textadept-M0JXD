@@ -151,9 +151,9 @@ table.insert(textadept.menu.menubar[_L['Edit']], 11, {
 })
 
 _L['Reset Lua State'] = 'Reset L_ua State'
-local tools = textadept.menu.menubar[_L['Tools']]
-tools[#tools + 1] = {''}
-tools[#tools + 1] = {_L['Reset Lua State'], reset}
+local tools_menu = textadept.menu.menubar[_L['Tools']]
+tools_menu[#tools_menu + 1] = {''}
+tools_menu[#tools_menu + 1] = {_L['Reset Lua State'], reset}
 
 _L['Toggle Line Guide'] = 'Toggle _Line Guide'
 table.insert(textadept.menu.menubar[_L['View']], 18, {
@@ -167,6 +167,13 @@ table.insert(textadept.menu.menubar[_L['View']], 19, {
 	_L['Toggle Strip Trailing Whitespace'], function()
 		textadept.editing.strip_trailing_spaces = not textadept.editing.strip_trailing_spaces
 		events.emit(events.UPDATE_UI, 3)
+	end
+})
+
+_L['Toggle End Of Line Characters'] = 'Toggle _End Of Line Characters'
+table.insert(textadept.menu.menubar[_L['View']], 20, {
+	_L['Toggle End Of Line Characters'], function()
+		view.view_eol = not view.view_eol
 	end
 })
 
