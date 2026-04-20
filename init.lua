@@ -132,6 +132,7 @@ table.insert(textadept.menu.menubar[_L['File']], 8, {
 		os.remove(oldname)
 	end
 })
+keys['f2'] = textadept.menu.menubar['File/Rename'][2]
 
 -- Pandoc conversions to Markdown often have extra blank lines
 _L['Delete Blank Lines'] = 'Delete Blank _Lines'
