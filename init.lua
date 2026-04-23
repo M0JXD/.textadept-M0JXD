@@ -60,15 +60,6 @@ if not BSD then require('discord_rpc')() end
 -- theme_mgr() ; require('textredux').hijack() -- @rgieseke
 -- keys['ctrl+@'] = require('minimap') -- @Fwirt
 
--- Keybindings
-keys['ctrl+l'] = textadept.editing.select_line
-keys['ctrl+g'] = textadept.menu.menubar['Search/Go To Line...'][2]
-keys[(CURSES and 'meta+L' or 'ctrl+L')] = textadept.menu.menubar['Buffer/Select Lexer...'][2]
-keys[(CURSES and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
-keys[(CURSES and 'ctrl+k' or 'ctrl+K')] = buffer.line_delete
-keys[(CURSES and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_up
-keys[(CURSES and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
-
 -- Buffer/Language Settings
 lexer.detect_extensions.h = 'c'
 lexer.detect_extensions.C = 'cpp'
@@ -132,7 +123,6 @@ table.insert(textadept.menu.menubar[_L['File']], 8, {
 		os.remove(oldname)
 	end
 })
-keys['f2'] = textadept.menu.menubar['File/Rename'][2]
 
 -- Pandoc conversions to Markdown often have extra blank lines
 _L['Delete Blank Lines'] = 'Delete Blank _Lines'
@@ -185,6 +175,17 @@ events.connect(events.UPDATE_UI, function(updated)
 	ui.buffer_statusbar_text = ui.buffer_statusbar_text:bst_insert(
 		ui.buffer_statusbar_text:bst_count() - 1, strip)
 end)
+
+-- Keybindings
+keys['f2'] = textadept.menu.menubar['File/Rename'][2]
+keys['f5'] = reset
+keys['ctrl+g'] = textadept.menu.menubar['Search/Go To Line...'][2]
+keys['ctrl+l'] = textadept.editing.select_line
+keys[(CURSES and 'ctrl+k' or 'ctrl+K')] = buffer.line_delete
+keys[(CURSES and 'meta+L' or 'ctrl+L')] = textadept.menu.menubar['Buffer/Select Lexer...'][2]
+keys[(CURSES and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
+keys[(CURSES and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_up
+keys[(CURSES and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
 
 -- Hide some folders from the quick open list
 table.insert(lfs.default_filter, '!.xmake')
