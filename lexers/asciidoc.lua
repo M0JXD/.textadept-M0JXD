@@ -80,9 +80,6 @@ local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range
 	#(punct_space + -1)
 lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
 
--- TODO: Bold with Italic doesn't work, but it doesn't on the site either
--- https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/#text-formatting
-
 local attribute = flanked_range(':')
 lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
 
