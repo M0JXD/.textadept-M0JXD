@@ -173,17 +173,24 @@ function M.select_theme(mode)
 	end
 	local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
 	if i then
-		if mode == 'light' then
-			M.theme.light = themes[i]
-		elseif mode == 'dark' then
-			M.theme.dark = themes[i]
-		elseif mode == 'term' then
-			M.theme.term = themes[i]
+		local lex = view.buffer:get_lexer()
+		if M.theme[lex] and not CURSES then
+			if type(M.theme[lex]) == 'table' then
+				M.theme[lex][(mode == 'light') and 1 or 2] = themes[i]
+			else
+				M.theme[lex] = themes[i]
+			end
+		else
+			if mode == 'light' then
+				M.theme.light = themes[i]
+			elseif mode == 'dark' then
+				M.theme.dark = themes[i]
+			elseif mode == 'term' then
+				M.theme.term = themes[i]
+			end
 		end
 		M.theme_command_entry()
 		M.theme_all_views(true)
-		reset_view(view)
-		view:set_theme(themes[i], {font = M.font.family, size = M.font.size})
 	end
 end
 
