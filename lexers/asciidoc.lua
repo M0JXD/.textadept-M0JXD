@@ -19,7 +19,7 @@ lex:set_word_list(lexer.KEYWORD, {"NOTE", "IMPORTANT", "WARNING", "TIP", "CAUTIO
 -- Block elements.
 local function h(n)
 	return lex:tag(string.format('%s.h%s', lexer.HEADING, n),
-		lexer.to_eol(lexer.starts_line(string.rep('=', n))))
+		lexer.to_eol(lexer.starts_line(string.rep('=', n) * S(' ') * lexer.alnum)))
 end
 lex:add_rule('header', h(6) + h(5) + h(4) + h(3) + h(2) + h(1))
 lex:add_rule('block_title', lex:tag(lexer.HEADING, lexer.to_eol(lexer.starts_line('.') * lexer.alnum)))
