@@ -61,26 +61,21 @@ local monospace = lpeg.Cmt(lpeg.C(P('`')^1), function(input, index, bt)
 end)
 lex:add_rule('monospace', lex:tag(lexer.CODE, monospace))
 
-local punct_space = lexer.punct + lexer.space
-local hspace = lexer.space - '\n'
-local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
+lex:add_rule('strong', lex:tag(lexer.BOLD, lexer.range('*', true)))
+lex:add_rule('em', lex:tag(lexer.ITALIC, lexer.range('_', true)))
 
 -- Handles flanking delimiters as described in
 -- https://github.github.com/gfm/#emphasis-and-strong-emphasis in the cases where simple
 -- delimited ranges are not sufficient.
+local punct_space = lexer.punct + lexer.space
+local hspace = lexer.space - '\n'
+local blank_line = '\n' * hspace^0 * ('\n' + P(-1))
 local function flanked_range(s, not_inword)
 	local fl_char = lexer.any - s - lexer.space
 	local left_fl = B(punct_space - s) * s * #fl_char + s * #(fl_char - lexer.punct)
 	local right_fl = B(lexer.punct) * s * #(punct_space - s) + B(fl_char) * s
 	return left_fl * (lexer.any - blank_line - (not_inword and s * #punct_space or s))^0 * right_fl
 end
-
-local asterisk_strong = flanked_range('*')
-lex:add_rule('strong', lex:tag(lexer.BOLD, asterisk_strong))
-
-local underscore_em = (B(punct_space) + #lexer.starts_line('_')) * flanked_range('_', true) *
-	#(punct_space + -1)
-lex:add_rule('em', lex:tag(lexer.ITALIC, underscore_em))
 
 local attribute = flanked_range(':')
 lex:add_rule('attribute', lex:tag(lexer.ATTRIBUTE, attribute))
