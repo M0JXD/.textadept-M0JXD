@@ -3,6 +3,8 @@
 
 local M = {}
 
+-- TODO: If CURSES, can I suspend and launch in current terminal?
+
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
 
