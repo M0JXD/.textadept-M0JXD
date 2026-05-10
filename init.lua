@@ -69,6 +69,7 @@ lexer.detect_extensions.blp = 'blueprint'
 lexer.detect_extensions.adoc = 'asciidoc'
 textadept.editing.auto_pairs.text = {}
 textadept.editing.auto_pairs.markdown = {['*'] = '*', ['_'] = '_'}
+-- TODO: Propose a setting so comments without trailing whitespace can be detected
 textadept.editing.comment_string.c = '/* | */'
 textadept.editing.comment_string.lua = '-- '
 textadept.editing.comment_string.python = '# '
