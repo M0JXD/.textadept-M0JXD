@@ -199,7 +199,6 @@ local function save_session()
 	local append = (WIN32 and '\\' or '/') .. (CURSES and 'session_term' or 'session')
 	textadept.session.save(_USERHOME .. append)
 end
-
 events.connect(events.FILE_OPENED, save_session)
 events.connect(events.FILE_AFTER_SAVE, save_session)
 events.connect(events.BUFFER_DELETED, save_session)
