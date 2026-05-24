@@ -164,9 +164,7 @@ table.insert(textadept.menu.menubar[_L['View']], 19, {
 
 _L['Toggle End Of Line Characters'] = 'Toggle _End Of Line Characters'
 table.insert(textadept.menu.menubar[_L['View']], 20, {
-	_L['Toggle End Of Line Characters'], function()
-		view.view_eol = not view.view_eol
-	end
+	_L['Toggle End Of Line Characters'], function() view.view_eol = not view.view_eol end
 })
 
 -- UI Adjustments
@@ -197,11 +195,14 @@ table.insert(lfs.default_filter, '!.vs')
 table.insert(lfs.default_filter, '!.vscode')
 
 -- Save session data regularly in case of crash or battery
-timeout(300, function ()
+local function save_session()
 	local append = (WIN32 and '\\' or '/') .. (CURSES and 'session_term' or 'session')
 	textadept.session.save(_USERHOME .. append)
-	return true
-end)
+end
+
+events.connect(events.FILE_OPENED, save_session)
+events.connect(events.FILE_AFTER_SAVE, save_session)
+events.connect(events.BUFFER_DELETED, save_session)
 
 -- Platform Specific Adjustments
 if CURSES then
