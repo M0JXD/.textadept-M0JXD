@@ -196,6 +196,13 @@ table.insert(lfs.default_filter, '!assets')
 table.insert(lfs.default_filter, '!.vs')
 table.insert(lfs.default_filter, '!.vscode')
 
+-- Save session data regularly in case of crash or battery
+timeout(300, function ()
+	local append = (WIN32 and '\\' or '/') .. (CURSES and 'session_term' or 'session')
+	textadept.session.save(_USERHOME .. append)
+	return true
+end)
+
 -- Platform Specific Adjustments
 if CURSES then
 	-- Add a suspend menu entry
