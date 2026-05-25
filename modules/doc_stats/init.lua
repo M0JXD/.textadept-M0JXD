@@ -162,7 +162,7 @@ end
 
 function string.bst_insert(str, ...)
 	local text, pos, value
-	local spacing = CURSES and '  ' or '    '
+	local spacing = UI == 'terminal' and '  ' or '    '
 	local _, count = str:gsub(spacing, spacing)
 	count = count + 1
 
@@ -192,7 +192,7 @@ end
 
 function string.bst_replace(str, pos, value)
 	local text
-	local spacing = CURSES and '  ' or '    '
+	local spacing = UI == 'terminal' and '  ' or '    '
 	local entry_pat = '%S*%s?%S*' .. spacing
 	local _, count = str:gsub(spacing, spacing)
 	count = count + 1

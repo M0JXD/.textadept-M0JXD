@@ -3,7 +3,7 @@
 
 local M = {}
 
-local spacing = CURSES and '  ' or '    '
+local spacing = UI == 'terminal' and '  ' or '    '
 
 function string.bst_count(str)
 	local _, count = str:gsub(spacing, spacing)

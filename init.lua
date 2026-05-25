@@ -6,7 +6,7 @@ theme_mgr.theme.light = 'ayu-light'
 theme_mgr.theme.dark = 'ayu-evolve'
 theme_mgr.theme.term = 'ayu-evolve'
 theme_mgr.theme.markdown = {'catppuccin-latte', 'catppuccin-macchiato'}
-if LINUX then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
+if OS == 'linux' then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
 -- theme_mgr.font.family = 'Droid Sans Mono'
 -- theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family = 'FreeMono'
@@ -30,17 +30,17 @@ format.commands.javascript = prettier_formatter
 format.commands.typescript = prettier_formatter
 format.commands.markdown = prettier_formatter
 format.commands.yaml = prettier_formatter
-format.commands.python = WIN32 and 'py' or 'python' .. ' -m black -'
+format.commands.python = OS == 'windows' and 'py' or 'python' .. ' -m black -'
 local lsp = false
-if not BSD then
+if OS ~= 'bsd' then
 	lsp = require('lsp')
-	if QT then
+	if UI == 'qt' then
 		lsp.server_commands.dart = 'dart language-server'
 		keys['ctrl+.'] = textadept.menu.menubar['Tools/Language Server/Code Action'][2]
 	end
 end
 require('lua_repl')
-keys[(CURSES and 'meta+O' or 'alt+O')] = require('open_file_mode')
+keys[(UI == 'terminal' and 'meta+O' or 'alt+O')] = require('open_file_mode')
 -- require('scratch')
 local spellcheck = require('spellcheck')
 spellcheck.check_spelling_on_save = false
@@ -54,7 +54,7 @@ require('quick_open')
 require('export_ext')
 local ds = require('doc_stats')
 ds.display.lines = true
-if not BSD then require('discord_rpc')() end
+-- if OS ~= 'bsd' then require('discord_rpc')() end
 
 -- Modules (External)
 -- theme_mgr() ; require('textredux').hijack() -- @rgieseke
@@ -111,7 +111,7 @@ events.connect(events.VIEW_AFTER_SWITCH, lexer_settings)
 -- Tools
 textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
 textadept.run.build_commands['xmake.lua'] = 'xmake'
-textadept.run.compile_commands.python = (WIN32 and 'py' or 'python') .. ' -m flake8 %f' -- Run a linter
+textadept.run.compile_commands.python = (OS == 'windows' and 'py' or 'python') .. ' -m flake8 %f' -- Run a linter
 textadept.run.compile_commands.ino = 'arduino-cli compile -b arduino:avr:nano "%p"' -- Verify
 textadept.run.run_commands.ino = 'arduino-cli upload "%p" -b arduino:avr:nano -p /dev/ttyACM0' -- Upload
 
@@ -180,11 +180,12 @@ keys['f2'] = textadept.menu.menubar['File/Rename'][2]
 keys['f5'] = reset
 keys['ctrl+g'] = textadept.menu.menubar['Search/Go To Line...'][2]
 keys['ctrl+l'] = textadept.editing.select_line
-keys[(CURSES and 'ctrl+k' or 'ctrl+K')] = buffer.line_delete
-keys[(CURSES and 'meta+L' or 'ctrl+L')] = textadept.menu.menubar['Buffer/Select Lexer...'][2]
-keys[(CURSES and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
-keys[(CURSES and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_up
-keys[(CURSES and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
+keys[(UI == 'terminal' and 'ctrl+k' or 'ctrl+K')] = buffer.line_delete
+keys[(UI == 'terminal' and 'meta+L' or 'ctrl+L')] =
+	textadept.menu.menubar['Buffer/Select Lexer...'][2]
+keys[(UI == 'terminal' and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
+keys[(UI == 'terminal' and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_up
+keys[(UI == 'terminal' and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
 
 -- Hide some folders from the quick open list
 table.insert(lfs.default_filter, '!.xmake')
@@ -196,7 +197,8 @@ table.insert(lfs.default_filter, '!.vscode')
 
 -- Save session data regularly in case of crash or battery
 local function save_session()
-	local append = (WIN32 and '\\' or '/') .. (CURSES and 'session_term' or 'session')
+	local append = (OS == 'windows' and '\\' or '/') ..
+		(UI == 'terminal' and 'session_term' or 'session')
 	textadept.session.save(_USERHOME .. append)
 end
 events.connect(events.FILE_OPENED, save_session)
@@ -204,12 +206,12 @@ events.connect(events.FILE_AFTER_SAVE, save_session)
 events.connect(events.BUFFER_DELETED, save_session)
 
 -- Platform Specific Adjustments
-if CURSES then
+if UI == 'terminal' then
 	-- Add a suspend menu entry
 	table.insert(textadept.menu.menubar[_L['View']], {'Suspend...', ui.suspend})
-elseif WIN32 then
+elseif OS == 'windows' then
 	keys['ctrl+alt+|'] = nil -- Disable due to weird UK keyboard
-elseif GTK then
+elseif UI == 'gtk' then
 	-- Dirty fix for X11 focus
 	events.connect(events.INITIALIZED, function()
 		local filename = buffer.filename or buffer._type or _L['Untitled']

@@ -20,8 +20,8 @@ colors.violet = 0xa87fad
 colors.purple = 0xa46534
 
 -- Default font.
-if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
-if not size then size = not OSX and 10 or 12 end
+if not font then font = OS == 'windows' and 'Consolas' or OS == 'macos' and 'Monaco' or 'Monospace' end
+if not size then size = OS ~= 'macos' and 10 or 12 end
 
 -- Reset line back
 view:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
@@ -134,8 +134,8 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = CURSES and colors.dark_grey or colors.white
-	view.marker_back[i] =  CURSES and colors.white or colors.dark_grey
+	view.marker_fore[i] = UI == 'terminal' and colors.dark_grey or colors.white
+	view.marker_back[i] = UI == 'terminal' and colors.white or colors.dark_grey
 	view.marker_back_selected[i] = colors.black
 end
 

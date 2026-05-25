@@ -2,7 +2,7 @@
 
 Based on Mitchell's [Distraction Free mode](https://github.com/orbitalquark/textadept/wiki/DistractionFreeMode) but wrapped into a module.
 Also added the ability to hide the tab bar, and allows you to configure what you want to hide.
-Also works on CURSES and hides the title. Defaults to my preferences.
+Also works in the terminal version, hiding the title. Defaults to my preferences.
 
 Example usage:
 

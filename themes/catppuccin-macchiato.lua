@@ -33,12 +33,12 @@ colors.mantle    = 0x30201e
 colors.crust     = 0x261918
 -- LuaFormatter on
 
-colors.selection = CURSES and 0x594440 or (0x40000000 + colors.overlay_2)
-colors.lineback = CURSES and 0x4c3532 or (0x18000000 + colors.lavender)
+colors.selection = UI == 'terminal' and 0x594440 or (0x40000000 + colors.overlay_2)
+colors.lineback = UI == 'terminal' and 0x4c3532 or (0x18000000 + colors.lavender)
 
 -- Default font.
-if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
-if not size then size = not OSX and 10 or 12 end
+if not font then font = OS == 'windows' and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
+if not size then size = OS ~= 'macos' and 10 or 12 end
 
 -- Predefined styles.
 styles[view.STYLE_DEFAULT] = {font = font, size = size, fore = colors.text, back = colors.base}
@@ -121,7 +121,7 @@ styles.error_indent = {back = colors.red}
 
 -- Element colors.
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.selection
-if not CURSES then
+if UI ~= 'terminal' then
 	view.selection_layer = view.LAYER_OVER_TEXT
 	-- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
 	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
@@ -136,7 +136,7 @@ if not CURSES then
 	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 	view.caret_line_layer = view.LAYER_UNDER_TEXT
 else
-	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in CURSES
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default for terminal
 end
 
 if view ~= ui.command_entry then
@@ -155,8 +155,8 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = CURSES and colors.subtext_1 or colors.crust
-	view.marker_back[i] = CURSES and colors.base or colors.overlay_1
+	view.marker_fore[i] = UI == 'terminal' and colors.subtext_1 or colors.crust
+	view.marker_back[i] = UI == 'terminal' and colors.base or colors.overlay_1
 	view.marker_back_selected[i] = colors.overlay_2
 end
 

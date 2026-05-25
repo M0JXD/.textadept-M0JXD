@@ -9,7 +9,7 @@
 local M = {}
 
 --- Command used to open exported HTML files in the user's default web browser.
-M.browser = WIN32 and 'start ""' or OSX and 'open' or LINUX and 'xdg-open'
+M.browser = OS == 'windows' and 'start ""' or OS == 'macos' and 'open' or 'xdg-open'
 
 function check(type)
 	if not (buffer:get_lexer() == 'markdown' or buffer:get_lexer() == 'latex') then
@@ -63,7 +63,7 @@ function M.pandoc(type)
 			pandoc_str = pandoc_str .. '-V geometry:margin=1.5cm'
 		elseif type == 'odt' then
 			pandoc_str = pandoc_str .. '--reference-doc ' .. _USERHOME ..
-				(WIN32 and '\\modules\\export_ext\\reference.odt' or
+				(OS == 'windows' and '\\modules\\export_ext\\reference.odt' or
 					'/modules/export_ext/reference.odt')
 		end
 		pandoc_str = pandoc_str .. ' -s -o "' .. out_filename .. '" "' .. filename .. '"'

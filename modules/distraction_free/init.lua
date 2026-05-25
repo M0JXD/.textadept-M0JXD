@@ -10,7 +10,7 @@ M.clear_statusbar = true
 M.hide_margins = false
 M.hide_curses_title = true
 M.maximise = false
-M.toggle_shortcut = BSD and 'f11' or 'ctrl+f11'
+M.toggle_shortcut = OS == 'bsd' and 'f11' or 'ctrl+f11'
 
 -- NB: This is carefully connected to the right events instead of generic UPDATE_UI
 -- Otherwise it just flickers all the time.
@@ -46,7 +46,7 @@ keys[M.toggle_shortcut] = function()
 		end
 
 		-- Remove the "Title" in curses
-		if CURSES and M.hide_curses_title then
+		if UI == 'terminal' and M.hide_curses_title then
 			events.connect(events.BUFFER_AFTER_SWITCH, clear_title)
 			events.connect(events.BUFFER_NEW, clear_title)
 			events.connect(events.SAVE_POINT_REACHED, clear_title)
@@ -68,7 +68,7 @@ keys[M.toggle_shortcut] = function()
 			for i = 1, view.margins do view.margin_width_n[i] = margin_widths[i] end
 		end
 		-- Restore the title by switching to the same buffer
-		if CURSES and M.hide_curses_title then
+		if UI == 'terminal' and M.hide_curses_title then
 			events.disconnect(events.BUFFER_AFTER_SWITCH, clear_title)
 			events.disconnect(events.BUFFER_NEW, clear_title)
 			events.disconnect(events.SAVE_POINT_REACHED, clear_title)

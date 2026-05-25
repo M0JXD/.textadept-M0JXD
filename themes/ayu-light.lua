@@ -6,10 +6,10 @@ local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
 colors.black = 0x66615c -- foreground
-colors.light_black = CURSES and 0xf6e4d6 or 0x26d65b03 -- selection
+colors.light_black = UI == 'terminal' and 0xf6e4d6 or 0x26d65b03 -- selection
 colors.dark_grey = 0xb1aead -- comment
 -- colors.grey = --unused
-colors.light_grey = CURSES and 0xf1eeec or 0x1a9f8e82 -- current line
+colors.light_grey = UI == 'terminal' and 0xf1eeec or 0x1a9f8e82 -- current line
 colors.white = 0xfcfcfc -- background
 
 colors.red = 0x7171f0 -- markup
@@ -24,8 +24,8 @@ colors.blue = 0xe6a422 -- entity
 colors.aqua = 0xd4b455 -- tag
 
 -- Default font.
-if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
-if not size then size = not OSX and 10 or 12 end
+if not font then font = OS == 'windows' and 'Consolas' or OS == 'macos' and 'Monaco' or 'Monospace' end
+if not size then size = OS ~= 'macos' and 10 or 12 end
 
 -- Predefined styles.
 styles[view.STYLE_DEFAULT] = {font = font, size = size, fore = colors.black, back = colors.white}
@@ -108,7 +108,7 @@ styles.error_indent = {back = colors.red}
 
 -- Element colors.
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_black
-if not CURSES then
+if UI ~= 'terminal' then
 	view.selection_layer = view.LAYER_OVER_TEXT
 	-- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
 	-- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
@@ -123,7 +123,7 @@ if not CURSES then
 	-- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 	view.caret_line_layer = view.LAYER_UNDER_TEXT
 else
-	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in CURSES
+	view:reset_element_color(view.ELEMENT_SELECTION_TEXT) -- For whatever reason the default ain't default in UI == 'terminal'
 end
 if view ~= ui.command_entry then
 	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_grey
@@ -141,8 +141,8 @@ view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
 -- view.marker_fore[textadept.run.MARK_ERROR] = colors.white
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = CURSES and colors.dark_grey or colors.white
-	view.marker_back[i] = CURSES and colors.white or colors.dark_grey
+	view.marker_fore[i] = UI == 'terminal' and colors.dark_grey or colors.white
+	view.marker_back[i] = UI == 'terminal' and colors.white or colors.dark_grey
 	view.marker_back_selected[i] = colors.black
 end
 

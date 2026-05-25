@@ -3,7 +3,7 @@
 
 local M = {}
 
--- TODO: If CURSES, can I suspend and launch in current terminal?
+-- TODO: If UI == 'terminal', can I suspend and launch in current terminal?
 
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
@@ -46,7 +46,7 @@ end
 M.explorer = 'xdg-open'
 M.git_client = 'lazygit'
 
-if WIN32 then
+if OS == 'windows' then
 	M.terminal = 'cmd.exe /f:on'
 	M.explorer = 'explorer.exe'
 	M.git_client = 'lazygit.exe'
@@ -54,7 +54,7 @@ end
 
 function M.openTerminalHere(arg)
 	local argString = '~'
-	if LINUX or BSD then
+	if OS ~= 'windows' then
 		if buffer.filename then
 			argString = '"' .. buffer.filename:match('.+/') .. '"'
 			argString = M.term_dir_arg .. argString
@@ -65,7 +65,7 @@ function M.openTerminalHere(arg)
 			argString = argString .. ' &'
 		end
 		io.popen(M.terminal .. ' ' .. argString)
-	elseif WIN32 then
+	else
 		local prePath = buffer.filename:match('.+\\')
 		local start = 'start '
 		argString = ' /K "cd /d ' .. prePath .. '"'
@@ -79,10 +79,10 @@ end
 
 function M.openFileBrowserHere()
 	local pathString = '~'
-	if LINUX or BSD then
+	if OS ~= 'windows' then
 		if buffer.filename then pathString = buffer.filename:match('.+/') end
 		io.popen(M.explorer .. ' "' .. pathString .. '" &')
-	elseif WIN32 then
+	else
 		local prePath = buffer.filename:match('.+\\')
 		pathString = ' /e,' .. prePath
 		io.popen('start ' .. M.explorer .. pathString)

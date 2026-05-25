@@ -5,7 +5,7 @@
 -- (Leaving a fallback for when you edit your themes and crash everything...)
 
 local M = {theme = {}, font = {}, mt = {}}
-local default_font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace'
+local default_font = (OS == 'windows') and 'Consolas' or (OS == 'macos') and 'Monaco' or 'Monospace'
 M.theme.light = 'light'
 M.theme.dark = 'dark'
 M.theme.term = 'term'
@@ -14,7 +14,7 @@ M.font.family = default_font
 
 local function check_font(font)
 	local font_check_cmd
-	if WIN32 then
+	if OS == 'windows' then
 		-- Source - https://superuser.com/a/1534136
 		-- Posted by phuclv, modified by community. See post 'Timeline' for change history
 		-- Retrieved 2026-02-27, License - CC BY-SA 4.0
@@ -54,13 +54,13 @@ end
 
 -- Reset some commonly adjusted things that cause problems when switching themes
 local function reset_view(view_to_reset)
-	if not CURSES or (CURSES and not M.theme.term == 'term') then
+	if UI ~= 'terminal' or (UI == 'terminal' and not (M.theme.term == 'term')) then
 		view_to_reset:style_reset_default()
 		view_to_reset:style_clear_all()
 		view_to_reset:reset_element_color(view.ELEMENT_SELECTION_BACK)
 		view_to_reset:reset_element_color(view.ELEMENT_CARET_LINE_BACK)
 	end
-	if not CURSES then
+	if UI ~= 'terminal' then
 		view_to_reset.caret_style = view.CARETSTYLE_LINE
 		view_to_reset.caret_line_layer = view.LAYER_BASE
 		view_to_reset.selection_layer = view.LAYER_BASE
@@ -87,14 +87,15 @@ function M.theme_view(view_reset, view)
 	if view_reset then reset_view(view) end
 	local theme
 	local lex = view.buffer:get_lexer()
-	if M.theme[lex] and not CURSES then
+	if M.theme[lex] and UI ~= 'terminal' then
 		if type(M.theme[lex]) == 'table' then
 			theme = (_THEME == 'light') and M.theme[lex][1] or M.theme[lex][2]
 		else
 			theme = M.theme[lex]
 		end
 	else
-		theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
+		theme = UI == 'terminal' and M.theme.term or (_THEME == 'dark') and M.theme.dark or
+			M.theme.light
 	end
 	view:set_theme(theme, {font = M.font.family, size = M.font.size})
 end
@@ -104,7 +105,8 @@ function M.theme_all_views(view_reset)
 end
 
 function M.theme_command_entry()
-	local theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
+	local theme = UI == 'terminal' and M.theme.term or (_THEME == 'dark') and M.theme.dark or
+		M.theme.light
 	pcall(function()
 		ui.command_entry:set_theme(theme, {font = M.font.family, size = M.font.size})
 	end)
@@ -113,16 +115,20 @@ end
 local function init_checks()
 	if M.font.family ~= default_font and not check_font(M.font.family) then
 		M.font.family = default_font
-	elseif CURSES and not check_term() then
+	elseif UI == 'terminal' and not check_term() then
 		M.theme.term = 'term'
 	end
-	if not CURSES then
+	if UI ~= 'terminal' then
 		-- Check for any lexer specific themes, because then we need to theme on switches
 		for k, v in pairs(M.theme) do
 			if k ~= 'light' or k ~= 'dark' or k ~= 'term' then
 				-- Views except the last get upset if we reset styles (because some styles are global)
-				events.connect(events.VIEW_AFTER_SWITCH, function() M.theme_view(true, view) end)
-				events.connect(events.LEXER_LOADED, function() M.theme_view(true, view) end)
+				events.connect(events.VIEW_AFTER_SWITCH, function()
+					M.theme_view(true, view)
+				end)
+				events.connect(events.LEXER_LOADED, function()
+					M.theme_view(true, view)
+				end)
 				events.connect(events.BUFFER_AFTER_SWITCH, function()
 					M.theme_view(true, view)
 				end)
@@ -130,7 +136,7 @@ local function init_checks()
 			end
 		end
 	end
-	if GTK and check_gtk2_dark() then _G._THEME = 'dark' end
+	if UI == 'gtk' and check_gtk2_dark() then _G._THEME = 'dark' end
 	events.connect(events.VIEW_NEW, function() M.theme_view(true, view) end)
 end
 
@@ -141,7 +147,7 @@ end
 events.connect(events.INITIALIZED, init)
 
 events.connect(events.INITIALIZED, function()
-	if not CURSES then
+	if UI ~= 'terminal' then
 		-- For whatever reason, if we connect this before init view:set_theme doesn't work right
 		events.connect(events.MODE_CHANGED, function()
 			M.theme_command_entry()
@@ -174,7 +180,7 @@ function M.select_theme(mode)
 	local i = ui.dialogs.list{title = _L['Select Theme'], items = themes}
 	if i then
 		local lex = view.buffer:get_lexer()
-		if M.theme[lex] and not CURSES then
+		if M.theme[lex] and UI ~= 'terminal' then
 			if type(M.theme[lex]) == 'table' then
 				M.theme[lex][(mode == 'light') and 1 or 2] = themes[i]
 			else
@@ -197,7 +203,8 @@ end
 M.mt.__call = function()
 	events.disconnect(events.INITIALIZED, init)
 	init_checks()
-	local theme = CURSES and M.theme.term or (_THEME == 'dark') and M.theme.dark or M.theme.light
+	local theme = UI == 'terminal' and M.theme.term or (_THEME == 'dark') and M.theme.dark or
+		M.theme.light
 	view:set_theme(theme, {font = M.font.family, size = M.font.size})
 end
 setmetatable(M, M.mt)
@@ -206,7 +213,7 @@ _L['Change Theme...'] = 'Change _Theme...'
 _L['Select Light Theme'] = 'Select _Light Theme'
 _L['Select Dark Theme'] = 'Select _Dark Theme'
 local view_menu = textadept.menu.menubar[_L['View']]
-if not CURSES then
+if UI ~= 'terminal' then
 	table.insert(view_menu, #view_menu - 2, {
 		title = _L['Change Theme...'],
 		{_L['Select Light Theme'], function() M.select_theme('light') end},
