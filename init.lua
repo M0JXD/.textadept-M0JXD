@@ -54,7 +54,7 @@ require('quick_open')
 require('export_ext')
 local ds = require('doc_stats')
 ds.display.lines = true
--- if OS ~= 'bsd' then require('discord_rpc')() end
+if OS ~= 'bsd' then require('discord_rpc')() end
 
 -- Modules (External)
 -- theme_mgr() ; require('textredux').hijack() -- @rgieseke
