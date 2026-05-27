@@ -176,14 +176,14 @@ events.connect(events.UPDATE_UI, function(updated)
 end)
 
 -- Keybindings
-keys['f2'] = textadept.menu.menubar['File/Rename'][2]
+local menubar = textadept.menu.menubar
+keys['f2'] = menubar['File/Rename'][2]
 keys['f5'] = reset
-keys['ctrl+g'] = textadept.menu.menubar['Search/Go To Line...'][2]
+keys['ctrl+g'] = menubar['Search/Go To Line...'][2]
 keys['ctrl+l'] = textadept.editing.select_line
 keys[(UI == 'terminal' and 'ctrl+k' or 'ctrl+K')] = buffer.line_delete
-keys[(UI == 'terminal' and 'meta+L' or 'ctrl+L')] =
-	textadept.menu.menubar['Buffer/Select Lexer...'][2]
-keys[(UI == 'terminal' and 'meta+,' or 'ctrl+,')] = textadept.menu.menubar['Edit/Preferences'][2]
+keys[(UI == 'terminal' and 'meta+L' or 'ctrl+L')] = menubar['Buffer/Select Lexer...'][2]
+keys[(UI == 'terminal' and 'meta+,' or 'ctrl+,')] = menubar['Edit/Preferences'][2]
 keys[(UI == 'terminal' and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_up
 keys[(UI == 'terminal' and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
 
