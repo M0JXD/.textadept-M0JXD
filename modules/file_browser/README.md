@@ -1,6 +1,7 @@
 # Modified File Browser Module
 
 I now very rarely use the file_browser, instead I prefer to open the system browser (hence the Quick Open module). As such it should be considered unmaintained.
+I believe it was last compatible with Textadept 12.9, but is not with version 13.
 This is mostly the same as the [original version](https://github.com/orbitalquark/textadept/wiki/ta-filebrowser) but adds some sorting options that refugees from other editors may find helpful. <br>
 
 NOTE: At the moment this seems a bit broken on Windows.
