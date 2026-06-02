@@ -6,9 +6,9 @@ local M = {}
 M.hide_menubar = true
 M.hide_tabs = true
 M.hide_scrollbars = true
-M.clear_statusbar = true
+M.hide_statusbar = true
 M.hide_margins = false
-M.hide_curses_title = true
+M.hide_term_title = true
 M.maximise = false
 M.toggle_shortcut = OS == 'bsd' and 'f11' or 'ctrl+f11'
 
@@ -46,7 +46,7 @@ keys[M.toggle_shortcut] = function()
 		end
 
 		-- Remove the "Title" in curses
-		if UI == 'terminal' and M.hide_curses_title then
+		if UI == 'terminal' and M.hide_term_title then
 			events.connect(events.BUFFER_AFTER_SWITCH, clear_title)
 			events.connect(events.BUFFER_NEW, clear_title)
 			events.connect(events.SAVE_POINT_REACHED, clear_title)
@@ -63,12 +63,12 @@ keys[M.toggle_shortcut] = function()
 			view.h_scroll_bar = true
 			view.v_scroll_bar = true
 		end
-		if M.clear_statusbar then ui.statusbar = true end
+		if M.hide_statusbar then ui.statusbar = true end
 		if M.hide_margins then
 			for i = 1, view.margins do view.margin_width_n[i] = margin_widths[i] end
 		end
 		-- Restore the title by switching to the same buffer
-		if UI == 'terminal' and M.hide_curses_title then
+		if UI == 'terminal' and M.hide_term_title then
 			events.disconnect(events.BUFFER_AFTER_SWITCH, clear_title)
 			events.disconnect(events.BUFFER_NEW, clear_title)
 			events.disconnect(events.SAVE_POINT_REACHED, clear_title)
