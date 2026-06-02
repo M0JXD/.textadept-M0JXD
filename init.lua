@@ -3,14 +3,13 @@
 -- Theming
 local theme_mgr = require('theme_mgr')
 theme_mgr.theme.light = 'ayu-light'
-theme_mgr.theme.dark = 'ayu-evolve'
+theme_mgr.theme.dark = 'ayu-dark'
 theme_mgr.theme.term = 'ayu-evolve'
-theme_mgr.theme.markdown = {'catppuccin-latte', 'catppuccin-macchiato'}
-if OS == 'linux' then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
+theme_mgr.theme.markdown = {'catppuccin-latte', 'catppuccin-mocha'}
+if OS ~= 'windows' then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
 -- theme_mgr.font.family = 'Droid Sans Mono'
 -- theme_mgr.font.family = 'Noto Mono'
 -- theme_mgr.font.family = 'FreeMono'
-theme_mgr.font.size = 12
 
 -- Modules (Official)
 -- require('debugger')
