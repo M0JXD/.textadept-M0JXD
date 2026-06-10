@@ -170,7 +170,11 @@ _L['Flip a Coin'] = 'Flip a _Coin'
 math.randomseed(os.time())
 table.insert(textadept.menu.menubar[_L['Help']], 7, {
 	_L['Flip a Coin'], function()
-		ui.statusbar_text = math.random(2) > 1 and 'Heads' or 'Tails'
+		local flip = math.random(2) > 1
+		ui.dialogs.message{
+			title = 'Coin Flip', icon = flip and 'face-angel' or 'face-devilish',
+			text = 'You got ' .. (flip and 'Heads.' or 'Tails.')
+		}
 	end
 })
 
