@@ -167,9 +167,9 @@ table.insert(textadept.menu.menubar[_L['View']], 20, {
 })
 
 _L['Flip a Coin'] = 'Flip a _Coin'
+math.randomseed(os.time())
 table.insert(textadept.menu.menubar[_L['Help']], 7, {
 	_L['Flip a Coin'], function()
-		math.randomseed(os.time())
 		ui.statusbar_text = math.random(2) > 1 and 'Heads' or 'Tails'
 	end
 })
