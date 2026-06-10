@@ -166,6 +166,14 @@ table.insert(textadept.menu.menubar[_L['View']], 20, {
 	_L['Toggle End Of Line Characters'], function() view.view_eol = not view.view_eol end
 })
 
+_L['Flip a Coin'] = 'Flip a _Coin'
+table.insert(textadept.menu.menubar[_L['Help']], 7, {
+	_L['Flip a Coin'], function()
+		math.randomseed(os.time())
+		ui.statusbar_text = math.random(2) > 1 and 'Heads' or 'Tails'
+	end
+})
+
 -- UI Adjustments
 events.connect(events.UPDATE_UI, function(updated)
 	if not updated or updated & 3 == 0 then return end
