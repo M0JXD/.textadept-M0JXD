@@ -21,3 +21,14 @@ All of the modules I've made have their own README that explains them. In short,
 | Export Extensions           | Extends the official export module with options to convert Markdown and LaTeX to PDF and HTML |
 | Buffer Statusbar Utilities  | String manipulation utilities to make adjusting the Buffer Statusbar easier |
 | File Browser (UNMAINTAINED) | A modified version of the Textadept File Browser |
+
+I usually install Textadept to *~/Applications/textadept/*, I always forget my desktop integration steps so:
+- Copy desktop files to *~.local/share/applications/* and SVG icons in *~/.local/share/icons/hicolor/scalable/apps/*.
+- Add this into *.bashrc* or *.bash_profile* (aliases possibly in *.bash_aliases*):
+
+```bash
+export PATH=$HOME/Applications/textadept:$PATH
+alias ta="textadept-curses"
+alias ta-gtk="textadept-gtk"
+alias ta-qt="textadept"
+```
