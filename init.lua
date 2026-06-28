@@ -199,12 +199,13 @@ keys[(UI == 'terminal' and 'meta+up' or 'alt+up')] = buffer.move_selected_lines_
 keys[(UI == 'terminal' and 'meta+down' or 'alt+down')] = buffer.move_selected_lines_down
 
 -- Hide some folders from the quick open list
-table.insert(lfs.default_filter, '!.xmake')
-table.insert(lfs.default_filter, '!build_dir')
-table.insert(lfs.default_filter, '!build')
 table.insert(lfs.default_filter, '!assets')
+table.insert(lfs.default_filter, '!build')
+table.insert(lfs.default_filter, '!build_dir')
+table.insert(lfs.default_filter, '!resources')
 table.insert(lfs.default_filter, '!.vs')
 table.insert(lfs.default_filter, '!.vscode')
+table.insert(lfs.default_filter, '!.xmake')
 
 -- Save session data regularly in case of crash or battery
 local function save_session()
