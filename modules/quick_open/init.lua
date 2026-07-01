@@ -4,6 +4,7 @@
 local M = {}
 
 -- TODO: If UI == 'terminal', can I suspend and launch in current terminal?
+if UI == 'terminal' then return M end
 
 local desktop = os.getenv('XDG_CURRENT_DESKTOP')
 if desktop == nil then desktop = '' end
@@ -95,19 +96,13 @@ end
 
 local quick_open = textadept.menu.menubar[_L['Tools/Quick Open']]
 _L['Open Terminal Here...'] = 'Open _Terminal Here...'
-table.insert(quick_open, 5, {
-	_L['Open Terminal Here...'], M.openTerminalHere
-})
+table.insert(quick_open, 5, {_L['Open Terminal Here...'], M.openTerminalHere})
 
 _L['Open File Browser Here...'] = 'Open _File Browser Here...'
-table.insert(quick_open, 6, {
-	_L['Open File Browser Here...'], M.openFileBrowserHere
-})
+table.insert(quick_open, 6, {_L['Open File Browser Here...'], M.openFileBrowserHere})
 
 _L['Open Git Client Here...'] = 'Open _Git Client Here...'
-table.insert(quick_open, 7, {
-	_L['Open Git Client Here...'], M.openGitClientHere
-})
+table.insert(quick_open, 7, {_L['Open Git Client Here...'], M.openGitClientHere})
 
 events.connect(events.INITIALIZED, function()
 	keys[M.bindings.terminal] = M.openTerminalHere
