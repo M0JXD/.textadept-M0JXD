@@ -161,7 +161,7 @@ view.indic_fore[textadept.run.INDIC_ERROR] = colors.red
 view.call_tip_fore_hlt = colors.blue
 
 -- Long Lines.
-view.edge_color = colors.light_black
+view.edge_color = colors.dark_grey
 
 -- Find & replace pane entries.
 ui.find.entry_font = font .. ' ' .. size
