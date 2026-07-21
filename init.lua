@@ -13,7 +13,8 @@ if OS ~= 'windows' then theme_mgr.theme.text = {'xed-light', 'xed-dark'} end
 
 -- Modules (Official)
 -- require('debugger')
-require('export')
+local export = require('export')
+-- export.line_numbers = false
 require('file_diff')
 local format = require('format')
 local function prettier_formatter()
